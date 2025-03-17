@@ -66,11 +66,13 @@
   "education": [
     {
       "title": "Ensino Médio | Completo",
-      "instituto": "Educandário Evangélico - Itaberaí GO"
+      "instituto": "Educandário Evangélico - Itaberaí GO",
+      "checks": true
     },
     {
       "title": "Engenharia da Computação | Cursando 7° Período",
-      "instituto": "UEMG - Universidade do Estado de Minas Gerais"
+      "instituto": "UEMG - Universidade do Estado de Minas Gerais",
+      "checks": true
     }
   ],
   "languages": [
