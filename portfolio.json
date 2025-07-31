@@ -1,0 +1,80 @@
+{
+  "name": "Artur Morais Brasileiro",
+  "role": "Cursando Engenharia da Computação",
+  "bio": "Sou estudante de Engenharia de Computação na UEMG, apaixonado por tecnologia desde que montei meu primeiro circuito Arduino. Tenho me aprofundado em cibersegurança, Linux e redes de computadores, além de ser um entusiasta da cultura maker, sempre criando protótipos e pequenos projetos para aprender na prática. Nos últimos meses, desenvolvi soluções como um sistema de detecção de intrusão caseiro usando Raspberry Pi, automações com Node-RED e um mini-robô controlado por Wi-Fi, tudo para exercitar meus conhecimentos em hardware e software. Cada desafio me ensinou algo novo — seja configurando servidores Linux, analisando pacotes de rede ou escrevendo scripts de automação. Estou em busca de uma oportunidade de estágio para crescer ainda mais, colaborar com equipes reais e levar meus projetos a um próximo nível. Sou curioso, proativo e adoro dividir ideias, seja em hackathons, fóruns de segurança ou no meu GitHub. Vamos conversar?",
+  "profileImage": "Artur.jpg",
+  "contact": {
+    "email": "arturbrasileiro00@gmail.com",
+    "github": "https://github.com/Artur-Brasileiro",
+    "linkedin": "www.linkedin.com/in/artur-brasileiro"
+  },
+  "skills": [
+    {
+      "category": "Linguagens",
+      "items": [
+        { "name": "C# .NET" },
+        { "name": "Python" },
+        { "name": "Java" },
+        { "name": "Kotlin" }
+      ]
+    },
+    {
+      "category": "Banco de Dados",
+      "items": [
+        { "name": "PostgreSQL" },
+        { "name": "MySql" },
+        { "name": "MongoDB" },
+        { "name": "Oracle Database" }
+      ]
+    },
+    {
+      "category": "Tecnologias",
+      "items": [
+        { "name": "React" },
+        { "name": "Angular" },
+        { "name": "Google Firebase" },
+        { "name": "Android Studio" }
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "Ensino Médio",
+      "institution": "Educandário Evangélico - Itaberaí GO",
+      "period": "2021",
+      "status": "Completo"
+    },
+    {
+      "degree": "Engenharia da Computação - 8° Período",
+      "institution": "Universidade do Estado de Minas Gerais - UEMG",
+      "period": "2022 – Hoje",
+      "status": "Cursando"
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj-01",
+      "title": "Meu Portfólio React",
+      "description": "Site de portfólio dinâmico usando React, Vite e Tailwind.",
+      "technologies": ["React", "Vite", "TypeScript"],
+      "github": "https://github.com/Artur-Brasileiro/Portfolio",
+      "demo": "https://artur-brasileiro.github.io/Portfolio/"
+    },
+    {
+      "id": "proj-02",
+      "title": "Jogo de Inglês",
+      "description": "Site feito para treinar meu inglês",
+      "technologies": ["React", "Vite", "TypeScript"],
+      "github": "https://github.com/Artur-Brasileiro/jogo-de-ingles",
+      "demo": "https://artur-brasileiro.github.io/jogo-de-ingles/"
+    },
+    {
+      "id": "proj-03",
+      "title": "Gerenciamento Familiar",
+      "description": "Aplicação web para controle financeiro de uma família",
+      "technologies": ["Angular", "TypeScript"],
+      "github": "https://github.com/Artur-Brasileiro/gerenciamento-familiar",
+      "demo": "https://artur-brasileiro.github.io/gerenciamento-familiar/"
+    }
+  ]
+}
