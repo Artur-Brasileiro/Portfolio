@@ -28,7 +28,7 @@ const About = () => {
             Sobre <span className="gradient-text">Mim</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Estudante do 8º período de Engenharia da Computação, minha paixão é resolver problemas complexos usando tecnologia. Tenho experiência prática na concepção de soluções de software e no desenvolvimento de projetos de hardware. Estou em uma fase de exploração, buscando ativamente aprofundar meus conhecimentos e enfrentar novos desafios inovadores.
+            Estudante do 8º período de Engenharia da Computação, minha paixão é resolver problemas complexos usando tecnologia. Tenho experiência prática na concepção de soluções de software e no desenvolvimento de projetos de hardware. Estou em uma fase de exploração, buscando aprofundar meus conhecimentos e enfrentar novos desafios inovadores.
           </p>
         </div>
 

@@ -2,6 +2,7 @@ import { Code2, Cpu, ExternalLink } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
 import { Badge } from "./ui/badge";
+import { Link } from "react-router-dom"; // <-- NOVA IMPORTAÇÃO
 
 const Projects = () => {
   const projectCategories = [
@@ -9,13 +10,13 @@ const Projects = () => {
       icon: Code2,
       title: "Programação",
       color: "primary",
-      link: "/programacao",
+      link: "/programacao", // O link agora aponta para a rota definida
     },
     {
       icon: Cpu,
       title: "Hardware",
       color: "accent",
-      link: "/hardware",
+      link: "/hardware", // O link agora aponta para a rota definida
     },
   ];
 
@@ -42,9 +43,14 @@ const Projects = () => {
               <p className="text-muted-foreground mb-4">
                 Veja todos os projetos de {category.title.toLowerCase()}
               </p>
-              <Button className="w-full group-hover:shadow-glow">
-                Ver Projetos <ExternalLink className="w-4 h-4 ml-2" />
+              
+              {/* ALTERAÇÃO AQUI: Usando o Button como "asChild" para envolver o Link */}
+              <Button asChild className="w-full group-hover:shadow-glow">
+                <Link to={category.link}>
+                  Ver Projetos <ExternalLink className="w-4 h-4 ml-2" />
+                </Link>
               </Button>
+              
             </Card>
           ))}
         </div>
