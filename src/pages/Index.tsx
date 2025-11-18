@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
@@ -12,8 +12,6 @@ const Index = () => {
   const location = useLocation();
 
   useLayoutEffect(() => {
-    // 1. Tenta pegar o ID do alvo vindo do Navbar (via state)
-    // 2. Se não tiver, tenta pegar via Hash (via URL, ex: /#projetos)
     const stateTarget = location.state && (location.state as { targetId?: string }).targetId;
     const hashTarget = location.hash ? location.hash.replace("#", "") : null;
     
@@ -22,14 +20,24 @@ const Index = () => {
     if (targetId) {
       const element = document.getElementById(targetId);
       if (element) {
-        // Rola instantaneamente para não "piscar" o topo da página
         element.scrollIntoView({ behavior: "instant", block: "start" });
       }
     } else {
-      // Se não tiver alvo nenhum, garante que comece no topo
       window.scrollTo({ top: 0, behavior: "instant" });
     }
   }, [location]);
+
+  useEffect(() => {
+    const imagesToPreload = [
+      "projeto_espectro.jpg",
+      "projeto_deauther.jpg"
+    ];
+
+    imagesToPreload.forEach((imageName) => {
+      const img = new Image();
+      img.src = `${import.meta.env.BASE_URL}${imageName}`;
+    });
+  }, []);
 
   return (
     <div className="min-h-screen">
