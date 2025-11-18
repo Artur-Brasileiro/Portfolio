@@ -1,10 +1,9 @@
-import { useLayoutEffect, useState } from "react"; // 1. Adicione useState
-import { ArrowLeft, Code2, Cpu, ExternalLink, PlayCircle } from "lucide-react"; // Troquei Youtube por PlayCircle
+import { useLayoutEffect, useState } from "react";
+import { ArrowLeft, Code2, Cpu, ExternalLink, PlayCircle } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-// 2. Importe os componentes do Dialog (Modal)
 import {
   Dialog,
   DialogContent,
@@ -18,8 +17,20 @@ const projectData = {
     title: "Projetos de Programação (Software)",
     icon: Code2,
     projects: [
-      { id: 1, name: "Sistema de Gerenciamento Web", description: "Aplicação full-stack com React e Node.js." },
-      { id: 2, name: "Algoritmos de Cibersegurança", description: "Implementação de criptografia e hashing." },
+      { 
+        id: 1, 
+        name: "Chatbot com React", 
+        description: "Desenvolvimento de um chatbot simples com React.",
+        // ADICIONADO: Link para o repositório
+        githubLink: "https://github.com/Artur-Brasileiro/Chatbot-React" 
+      },
+      { 
+        id: 2, 
+        name: "Gerenciamento Familiar", 
+        description: "Criação de aplicação web feito com Angular para fazer o controle financeiro de uma família.",
+        // ADICIONADO: Link para o repositório
+        githubLink: "https://github.com/Artur-Brasileiro/SEU-REPOSITORIO-CIBERSEGURANCA" 
+      },
     ],
   },
   hardware: {
@@ -31,16 +42,14 @@ const projectData = {
         name: "Analisador de Espectro de Áudio", 
         description: "Visualização de espectro em tempo real.",
         image: "/projeto_espectro.jpg",
-        // 3. Alterei para caminho local (Coloque seu arquivo em public/videos/)
         videoSrc: "/videos/arduino.mp4", 
         longDescription: "Um analisador de áudio compacto que usa um ESP32-S3 para capturar sons, processar as frequências e exibir o espectro em uma pequena tela OLED. Mostra a forma “visual” do som em tempo real."
       },
       { 
         id: 4, 
-        name: "Deauther Didático (BW-16)", 
+        name: "Deauther Didático (2.4 e 5GHz)", 
         description: "Desautenticação de redes em ambiente controlado.",
         image: "/projeto_deauther.jpg",
-        // 3. Alterei para caminho local
         videoSrc: "/videos/raspberry.mp4", 
         longDescription: "Dispositivo didático baseado no BW-16 com tela OLED de 0,96, usado para estudar o funcionamento de redes Wi-Fi e entender, em ambiente controlado, como pacotes de desautenticação afetam a conexão. O projeto inclui case em impressão 3D e uma placa de circuito impresso feita manualmente, tornando o dispositivo compacto e ideal para aprendizado prático."
       },
@@ -52,7 +61,6 @@ const ProjectsPage = () => {
   const { category } = useParams<{ category: keyof typeof projectData }>();
   const categoryData = category && projectData[category as keyof typeof projectData];
   
-  // 4. Estado para controlar o vídeo selecionado e se o modal está aberto
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -113,7 +121,6 @@ const ProjectsPage = () => {
                         />
                     </AspectRatio>
                     
-                    {/* O botão continua funcionando normalmente */}
                     <Button 
                       className="mt-4 w-full shadow-glow" 
                       onClick={() => handleOpenVideo(project.videoSrc || "")}
@@ -143,16 +150,25 @@ const ProjectsPage = () => {
             ))}
           </div>
         ) : (
+          /* MUDANÇA AQUI: Renderização de Software com botão de link */
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {categoryData.projects.map((project) => (
+            {(categoryData.projects as typeof projectData['programacao']['projects']).map((project) => (
               <Card key={project.id} className="p-4 hover:shadow-glow transition-all duration-300">
                 <CardHeader>
                   <CardTitle>{project.name}</CardTitle>
                   <CardDescription>{project.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button variant="outline" className="w-full">
-                    Detalhes do Projeto
+                  <Button asChild variant="outline" className="w-full group">
+                    <a 
+                      href={project.githubLink} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center"
+                    >
+                      Detalhes no GitHub
+                      <ExternalLink className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+                    </a>
                   </Button>
                 </CardContent>
               </Card>
@@ -160,10 +176,8 @@ const ProjectsPage = () => {
           </div>
         )}
 
-        {/* 6. Componente do Modal de Vídeo */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent className="sm:max-w-4xl p-0 bg-black border-border overflow-hidden">
-             {/* Header oculto para acessibilidade ou visível se preferir */}
              <DialogHeader className="sr-only"> 
                 <DialogTitle>Demonstração do Projeto</DialogTitle>
                 <DialogDescription>Vídeo demonstrativo do hardware funcionando.</DialogDescription>
