@@ -2,7 +2,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+// 1. MUDANÇA AQUI: Importe HashRouter em vez de BrowserRouter
+import { HashRouter, Routes, Route } from "react-router-dom"; 
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ProjectsPage from "./pages/ProjectsPage";
@@ -14,16 +15,14 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      {/* 2. MUDANÇA AQUI: Troque BrowserRouter por HashRouter */}
+      <HashRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          {/* 2. ADICIONE A NOVA ROTA PARA VISUALIZAÇÃO DE PROJETOS */}
           <Route path="/:category" element={<ProjectsPage />} /> 
-          {/* Opcional: Se quiser um path mais claro, pode ser: <Route path="/projetos/:category" element={<ProjectsPage />} /> */}
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );
