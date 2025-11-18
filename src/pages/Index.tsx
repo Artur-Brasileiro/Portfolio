@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "react"; // <-- Troque useEffect por useLayoutEffect
+import { useLayoutEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
@@ -11,16 +11,22 @@ import Footer from "@/components/Footer";
 const Index = () => {
   const location = useLocation();
 
-  // useLayoutEffect roda ANTES do navegador "pintar" a tela
   useLayoutEffect(() => {
-    if (location.hash) {
-      const element = document.querySelector(location.hash);
+    // 1. Tenta pegar o ID do alvo vindo do Navbar (via state)
+    // 2. Se não tiver, tenta pegar via Hash (via URL, ex: /#projetos)
+    const stateTarget = location.state && (location.state as { targetId?: string }).targetId;
+    const hashTarget = location.hash ? location.hash.replace("#", "") : null;
+    
+    const targetId = stateTarget || hashTarget;
+
+    if (targetId) {
+      const element = document.getElementById(targetId);
       if (element) {
-        // Rola instantaneamente para o elemento, evitando o "pulo" visual
+        // Rola instantaneamente para não "piscar" o topo da página
         element.scrollIntoView({ behavior: "instant", block: "start" });
       }
     } else {
-      // Se não tiver hash, garante que comece no topo
+      // Se não tiver alvo nenhum, garante que comece no topo
       window.scrollTo({ top: 0, behavior: "instant" });
     }
   }, [location]);

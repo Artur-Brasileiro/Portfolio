@@ -21,14 +21,12 @@ const projectData = {
         id: 1, 
         name: "Chatbot com React", 
         description: "Desenvolvimento de um chatbot simples com React.",
-        // ADICIONADO: Link para o repositório
         githubLink: "https://github.com/Artur-Brasileiro/Chatbot-React" 
       },
       { 
         id: 2, 
         name: "Gerenciamento Familiar", 
         description: "Criação de aplicação web feito com Angular para fazer o controle financeiro de uma família.",
-        // ADICIONADO: Link para o repositório
         githubLink: "https://github.com/Artur-Brasileiro/SEU-REPOSITORIO-CIBERSEGURANCA" 
       },
     ],
@@ -41,16 +39,18 @@ const projectData = {
         id: 3, 
         name: "Analisador de Espectro de Áudio", 
         description: "Visualização de espectro em tempo real.",
-        image: "/projeto_espectro.jpg",
-        videoSrc: "/videos/arduino.mp4", 
+        // CORREÇÃO: Removi a barra '/' do início
+        image: "projeto_espectro.jpg",
+        videoSrc: "videos/arduino.mp4", 
         longDescription: "Um analisador de áudio compacto que usa um ESP32-S3 para capturar sons, processar as frequências e exibir o espectro em uma pequena tela OLED. Mostra a forma “visual” do som em tempo real."
       },
       { 
         id: 4, 
         name: "Deauther Didático (2.4 e 5GHz)", 
         description: "Desautenticação de redes em ambiente controlado.",
-        image: "/projeto_deauther.jpg",
-        videoSrc: "/videos/raspberry.mp4", 
+        // CORREÇÃO: Removi a barra '/' do início
+        image: "projeto_deauther.jpg",
+        videoSrc: "videos/raspberry.mp4", 
         longDescription: "Dispositivo didático baseado no BW-16 com tela OLED de 0,96, usado para estudar o funcionamento de redes Wi-Fi e entender, em ambiente controlado, como pacotes de desautenticação afetam a conexão. O projeto inclui case em impressão 3D e uma placa de circuito impresso feita manualmente, tornando o dispositivo compacto e ideal para aprendizado prático."
       },
     ],
@@ -69,7 +69,8 @@ const ProjectsPage = () => {
   }, [category]);
 
   const handleOpenVideo = (videoSrc: string) => {
-    setSelectedVideo(videoSrc);
+    // CORREÇÃO: Adiciona o base path ao abrir o vídeo também
+    setSelectedVideo(`${import.meta.env.BASE_URL}${videoSrc}`);
     setIsDialogOpen(true);
   };
 
@@ -114,8 +115,9 @@ const ProjectsPage = () => {
                   
                   <div className="md:col-span-1">
                     <AspectRatio ratio={16 / 9} className="rounded-lg overflow-hidden border border-border/50 bg-secondary">
+                        {/* CORREÇÃO AQUI: Usando import.meta.env.BASE_URL */}
                         <img 
-                            src={project.image} 
+                            src={`${import.meta.env.BASE_URL}${project.image}`} 
                             alt={`Imagem do Projeto: ${project.name}`} 
                             className="w-full h-full object-cover"
                         />
@@ -150,7 +152,6 @@ const ProjectsPage = () => {
             ))}
           </div>
         ) : (
-          /* MUDANÇA AQUI: Renderização de Software com botão de link */
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {(categoryData.projects as typeof projectData['programacao']['projects']).map((project) => (
               <Card key={project.id} className="p-4 hover:shadow-glow transition-all duration-300">

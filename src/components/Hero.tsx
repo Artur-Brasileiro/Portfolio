@@ -2,6 +2,15 @@ import { ArrowDown } from "lucide-react";
 import { Button } from "./ui/button";
 
 const Hero = () => {
+  // Função para interceptar o clique e rolar suavemente
+  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    e.preventDefault(); // Impede que o HashRouter tente navegar para uma rota inexistente
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <section className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-hero">
       {/* Animated background elements */}
@@ -23,19 +32,36 @@ const Hero = () => {
             Desenvolvedor de software e hardware, criando soluções web modernas e sistemas embarcados
           </p>
           <div className="flex gap-4 justify-center pt-4">
+            
+            {/* Botão Ver Projetos corrigido */}
             <Button size="lg" className="shadow-glow" asChild>
-              <a href="#projetos">Ver Projetos</a>
+              <a 
+                href="#projetos" 
+                onClick={(e) => handleScroll(e, "projetos")}
+              >
+                Ver Projetos
+              </a>
             </Button>
+
+            {/* Botão Entrar em Contato corrigido */}
             <Button size="lg" variant="secondary" asChild>
-              <a href="#contato">Entrar em Contato</a>
+              <a 
+                href="#contato" 
+                onClick={(e) => handleScroll(e, "contato")}
+              >
+                Entrar em Contato
+              </a>
             </Button>
+            
           </div>
         </div>
       </div>
 
+      {/* Seta para baixo corrigida */}
       <a
         href="#sobre"
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce"
+        onClick={(e) => handleScroll(e, "sobre")}
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce cursor-pointer"
       >
         <ArrowDown className="w-6 h-6 text-muted-foreground" />
       </a>
