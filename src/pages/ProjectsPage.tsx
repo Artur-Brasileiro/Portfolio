@@ -63,19 +63,21 @@ const projectData = {
         id: 3, 
         name: "Analisador de Espectro de Áudio", 
         description: "Visualização de espectro em tempo real.",
-        // CORREÇÃO: Removi a barra '/' do início
         image: "projeto_espectro.jpg",
         videoSrc: "videos/video_espectro.mp4", 
-        longDescription: "Um analisador de áudio compacto que usa um ESP32-S3 para capturar sons, processar as frequências e exibir o espectro em uma pequena tela OLED. Mostra a forma “visual” do som em tempo real."
+        longDescription: "Um analisador de áudio compacto que usa um ESP32-S3 para capturar sons, processar as frequências e exibir o espectro em uma pequena tela OLED. Mostra a forma “visual” do som em tempo real.",
+        // ADICIONE SEU LINK AQUI
+        technicalLink: "https://github.com/Artur-Brasileiro/Analisador-Espectro" 
       },
       { 
         id: 4, 
         name: "Deauther Didático (2.4 e 5GHz)", 
         description: "Desautenticação de redes em ambiente controlado.",
-        // CORREÇÃO: Removi a barra '/' do início
         image: "projeto_deauther.jpg",
-        videoSrc: "videos/raspberry.mp4", 
-        longDescription: "Dispositivo didático baseado no BW-16 com tela OLED de 0,96\", usado para estudar o funcionamento de redes Wi-Fi e entender, em ambiente controlado, como pacotes de desautenticação afetam a conexão. O projeto inclui case em impressão 3D e uma placa de circuito impresso feita manualmente, tornando o dispositivo compacto e ideal para aprendizado prático."
+        videoSrc: "videos/video_deauther.mp4", 
+        longDescription: "Dispositivo didático baseado no BW-16 com tela OLED de 0,96\", usado para estudar o funcionamento de redes Wi-Fi e entender, em ambiente controlado, como pacotes de desautenticação afetam a conexão. O projeto inclui case em impressão 3D e uma placa de circuito impresso feita manualmente, tornando o dispositivo compacto e ideal para aprendizado prático.",
+        // ADICIONE SEU LINK AQUI
+        technicalLink: "https://github.com/Artur-Brasileiro/Deauther-5GHz" 
       },
     ],
   },
@@ -93,7 +95,6 @@ const ProjectsPage = () => {
   }, [category]);
 
   const handleOpenVideo = (videoSrc: string) => {
-    // CORREÇÃO: Adiciona o base path ao abrir o vídeo também
     setSelectedVideo(`${import.meta.env.BASE_URL}${videoSrc}`);
     setIsDialogOpen(true);
   };
@@ -139,7 +140,6 @@ const ProjectsPage = () => {
                   
                   <div className="md:col-span-1">
                     <AspectRatio ratio={16 / 9} className="rounded-lg overflow-hidden border border-border/50 bg-secondary">
-                        {/* CORREÇÃO AQUI: Usando import.meta.env.BASE_URL */}
                         <img 
                             src={`${import.meta.env.BASE_URL}${project.image}`} 
                             alt={`Imagem do Projeto: ${project.name}`} 
@@ -165,10 +165,20 @@ const ProjectsPage = () => {
                     </p>
                     
                     <div className="pt-4">
-                        <Button variant="default">
-                            Detalhes Técnicos
-                            <ExternalLink className="w-4 h-4 ml-2" />
-                        </Button>
+                        {/* Renderização condicional do botão */}
+                        {(project as any).technicalLink && (
+                            <Button asChild variant="default">
+                                <a 
+                                    href={(project as any).technicalLink} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2"
+                                >
+                                    Detalhes Técnicos
+                                    <ExternalLink className="w-4 h-4" />
+                                </a>
+                            </Button>
+                        )}
                     </div>
                   </div>
                 </div>
