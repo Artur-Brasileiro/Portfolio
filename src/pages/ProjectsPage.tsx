@@ -20,14 +20,14 @@ const projectData = {
       { 
         id: 1, 
         name: "Chatbot com React", 
-        description: "Desenvolvimento de um chatbot simples com React.",
+        description: "Desenvolvimento em React de um chatbot integrado com uma IA simples.",
         githubLink: "https://github.com/Artur-Brasileiro/Chatbot-React" 
       },
       { 
         id: 2, 
         name: "Gerenciamento Familiar", 
-        description: "Criação de aplicação web feito com Angular para fazer o controle financeiro de uma família.",
-        githubLink: "https://github.com/Artur-Brasileiro/SEU-REPOSITORIO-CIBERSEGURANCA" 
+        description: "Criação de aplicação web feito com C# e Angular para fazer o controle financeiro de uma família.",
+        githubLink: "https://github.com/Artur-Brasileiro/Gerenciamento-Familiar" 
       },
     ],
   },
@@ -51,7 +51,7 @@ const projectData = {
         // CORREÇÃO: Removi a barra '/' do início
         image: "projeto_deauther.jpg",
         videoSrc: "videos/raspberry.mp4", 
-        longDescription: "Dispositivo didático baseado no BW-16 com tela OLED de 0,96, usado para estudar o funcionamento de redes Wi-Fi e entender, em ambiente controlado, como pacotes de desautenticação afetam a conexão. O projeto inclui case em impressão 3D e uma placa de circuito impresso feita manualmente, tornando o dispositivo compacto e ideal para aprendizado prático."
+        longDescription: "Dispositivo didático baseado no BW-16 com tela OLED de 0,96\", usado para estudar o funcionamento de redes Wi-Fi e entender, em ambiente controlado, como pacotes de desautenticação afetam a conexão. O projeto inclui case em impressão 3D e uma placa de circuito impresso feita manualmente, tornando o dispositivo compacto e ideal para aprendizado prático."
       },
     ],
   },
