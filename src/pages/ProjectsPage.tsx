@@ -18,6 +18,30 @@ const projectData = {
     icon: Code2,
     projects: [
       { 
+        id: 5, 
+        name: "Perceptron Reconhecedor", 
+        description: "Desenvolvimento e treinamento de uma IA simples (Perceptron) para classificar a letra \"A\".",
+        githubLink: "https://github.com/Artur-Brasileiro/Perceptron-Reconhecedor" 
+      },
+      { 
+        id: 6, 
+        name: "Análise de Dados PRF", 
+        description: "Ciência de Dados aplicada em uma planilha do Excel da PRF para visualizarmos quais munícipios brasileiros tem o maior índice de acidentes em rodovias.",
+        githubLink: "https://github.com/Artur-Brasileiro/Analise-PRF" 
+      },
+      { 
+        id: 7, 
+        name: "Web Scraping Simples", 
+        description: "Web Scraping no site da CEMIG utilizando Python para comparar dados anuais.",
+        githubLink: "https://github.com/Artur-Brasileiro/Web-Scraping" 
+      },
+      { 
+        id: 8, 
+        name: "Relação Idade x Pressão", 
+        description: "Plotagem de um gráfico simples para visualizar a relação de Idade x Pressão Sistólica.",
+        githubLink: "https://github.com/Artur-Brasileiro/Grafico-Dispersao" 
+      },
+      { 
         id: 1, 
         name: "Chatbot com React", 
         description: "Desenvolvimento em React de um chatbot integrado com uma IA simples.",
