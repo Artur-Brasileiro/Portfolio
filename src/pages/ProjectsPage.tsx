@@ -65,7 +65,7 @@ const projectData = {
         description: "Visualização de espectro em tempo real.",
         // CORREÇÃO: Removi a barra '/' do início
         image: "projeto_espectro.jpg",
-        videoSrc: "videos/arduino.mp4", 
+        videoSrc: "videos/video_espectro.mp4", 
         longDescription: "Um analisador de áudio compacto que usa um ESP32-S3 para capturar sons, processar as frequências e exibir o espectro em uma pequena tela OLED. Mostra a forma “visual” do som em tempo real."
       },
       { 
