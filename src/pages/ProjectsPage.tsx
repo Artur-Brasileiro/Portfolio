@@ -16,48 +16,70 @@ const projectData = {
   programacao: {
     title: "Projetos de Programação (Software)",
     icon: Code2,
-    projects: [
-      { 
-        id: 5, 
-        name: "Perceptron Reconhecedor", 
-        description: "Desenvolvimento e treinamento de uma IA simples (Perceptron) para classificar a letra \"A\".",
-        githubLink: "https://github.com/Artur-Brasileiro/Perceptron-Reconhecedor" 
+    subsections: [
+      {
+        title: "Inteligência Artificial",
+        projects: [
+          { 
+            id: 9, 
+            name: "Introdução IA", 
+            description: "Projeto onde registro meu aprendizado e evolução no estudo de Inteligência Artificial.",
+            githubLink: "https://github.com/Artur-Brasileiro/Introducao-IA" 
+          },
+          { 
+            id: 5, 
+            name: "Perceptron Reconhecedor", 
+            description: "Desenvolvimento e treinamento de uma IA simples (Perceptron) para classificar a letra \"A\".",
+            githubLink: "https://github.com/Artur-Brasileiro/Perceptron-Reconhecedor" 
+          },
+        ]
       },
-      { 
-        id: 6, 
-        name: "Análise de Dados PRF", 
-        description: "Ciência de Dados aplicada em uma planilha do Excel da PRF para visualizarmos quais munícipios brasileiros tem o maior índice de acidentes em rodovias.",
-        githubLink: "https://github.com/Artur-Brasileiro/Analise-PRF" 
+      {
+        title: "Ciência de Dados & Automação",
+        projects: [
+          { 
+            id: 6, 
+            name: "Análise de Dados PRF", 
+            description: "Ciência de Dados aplicada em uma planilha do Excel da PRF para visualizarmos quais munícipios brasileiros tem o maior índice de acidentes em rodovias.",
+            githubLink: "https://github.com/Artur-Brasileiro/Analise-PRF" 
+          },
+          { 
+            id: 7, 
+            name: "Web Scraping Simples", 
+            description: "Web Scraping no site da CEMIG utilizando Python para comparar dados anuais.",
+            githubLink: "https://github.com/Artur-Brasileiro/Web-Scraping" 
+          },
+          { 
+            id: 8, 
+            name: "Relação Idade x Pressão", 
+            description: "Plotagem de um gráfico simples para visualizar a relação de Idade x Pressão Sistólica.",
+            githubLink: "https://github.com/Artur-Brasileiro/Grafico-Dispersao" 
+          },
+        ]
       },
-      { 
-        id: 7, 
-        name: "Web Scraping Simples", 
-        description: "Web Scraping no site da CEMIG utilizando Python para comparar dados anuais.",
-        githubLink: "https://github.com/Artur-Brasileiro/Web-Scraping" 
-      },
-      { 
-        id: 8, 
-        name: "Relação Idade x Pressão", 
-        description: "Plotagem de um gráfico simples para visualizar a relação de Idade x Pressão Sistólica.",
-        githubLink: "https://github.com/Artur-Brasileiro/Grafico-Dispersao" 
-      },
-      { 
-        id: 1, 
-        name: "Chatbot com React", 
-        description: "Desenvolvimento em React de um chatbot integrado com uma IA simples.",
-        githubLink: "https://github.com/Artur-Brasileiro/Chatbot-React" 
-      },
-      { 
-        id: 2, 
-        name: "Gerenciamento Familiar", 
-        description: "Criação de aplicação web feito com C# e Angular para fazer o controle financeiro de uma família.",
-        githubLink: "https://github.com/Artur-Brasileiro/Gerenciamento-Familiar" 
-      },
+      {
+        title: "Desenvolvimento Web",
+        projects: [
+          { 
+            id: 1, 
+            name: "Chatbot com React", 
+            description: "Desenvolvimento em React de um chatbot integrado com uma IA simples.",
+            githubLink: "https://github.com/Artur-Brasileiro/Chatbot-React" 
+          },
+          { 
+            id: 2, 
+            name: "Gerenciamento Familiar", 
+            description: "Criação de aplicação web feito com C# e Angular para fazer o controle financeiro de uma família.",
+            githubLink: "https://github.com/Artur-Brasileiro/Gerenciamento-Familiar" 
+          },
+        ]
+      }
     ],
   },
   hardware: {
     title: "Projetos de Hardware e Embarcados",
     icon: Cpu,
+    // Hardware mantém a estrutura de lista simples
     projects: [
       { 
         id: 3, 
@@ -66,7 +88,6 @@ const projectData = {
         image: "projeto_espectro.jpg",
         videoSrc: "videos/video_espectro.mp4", 
         longDescription: "Um analisador de áudio compacto que usa um ESP32-S3 para capturar sons, processar as frequências e exibir o espectro em uma pequena tela OLED. Mostra a forma “visual” do som em tempo real.",
-        // ADICIONE SEU LINK AQUI
         technicalLink: "https://github.com/Artur-Brasileiro/Analisador-Espectro" 
       },
       { 
@@ -76,7 +97,6 @@ const projectData = {
         image: "projeto_deauther.jpg",
         videoSrc: "videos/video_deauther.mp4", 
         longDescription: "Dispositivo didático baseado no BW-16 com tela OLED de 0,96\", usado para estudar o funcionamento de redes Wi-Fi e entender, em ambiente controlado, como pacotes de desautenticação afetam a conexão. O projeto inclui case em impressão 3D e uma placa de circuito impresso feita manualmente, tornando o dispositivo compacto e ideal para aprendizado prático.",
-        // ADICIONE SEU LINK AQUI
         technicalLink: "https://github.com/Artur-Brasileiro/Deauther-5GHz" 
       },
     ],
@@ -133,8 +153,10 @@ const ProjectsPage = () => {
         </div>
 
         {isHardware ? (
+          // ================= SEÇÃO DE HARDWARE =================
           <div className="space-y-12">
-            {(categoryData.projects as typeof projectData['hardware']['projects']).map((project) => (
+            {/* Cast necessário pois o TS não sabe que 'hardware' tem 'projects' e 'programacao' tem 'subsections' */}
+            {(categoryData as typeof projectData['hardware']).projects.map((project) => (
               <Card key={project.id} className="p-6 md:p-8 bg-card border-border shadow-lg">
                 <div className="grid md:grid-cols-3 gap-6 md:gap-8">
                   
@@ -165,7 +187,6 @@ const ProjectsPage = () => {
                     </p>
                     
                     <div className="pt-4">
-                        {/* Renderização condicional do botão */}
                         {(project as any).technicalLink && (
                             <Button asChild variant="default">
                                 <a 
@@ -186,27 +207,42 @@ const ProjectsPage = () => {
             ))}
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {(categoryData.projects as typeof projectData['programacao']['projects']).map((project) => (
-              <Card key={project.id} className="p-4 hover:shadow-glow transition-all duration-300">
-                <CardHeader>
-                  <CardTitle>{project.name}</CardTitle>
-                  <CardDescription>{project.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button asChild variant="outline" className="w-full group">
-                    <a 
-                      href={project.githubLink} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center"
-                    >
-                      Detalhes no GitHub
-                      <ExternalLink className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-                    </a>
-                  </Button>
-                </CardContent>
-              </Card>
+          // ================= SEÇÃO DE SOFTWARE (COM SUBSEÇÕES) =================
+          <div className="space-y-16">
+            {(categoryData as typeof projectData['programacao']).subsections.map((subsection, index) => (
+              <div key={index} className="space-y-6">
+                
+                {/* Cabeçalho da Subseção */}
+                <div className="flex items-center gap-4">
+                   <h3 className="text-2xl font-bold text-foreground">{subsection.title}</h3>
+                   <div className="h-[1px] flex-1 bg-border/60"></div>
+                </div>
+
+                {/* Grid de Projetos da Subseção */}
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {subsection.projects.map((project) => (
+                    <Card key={project.id} className="p-4 hover:shadow-glow transition-all duration-300 flex flex-col justify-between">
+                      <CardHeader>
+                        <CardTitle>{project.name}</CardTitle>
+                        <CardDescription className="mt-2">{project.description}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <Button asChild variant="outline" className="w-full group">
+                          <a 
+                            href={project.githubLink} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center"
+                          >
+                            Detalhes no GitHub
+                            <ExternalLink className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+                          </a>
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         )}
