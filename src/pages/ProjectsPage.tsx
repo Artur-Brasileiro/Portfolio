@@ -32,6 +32,12 @@ const projectData = {
             description: "Desenvolvimento e treinamento de uma IA simples (Perceptron) para classificar a letra \"A\".",
             githubLink: "https://github.com/Artur-Brasileiro/Perceptron-Reconhecedor" 
           },
+          { 
+            id: 10, 
+            name: "Algoritmo KNN", 
+            description: "Implementação do algoritmo KNN para classificar dados com base nos vizinhos mais próximos.",
+            githubLink: "https://github.com/Artur-Brasileiro/Algoritmo-KNN" 
+          },
         ]
       },
       {
