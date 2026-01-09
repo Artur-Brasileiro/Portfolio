@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from "react";
-import { ArrowLeft, Code2, Cpu, ExternalLink, PlayCircle } from "lucide-react";
+import { ArrowLeft, Code2, Cpu, ExternalLink, PlayCircle, Globe } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -41,6 +41,30 @@ const projectData = {
         ]
       },
       {
+        title: "Desenvolvimento Web",
+        projects: [
+          {
+            id: 11,
+            name: "English Hub",
+            description: "Plataforma web para aprendizado de inglês com recursos interativos.",
+            githubLink: "https://github.com/Artur-Brasileiro/English-Hub",
+            siteLink: "https://artur-brasileiro.github.io/English-Hub/"
+          },
+          { 
+            id: 1, 
+            name: "Chatbot com React", 
+            description: "Desenvolvimento em React de um chatbot integrado com uma IA simples.",
+            githubLink: "https://github.com/Artur-Brasileiro/Chatbot-React" 
+          },
+          { 
+            id: 2, 
+            name: "Gerenciamento Familiar", 
+            description: "Criação de aplicação web feito com C# e Angular para fazer o controle financeiro de uma família.",
+            githubLink: "https://github.com/Artur-Brasileiro/Gerenciamento-Familiar" 
+          }
+        ]
+      },
+      {
         title: "Ciência de Dados & Automação",
         projects: [
           { 
@@ -60,23 +84,6 @@ const projectData = {
             name: "Relação Idade x Pressão", 
             description: "Plotagem de um gráfico simples para visualizar a relação de Idade x Pressão Sistólica.",
             githubLink: "https://github.com/Artur-Brasileiro/Grafico-Dispersao" 
-          },
-        ]
-      },
-      {
-        title: "Desenvolvimento Web",
-        projects: [
-          { 
-            id: 1, 
-            name: "Chatbot com React", 
-            description: "Desenvolvimento em React de um chatbot integrado com uma IA simples.",
-            githubLink: "https://github.com/Artur-Brasileiro/Chatbot-React" 
-          },
-          { 
-            id: 2, 
-            name: "Gerenciamento Familiar", 
-            description: "Criação de aplicação web feito com C# e Angular para fazer o controle financeiro de uma família.",
-            githubLink: "https://github.com/Artur-Brasileiro/Gerenciamento-Familiar" 
           },
         ]
       }
@@ -232,19 +239,37 @@ const ProjectsPage = () => {
                         <CardTitle>{project.name}</CardTitle>
                         <CardDescription className="mt-2">{project.description}</CardDescription>
                       </CardHeader>
-                      <CardContent>
-                        <Button asChild variant="outline" className="w-full group">
-                          <a 
-                            href={project.githubLink} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="flex items-center justify-center"
-                          >
-                            Detalhes no GitHub
-                            <ExternalLink className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-                          </a>
-                        </Button>
-                      </CardContent>
+                        <CardContent>
+                          <div className="flex flex-col gap-3">
+                            {/* VERIFICAÇÃO: Se existir siteLink, mostra o botão de Acessar Site */}
+                            {(project as any).siteLink && (
+                              <Button asChild variant="default" className="w-full group shadow-sm">
+                                <a 
+                                  href={(project as any).siteLink} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="flex items-center justify-center"
+                                >
+                                  <Globe className="w-4 h-4 mr-2" />
+                                  Acessar Site
+                                </a>
+                              </Button>
+                            )}
+
+                            {/* Botão do GitHub (que já existia) */}
+                            <Button asChild variant="outline" className="w-full group">
+                              <a 
+                                href={project.githubLink} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="flex items-center justify-center"
+                              >
+                                Detalhes no GitHub
+                                <ExternalLink className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+                              </a>
+                            </Button>
+                          </div>
+                        </CardContent>
                     </Card>
                   ))}
                 </div>
