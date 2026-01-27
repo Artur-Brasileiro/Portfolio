@@ -45,10 +45,17 @@ const projectData = {
         projects: [
           {
             id: 11,
-            name: "English Hub",
+            name: "EnglishUp",
             description: "Plataforma web para aprendizado de inglês com recursos interativos.",
             githubLink: "https://github.com/Artur-Brasileiro/English-Hub",
             siteLink: "https://artur-brasileiro.github.io/English-Hub/"
+          },
+          {
+            id: 12,
+            name: "Portfólio - Professor de Inglês",
+            description: "Site portfólio para professor de inglês, destacando serviços e depoimentos.",
+            githubLink: "https://github.com/Artur-Brasileiro/Portfolio-Professor",
+            siteLink: "https://rodrigoalmeida.vercel.app/"
           },
           { 
             id: 1, 
