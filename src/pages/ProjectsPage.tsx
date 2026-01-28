@@ -48,7 +48,7 @@ const projectData = {
             name: "EnglishUp",
             description: "Plataforma web para aprendizado de inglês com recursos interativos.",
             githubLink: "https://github.com/Artur-Brasileiro/English-Hub",
-            siteLink: "https://artur-brasileiro.github.io/English-Hub/"
+            siteLink: "https://playenglishup.com.br/"
           },
           {
             id: 12,
