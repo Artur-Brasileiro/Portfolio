@@ -121,6 +121,16 @@ const projectData = {
         technicalLink: "https://github.com/Artur-Brasileiro/Deauther-5GHz",
         tags: ["BW-16", "Redes Wi-Fi", "PCB Customizada", "Impressão 3D"]
       },
+      { 
+        id: 13,
+        name: "Monitor de Luminosidade com Feedback Visual", 
+        description: "Sistema de leitura analógica com acionamento inteligente de atuadores.",
+        image: "projeto_sensorluz.jpg",
+        youtubeId: "rBSG0NzcMFI",
+        longDescription: "Um projeto prático de sistemas embarcados focado em eletrônica analógica e conversão ADC. Utiliza um sensor LDR em configuração de divisor de tensão para monitorar a luz ambiente. O microcontrolador processa os sinais em tempo real e categoriza a luminosidade, acionando um semáforo de LEDs com base em limiares (thresholds) pré-definidos no código.",
+        technicalLink: "https://github.com/Artur-Brasileiro/Sensor-Luz",
+        tags: ["Arduino", "Eletrônica Analógica", "Sensores LDR", "C++"]
+      },
     ],
   },
 };

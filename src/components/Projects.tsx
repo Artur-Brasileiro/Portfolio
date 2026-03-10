@@ -22,7 +22,7 @@ const Projects = () => {
       link: "/hardware",
       gradient: "from-orange-500/20 to-red-500/20",
       borderGlow: "group-hover:border-orange-500/50"
-    },
+    }
   ];
 
   // Dados dos projetos em destaque (Um de Software, Um de Hardware)
