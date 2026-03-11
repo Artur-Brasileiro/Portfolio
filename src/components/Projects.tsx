@@ -25,7 +25,6 @@ const Projects = () => {
     }
   ];
 
-  // Dados dos projetos em destaque (Atualmente 2, preparado para até 4 em grid 2x2)
   const featuredProjects = [
     {
       id: "englishup", 
@@ -41,13 +40,13 @@ const Projects = () => {
     },
     {
       id: "macropad-oled", 
-      title: "Macropad 15-Teclas com OLED",
+      title: "Macropad 18 Teclas com OLED",
       category: "Hardware & PCB",
       description: "Teclado auxiliar com display integrado e app multiplataforma que deteta programas ativos para mudar o contexto.",
-      image: "projeto_macropad.png", // <-- Substitua por "macropad.jpg" quando tiver a imagem
-      tags: ["C++", "EasyEDA", "PCB", "Integração OS"],
+      image: "projeto_macropad.png",
+      tags: ["C++", "EasyEDA", "PCB", "Python"],
       demoLink: "/projeto/macropad", 
-      githubLink: "https://github.com/Artur-Brasileiro/...", // Coloque o link real do GitHub aqui
+      githubLink: "https://github.com/Artur-Brasileiro/Macropad-TCC", 
       accentColor: "group-hover:border-purple-500/50 group-hover:shadow-purple-500/10",
       isInternal: true 
     }

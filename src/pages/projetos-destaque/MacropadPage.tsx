@@ -22,7 +22,7 @@ const MacropadPage = () => {
       status: "completed",
       date: "Fase 1",
       title: "Desenho da PCB no EasyEDA",
-      description: "Elaboração do esquemático e roteamento completo da placa no EasyEDA. O layout foi cuidadosamente planejado para acomodar as 15 teclas mecânicas e o display OLED de forma ergonômica.",
+      description: "Elaboração do esquemático e roteamento completo da placa no EasyEDA. O layout foi cuidadosamente planejado para acomodar as 18 teclas mecânicas e o display OLED de forma ergonômica.",
       image: "macropadpage/etapa1.png"
     },
     {
@@ -66,7 +66,7 @@ const MacropadPage = () => {
             </Badge>
           </div>
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground">
-            Macropad 15-Teclas com OLED
+            Macropad 18 Teclas com OLED
           </h1>
           <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl">
             Um teclado auxiliar customizado do zero, unindo design de circuito impresso, eletrônica embarcada e desenvolvimento de software multiplataforma.
@@ -74,7 +74,7 @@ const MacropadPage = () => {
           
           <div className="pt-4">
             <Button asChild variant="outline" className="border-white/10 hover:bg-secondary">
-              <a href="https://github.com/Artur-Brasileiro" target="_blank" rel="noopener noreferrer">
+              <a href="https://github.com/Artur-Brasileiro/Macropad-TCC" target="_blank" rel="noopener noreferrer">
                 <Github className="w-4 h-4 mr-2" /> Acompanhar no GitHub
               </a>
             </Button>
@@ -94,7 +94,7 @@ const MacropadPage = () => {
               A motivação por trás deste projeto é criar uma ferramenta que realmente se adapte ao fluxo de trabalho do usuário, em vez de ser apenas um teclado genérico com atalhos fixos.
             </p>
             <p>
-              Ao integrar um display OLED e desenvolver uma aplicação desktop inteligente, o Macropad saberá exatamente o que você está fazendo. Se você abrir o seu editor de código, as 15 teclas e a tela assumem funções de compilação, debug e formatação. Se você alternar para o navegador, os atalhos mudam instantaneamente.
+              Ao integrar um display OLED e desenvolver uma aplicação desktop inteligente, o Macropad saberá exatamente o que você está fazendo. Se você abrir o seu editor de código, as 18 teclas e a tela assumem funções de compilação, debug e formatação. Se você alternar para o navegador, os atalhos mudam instantaneamente.
             </p>
             <p>
               O grande desafio e diferencial deste projeto é construir a ponte completa: desenhar a própria placa, fabricar o protótipo, realizar a soldagem dos componentes e garantir que os códigos (C++ e Python) conversem perfeitamente com o sistema operacional.

@@ -1,5 +1,6 @@
 import { useLayoutEffect, useState } from "react";
-import { ArrowLeft, Code2, Cpu, ExternalLink, PlayCircle, Globe } from "lucide-react";
+// Importei o ArrowRight para o novo botão
+import { ArrowLeft, ArrowRight, Code2, Cpu, ExternalLink, PlayCircle, Globe } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -101,6 +102,7 @@ const projectData = {
     title: "Projetos de Hardware e Embarcados",
     icon: Cpu,
     projects: [
+      // ADICIONADO: Macropad como o primeiro item do Hardware
       { 
         id: 3, 
         name: "Analisador de Espectro de Áudio", 
@@ -109,7 +111,7 @@ const projectData = {
         youtubeId: "9tUq1hGooeE", 
         longDescription: "Um analisador de áudio compacto que usa um ESP32-S3 para capturar sons, processar as frequências e exibir o espectro em uma pequena tela OLED. Mostra a forma “visual” do som em tempo real.",
         technicalLink: "https://github.com/Artur-Brasileiro/Analisador-Espectro",
-        tags: ["ESP32-S3", "OLED", "C++", "Processamento de Áudio"] // <-- ADICIONADO
+        tags: ["ESP32-S3", "OLED", "C++", "Processamento de Áudio"]
       },
       { 
         id: 4, 
@@ -131,6 +133,16 @@ const projectData = {
         technicalLink: "https://github.com/Artur-Brasileiro/Sensor-Luz",
         tags: ["Arduino", "Eletrônica Analógica", "Sensores LDR", "C++"]
       },
+      {
+        id: 14,
+        name: "Macropad 15-Teclas com OLED",
+        description: "Teclado auxiliar com display integrado e app multiplataforma que detecta programas ativos.",
+        image: "projeto_macropad.png",
+        internalLink: "/projeto/macropad",
+        longDescription: "Um teclado auxiliar customizado do zero, unindo design de circuito impresso, eletrônica embarcada e desenvolvimento de software multiplataforma. Ele possui um aplicativo desktop em Python que detecta a janela ativa para alterar dinamicamente o contexto e as funções das teclas do hardware.",
+        technicalLink: "https://github.com/Artur-Brasileiro/Macropad-TCC",
+        tags: ["C++", "EasyEDA", "PCB", "Python"]
+      }
     ],
   },
 };
@@ -192,7 +204,6 @@ const ProjectsPage = () => {
                 key={project.id} 
                 className="group relative p-6 md:p-8 bg-card/80 backdrop-blur-sm border-border/50 shadow-lg transition-all duration-500 hover:shadow-orange-500/10 hover:border-orange-500/30 overflow-hidden"
               >
-                {/* Efeito de brilho de fundo no hover */}
                 <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
                 <div className="relative z-10 grid md:grid-cols-3 gap-8 md:gap-10">
@@ -207,17 +218,29 @@ const ProjectsPage = () => {
                               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                           />
                       </AspectRatio>
-                      {/* Overlay sutil na imagem */}
                       <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                     </div>
                     
-                    <Button 
-                      className="w-full bg-primary/90 hover:bg-primary shadow-[0_0_15px_rgba(234,88,12,0.3)] transition-all" 
-                      onClick={() => handleOpenVideo((project as any).youtubeId || "")} // <-- Atualizado aqui
-                    >
-                        <PlayCircle className="w-5 h-5 mr-2" /> 
-                        Ver Demonstração
-                    </Button>
+                    {/* Renderização condicional do Botão */}
+                    {(project as any).internalLink ? (
+                      <Button 
+                        asChild
+                        className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-[0_0_15px_rgba(249,115,22,0.4)] border-0 transition-all" 
+                      >
+                        <Link to={(project as any).internalLink}>
+                          Ver Página do Projeto
+                          <ArrowRight className="w-5 h-5 ml-2" />
+                        </Link>
+                      </Button>
+                    ) : (
+                      <Button 
+                        className="w-full bg-primary/90 hover:bg-primary shadow-[0_0_15px_rgba(234,88,12,0.3)] transition-all" 
+                        onClick={() => handleOpenVideo((project as any).youtubeId || "")} 
+                      >
+                          <PlayCircle className="w-5 h-5 mr-2" /> 
+                          Ver Demonstração
+                      </Button>
+                    )}
                   </div>
 
                   {/* Coluna das Informações */}
@@ -232,7 +255,6 @@ const ProjectsPage = () => {
                         </p>
                       </div>
 
-                      {/* Renderização das Tags */}
                       {project.tags && (
                         <div className="flex flex-wrap gap-2 pt-2">
                           {project.tags.map((tag, idx) => (
@@ -276,13 +298,11 @@ const ProjectsPage = () => {
             {(categoryData as typeof projectData['programacao']).subsections.map((subsection, index) => (
               <div key={index} className="space-y-6">
                 
-                {/* Cabeçalho da Subseção */}
                 <div className="flex items-center gap-4">
                    <h3 className="text-2xl font-bold text-foreground">{subsection.title}</h3>
                    <div className="h-[1px] flex-1 bg-border/60"></div>
                 </div>
 
-                {/* Grid de Projetos da Subseção */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {subsection.projects.map((project) => (
                     <Card key={project.id} className="p-4 hover:shadow-glow transition-all duration-300 flex flex-col justify-between">
@@ -292,7 +312,6 @@ const ProjectsPage = () => {
                       </CardHeader>
                         <CardContent>
                           <div className="flex flex-col gap-3">
-                            {/* VERIFICAÇÃO: Se existir siteLink, mostra o botão de Acessar Site */}
                             {(project as any).siteLink && (
                               <Button asChild variant="default" className="w-full group shadow-sm">
                                 <a 
@@ -307,7 +326,6 @@ const ProjectsPage = () => {
                               </Button>
                             )}
 
-                            {/* Botão do GitHub (que já existia) */}
                             <Button asChild variant="outline" className="w-full group">
                               <a 
                                 href={project.githubLink} 
