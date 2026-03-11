@@ -44,7 +44,7 @@ function Model({ url }: { url: string }) {
   return (
     /* O group recebe a inclinação desejada (PI/3) e a referência da animação */
     /* O Center garante que o giro aconteça em volta do meio da placa */
-    <group ref={modelRef} rotation={[Math.PI / 2, 2, 0]}>
+    <group ref={modelRef} rotation={[Math.PI / -4, -3, 4]}>
       <Center>
         <primitive object={copiedScene} />
       </Center>
@@ -65,7 +65,7 @@ export default function ModelViewer({
 
   return (
     <div className={`w-full h-full bg-secondary/20 ${isInteractive ? 'cursor-grab active:cursor-grabbing' : 'pointer-events-none'}`}>
-      <Canvas camera={{ position: [0, 2, 5], fov: 50 }}>
+      <Canvas camera={{ position: [20, -50, 100], fov: 50 }}>
         <Suspense fallback={<CanvasLoader />}>
           <Stage 
             environment="city" 
@@ -83,7 +83,7 @@ export default function ModelViewer({
           enablePan={enableZoom}
           enableRotate={enableRotate}
           makeDefault 
-          target={enableZoom ? [0, 0, 0] : [-20, -10, 0]} 
+          target={enableZoom ? [0, 0, 0] : [0, 0, 0]} 
         />
       </Canvas>
     </div>
