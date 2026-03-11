@@ -25,9 +25,10 @@ const Projects = () => {
     }
   ];
 
-  // Dados dos projetos em destaque (Um de Software, Um de Hardware)
+  // Dados dos projetos em destaque (Atualmente 2, preparado para até 4 em grid 2x2)
   const featuredProjects = [
     {
+      id: "englishup", 
       title: "EnglishUp",
       category: "Software",
       description: "Plataforma web para aprendizado de inglês com recursos interativos e design moderno.",
@@ -35,17 +36,20 @@ const Projects = () => {
       tags: ["React", "TypeScript", "Web"],
       demoLink: "https://playenglishup.com.br/",
       githubLink: "https://github.com/Artur-Brasileiro/English-Hub",
-      accentColor: "group-hover:border-cyan-500/50 group-hover:shadow-cyan-500/10"
+      accentColor: "group-hover:border-cyan-500/50 group-hover:shadow-cyan-500/10",
+      isInternal: false 
     },
     {
-      title: "Deauther Didático (5GHz)",
-      category: "Hardware",
-      description: "Dispositivo para estudo de redes Wi-Fi e cibersegurança, com case impresso em 3D e PCB customizada.",
-      image: "projeto_deauther.jpg", // Já está no seu repositório
-      tags: ["C++", "BW-16", "Impressão 3D", "PCB"],
-      demoLink: null, // Deixei null pois hardware geralmente não tem link de site
-      githubLink: "https://github.com/Artur-Brasileiro/Deauther-5GHz",
-      accentColor: "group-hover:border-orange-500/50 group-hover:shadow-orange-500/10"
+      id: "macropad-oled", 
+      title: "Macropad 15-Teclas com OLED",
+      category: "Hardware & PCB",
+      description: "Teclado auxiliar com display integrado e app multiplataforma que deteta programas ativos para mudar o contexto.",
+      image: "projeto_macropad.png", // <-- Substitua por "macropad.jpg" quando tiver a imagem
+      tags: ["C++", "EasyEDA", "PCB", "Integração OS"],
+      demoLink: "/projeto/macropad", 
+      githubLink: "https://github.com/Artur-Brasileiro/...", // Coloque o link real do GitHub aqui
+      accentColor: "group-hover:border-purple-500/50 group-hover:shadow-purple-500/10",
+      isInternal: true 
     }
   ];
 
@@ -90,7 +94,7 @@ const Projects = () => {
         </div>
 
         {/* =============== SEÇÃO DE PROJETOS DESTAQUE =============== */}
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-5xl mx-auto"> {/* Voltou para max-w-5xl para ficar bem proporcionado com 2 colunas */}
           <div className="flex items-center justify-center gap-3 mb-10">
             <h3 className="text-3xl font-bold flex items-center gap-3">
               Projetos Destaque
@@ -98,6 +102,7 @@ const Projects = () => {
             </h3>
           </div>
 
+          {/* Grid ajustado para 2 colunas (md:grid-cols-2) */}
           <div className="grid md:grid-cols-2 gap-8">
             {featuredProjects.map((project, index) => (
               <Card 
@@ -123,7 +128,7 @@ const Projects = () => {
                   <h4 className="text-2xl font-bold mb-2 text-foreground group-hover:text-primary transition-colors">
                     {project.title}
                   </h4>
-                  <p className="text-muted-foreground mb-6 flex-1">
+                  <p className="text-muted-foreground mb-6 flex-1 text-sm">
                     {project.description}
                   </p>
 
@@ -137,17 +142,24 @@ const Projects = () => {
                   </div>
 
                   {/* Botões de Ação */}
-                  <div className="flex flex-wrap gap-3 mt-auto">
+                  <div className="flex flex-col xl:flex-row gap-3 mt-auto">
                     {project.demoLink && (
-                      <Button asChild variant="default" className="flex-1 min-w-[140px]">
-                        <a href={project.demoLink} target="_blank" rel="noopener noreferrer">
-                          <Globe className="w-4 h-4 mr-2" />
-                          Ver Online
-                        </a>
+                      <Button asChild variant="default" className="flex-1">
+                        {project.isInternal ? (
+                          <Link to={project.demoLink}>
+                            <ArrowRight className="w-4 h-4 mr-2" />
+                            Ver Detalhes
+                          </Link>
+                        ) : (
+                          <a href={project.demoLink} target="_blank" rel="noopener noreferrer">
+                            <Globe className="w-4 h-4 mr-2" />
+                            Ver Online
+                          </a>
+                        )}
                       </Button>
                     )}
                     {project.githubLink && (
-                      <Button asChild variant="outline" className="flex-1 min-w-[140px] border-white/10 hover:bg-secondary">
+                      <Button asChild variant="outline" className="flex-1 border-white/10 hover:bg-secondary">
                         <a href={project.githubLink} target="_blank" rel="noopener noreferrer">
                           <Github className="w-4 h-4 mr-2" />
                           Repositório
