@@ -19,19 +19,22 @@ const Index = () => {
     
     const targetId = stateTarget || hashTarget;
 
-    // Usar um pequeno timeout garante que a página renderizou antes de tentar scrollar
-    const timeoutId = setTimeout(() => {
-      if (targetId) {
-        const element = document.getElementById(targetId);
-        if (element) {
-          element.scrollIntoView({ behavior: "instant", block: "start" });
+    // requestAnimationFrame aninhado garante que a DOM foi atualizada e pintada
+    let rafId: number;
+    rafId = requestAnimationFrame(() => {
+      rafId = requestAnimationFrame(() => {
+        if (targetId) {
+          const element = document.getElementById(targetId);
+          if (element) {
+            element.scrollIntoView({ behavior: "instant", block: "start" });
+          }
+        } else {
+          window.scrollTo({ top: 0, behavior: "instant" });
         }
-      } else {
-        window.scrollTo({ top: 0, behavior: "instant" });
-      }
-    }, 0);
+      });
+    });
 
-    return () => clearTimeout(timeoutId);
+    return () => cancelAnimationFrame(rafId);
   }, [location]);
 
   useEffect(() => {

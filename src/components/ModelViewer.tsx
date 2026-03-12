@@ -45,8 +45,12 @@ export default function ModelViewer({
 
   return (
     <div className={`w-full h-full bg-secondary/20 ${isInteractive ? 'cursor-grab active:cursor-grabbing' : 'pointer-events-none'}`}>
-      <Canvas camera={{ position: [20, -50, 100], fov: 50 }} dpr={[1, 2]}> 
-        {/* Adicionado dpr={[1, 2]} acima para melhorar nitidez em telas Retina/Mobile sem pesar em monitores comuns */}
+      {/* dpr restrito e frameloop="demand" se não houver animação constante */}
+      <Canvas 
+        camera={{ position: [20, -50, 100], fov: 50 }} 
+        dpr={[1, Math.min(2, window.devicePixelRatio)]} // Limita o DPR a 2 (evita travamentos em telas 3x e 4x)
+        gl={{ antialias: true, powerPreference: "high-performance" }} // Pede prioridade para a GPU
+      > 
         <Suspense fallback={<CanvasLoader />}>
           <Stage 
             environment="city" 

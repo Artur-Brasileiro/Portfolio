@@ -1,7 +1,7 @@
+// Em src/components/GhostCursor.jsx
 import { useEffect, useRef, useState } from "react";
 
 const GhostCursor = () => {
-  // 1. Criamos a ref para acessar a div diretamente
   const cursorRef = useRef(null); 
   const [visible, setVisible] = useState(false);
   
@@ -21,7 +21,6 @@ const GhostCursor = () => {
       if (!shownRef.current) {
         shownRef.current = true;
         posRef.current = { x: e.clientX, y: e.clientY };
-        // setVisible continua aqui pois ele só é chamado uma única vez
         setVisible(true); 
       }
     };
@@ -33,16 +32,16 @@ const GhostCursor = () => {
       };
       posRef.current = next;
       
-      // 2. MÁGICA: Em vez de setPos(next) (que causa re-render no React), 
-      // mudamos o estilo direto na tag HTML. Custo de performance quase zero.
       if (cursorRef.current) {
-        cursorRef.current.style.transform = `translate(${next.x - 120}px, ${next.y - 120}px)`;
+        // Usando translate3d em vez de translate para forçar o uso da GPU (Aceleração de Hardware)
+        cursorRef.current.style.transform = `translate3d(${next.x - 120}px, ${next.y - 120}px, 0)`;
       }
       
       rafRef.current = requestAnimationFrame(animate);
     };
 
-    window.addEventListener("mousemove", move);
+    // ADICIONADO { passive: true } para não bloquear a thread principal
+    window.addEventListener("mousemove", move, { passive: true });
     rafRef.current = requestAnimationFrame(animate);
 
     return () => {
@@ -55,19 +54,15 @@ const GhostCursor = () => {
 
   return (
     <div
-      // 3. Conectamos a ref aqui
       ref={cursorRef} 
-      // 4. Mantemos o seu z-[-1] e adicionamos will-change-transform para a Placa de Vídeo (GPU) processar o movimento
       className="fixed pointer-events-none z-[-1] will-change-transform" 
       style={{
-        // Removemos o transform daqui, pois a função animate cuidará dele via ref
-        width: 240,
-        height: 240,
+        width: "240px", // Adicionado "px" para evitar recálculo
+        height: "240px",
         borderRadius: "50%",
-        background:
-          "radial-gradient(circle, rgba(0, 255, 200, 0.45) 0%, rgba(0,255,200,0.08) 40%, transparent 70%)",
+        background: "radial-gradient(circle, rgba(0, 255, 200, 0.45) 0%, rgba(0,255,200,0.08) 40%, transparent 70%)",
         filter: "blur(70px)",
-        mixBlendMode: "screen", // deixa mais suave no fundo escuro
+        mixBlendMode: "screen",
       }}
     />
   );

@@ -15,6 +15,8 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const ProjectsPage = lazy(() => import("./pages/ProjectsPage"));
 const MacropadPage = lazy(() => import("./pages/projetos-destaque/MacropadPage"));
 
+const PageLoader = () => <div className="min-h-screen bg-background w-full" />;
+
 const queryClient = new QueryClient();
 
 const AnimatedRoutes = () => {
@@ -24,10 +26,10 @@ const AnimatedRoutes = () => {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         {/* Adicionado Suspense para lidar com o carregamento suave */}
-        <Route path="/" element={<Suspense fallback={null}><PageTransition><Index /></PageTransition></Suspense>} />
-        <Route path="/:category" element={<Suspense fallback={null}><PageTransition><ProjectsPage /></PageTransition></Suspense>} /> 
-        <Route path="/projeto/macropad" element={<Suspense fallback={null}><PageTransition><MacropadPage /></PageTransition></Suspense>} />
-        <Route path="*" element={<Suspense fallback={null}><PageTransition><NotFound /></PageTransition></Suspense>} />
+        <Route path="/" element={<Suspense fallback={<PageLoader />}><PageTransition><Index /></PageTransition></Suspense>} />
+        <Route path="/:category" element={<Suspense fallback={<PageLoader />}><PageTransition><ProjectsPage /></PageTransition></Suspense>} /> 
+        <Route path="/projeto/macropad" element={<Suspense fallback={<PageLoader />}><PageTransition><MacropadPage /></PageTransition></Suspense>} />
+        <Route path="*" element={<Suspense fallback={<PageLoader />}><PageTransition><NotFound /></PageTransition></Suspense>} />
       </Routes>
     </AnimatePresence>
   );
