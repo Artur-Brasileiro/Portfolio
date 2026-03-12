@@ -1,6 +1,6 @@
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Stage, Html, useProgress, Center } from '@react-three/drei';
-import { Suspense, useMemo, useEffect } from 'react';
+import { Suspense, useMemo } from 'react';
 import { Loader2 } from 'lucide-react';
 
 function CanvasLoader() {
@@ -17,26 +17,13 @@ function CanvasLoader() {
 
 function Model({ url }: { url: string }) {
   const { scene } = useGLTF(url);
+  // O memo garante que a cena só é clonada quando a URL realmente mudar
   const copiedScene = useMemo(() => scene.clone(), [scene]);
 
-  // LIMPAMOS O useFrame DAQUI! 
-  // O objeto ficará estático. Assim, o <Stage> calcula seu tamanho perfeitamente 
-  // apenas 1 vez e o erro do "zoom infinito" é resolvido.
-
-  // Limpeza de memória
-  useEffect(() => {
-    return () => {
-      copiedScene.traverse((child: any) => {
-        if ((child as any).isMesh) {
-          (child as any).geometry.dispose();
-          if ((child as any).material.dispose) (child as any).material.dispose();
-        }
-      });
-    };
-  }, [copiedScene]);
+  // REMOVIDO o useEffect de dispose()! 
+  // Deixe o useGLTF gerenciar o cache das geometrias/materiais.
 
   return (
-    /* Mantemos a inclinação do grupo para uma visão bonita */
     <group rotation={[Math.PI / -4, -3, 4]}>
       <Center>
         <primitive object={copiedScene} />
@@ -58,7 +45,8 @@ export default function ModelViewer({
 
   return (
     <div className={`w-full h-full bg-secondary/20 ${isInteractive ? 'cursor-grab active:cursor-grabbing' : 'pointer-events-none'}`}>
-      <Canvas camera={{ position: [20, -50, 100], fov: 50 }}>
+      <Canvas camera={{ position: [20, -50, 100], fov: 50 }} dpr={[1, 2]}> 
+        {/* Adicionado dpr={[1, 2]} acima para melhorar nitidez em telas Retina/Mobile sem pesar em monitores comuns */}
         <Suspense fallback={<CanvasLoader />}>
           <Stage 
             environment="city" 
@@ -70,11 +58,10 @@ export default function ModelViewer({
           </Stage>
         </Suspense>
         
-        {/* A MÁGICA ACONTECE AQUI NO ORBIT CONTROLS */}
         <OrbitControls 
-          autoRotate={true}          // DELEGA A ROTAÇÃO PARA O CONTROLE
-          autoRotateSpeed={2.5}      // VELOCIDADE (Ajuste conforme preferir, ex: 2.0 ou 3.0)
-          enableZoom={enableZoom}    // TRAVA O ZOOM QUANDO FOR MINIATURA
+          autoRotate={true}
+          autoRotateSpeed={2.5}
+          enableZoom={enableZoom}
           enablePan={enableZoom}
           enableRotate={enableRotate}
           makeDefault 
@@ -84,5 +71,4 @@ export default function ModelViewer({
   );
 }
 
-// Melhor prática: pré-carregar o modelo que você está usando
 useGLTF.preload("macropadpage/macropad.glb");

@@ -12,20 +12,26 @@ import ScrollReveal from "@/components/ScrollReveal"; // <-- Importamos o compon
 const Index = () => {
   const location = useLocation();
 
-  useLayoutEffect(() => {
+  // Alterado para useEffect para evitar bloqueio da thread de pintura
+  useEffect(() => {
     const stateTarget = location.state && (location.state as { targetId?: string }).targetId;
     const hashTarget = location.hash ? location.hash.replace("#", "") : null;
     
     const targetId = stateTarget || hashTarget;
 
-    if (targetId) {
-      const element = document.getElementById(targetId);
-      if (element) {
-        element.scrollIntoView({ behavior: "instant", block: "start" });
+    // Usar um pequeno timeout garante que a página renderizou antes de tentar scrollar
+    const timeoutId = setTimeout(() => {
+      if (targetId) {
+        const element = document.getElementById(targetId);
+        if (element) {
+          element.scrollIntoView({ behavior: "instant", block: "start" });
+        }
+      } else {
+        window.scrollTo({ top: 0, behavior: "instant" });
       }
-    } else {
-      window.scrollTo({ top: 0, behavior: "instant" });
-    }
+    }, 0);
+
+    return () => clearTimeout(timeoutId);
   }, [location]);
 
   useEffect(() => {

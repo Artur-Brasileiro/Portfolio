@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 
 const GhostCursor = () => {
-  const [pos, setPos] = useState({ x: 0, y: 0 });
+  // 1. Criamos a ref para acessar a div diretamente
+  const cursorRef = useRef(null); 
   const [visible, setVisible] = useState(false);
+  
   const targetRef = useRef({ x: 0, y: 0 });
   const posRef = useRef({ x: 0, y: 0 });
   const rafRef = useRef(null);
@@ -19,8 +21,8 @@ const GhostCursor = () => {
       if (!shownRef.current) {
         shownRef.current = true;
         posRef.current = { x: e.clientX, y: e.clientY };
-        setPos(posRef.current);
-        setVisible(true);
+        // setVisible continua aqui pois ele só é chamado uma única vez
+        setVisible(true); 
       }
     };
 
@@ -30,7 +32,13 @@ const GhostCursor = () => {
         y: lerp(posRef.current.y, targetRef.current.y, 0.12),
       };
       posRef.current = next;
-      setPos(next);
+      
+      // 2. MÁGICA: Em vez de setPos(next) (que causa re-render no React), 
+      // mudamos o estilo direto na tag HTML. Custo de performance quase zero.
+      if (cursorRef.current) {
+        cursorRef.current.style.transform = `translate(${next.x - 120}px, ${next.y - 120}px)`;
+      }
+      
       rafRef.current = requestAnimationFrame(animate);
     };
 
@@ -47,9 +55,12 @@ const GhostCursor = () => {
 
   return (
     <div
-      className="fixed pointer-events-none z-50"
+      // 3. Conectamos a ref aqui
+      ref={cursorRef} 
+      // 4. Mantemos o seu z-[-1] e adicionamos will-change-transform para a Placa de Vídeo (GPU) processar o movimento
+      className="fixed pointer-events-none z-[-1] will-change-transform" 
       style={{
-        transform: `translate(${pos.x - 120}px, ${pos.y - 120}px)`,
+        // Removemos o transform daqui, pois a função animate cuidará dele via ref
         width: 240,
         height: 240,
         borderRadius: "50%",
