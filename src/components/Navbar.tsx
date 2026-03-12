@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Code2, Menu, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Transition } from "framer-motion";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -50,44 +50,50 @@ const Navbar = () => {
     setIsMobileMenuOpen(false);
   };
 
+  // 1. Criamos uma transição suave, perfeitamente sincronizada e sem "ressalto"
+  const smoothTransition: Transition = { 
+    type: "spring", 
+    bounce: 0, 
+    duration: 0.5 
+  };
+
   return (
     <>
       <div className="fixed top-0 left-0 right-0 z-50 flex justify-center pt-2 sm:pt-4 px-4 pointer-events-none">
         
         <motion.nav
           layout
-          transition={{ type: "tween", duration: 0.5, ease: "easeInOut" }}
-          // Adicionámos 'border-transparent' no estado topo para evitar pequenos saltos de 1px
+          transition={smoothTransition} // <-- Aplicado aqui
           className={`pointer-events-auto flex items-center justify-between transition-colors duration-500 ${
             isScrolled
               ? "w-full md:w-auto bg-background/80 backdrop-blur-lg shadow-lg border border-border rounded-full px-6 py-3 md:gap-12"
               : "w-full max-w-7xl bg-transparent px-2 sm:px-4 py-4 rounded-none border border-transparent shadow-none md:gap-8"
           }`}
         >
-          {/* Adicionámos motion.a e layout aqui */}
           <motion.a 
             layout
+            transition={smoothTransition} // <-- Aplicado aqui
             href="#" 
             className="flex items-center gap-2 group mr-auto md:mr-0 shrink-0"
             onClick={(e) => handleNavClick(e, "#")}
           >
-            <motion.div layout>
+            <motion.div layout transition={smoothTransition}>
               <Code2 className="w-6 h-6 text-primary transition-transform group-hover:scale-110" />
             </motion.div>
             <motion.span 
               layout
-              // Removido o 'md:hidden' - manter sempre visível evita o teletransporte
+              transition={smoothTransition} // <-- Aplicado aqui
               className="font-bold text-xl gradient-text block"
             >
               Artur
             </motion.span>
           </motion.a>
 
-          {/* Desktop Menu - Adicionámos motion.div e layout a este agrupamento */}
-          <motion.div layout className="hidden md:flex items-center gap-8">
+          <motion.div layout transition={smoothTransition} className="hidden md:flex items-center gap-8">
             {navItems.map((item) => (
               <motion.a
                 layout
+                transition={smoothTransition} // <-- Aplicado aos filhos iterados
                 key={item.name}
                 href={item.href}
                 onClick={(e) => handleNavClick(e, item.href)}
@@ -99,8 +105,7 @@ const Navbar = () => {
             ))}
           </motion.div>
 
-          {/* Mobile Menu Button - Envolvido num motion.div com layout */}
-          <motion.div layout className="md:hidden ml-4">
+          <motion.div layout transition={smoothTransition} className="md:hidden ml-4">
             <Button
               variant="ghost"
               size="icon"
