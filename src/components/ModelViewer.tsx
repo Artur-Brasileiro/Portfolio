@@ -1,6 +1,6 @@
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Stage, Html, useProgress, Center } from '@react-three/drei';
-import { Suspense, useMemo, useEffect, useRef } from 'react';
+import { Suspense, useMemo, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 
 function CanvasLoader() {
@@ -17,17 +17,11 @@ function CanvasLoader() {
 
 function Model({ url }: { url: string }) {
   const { scene } = useGLTF(url);
-  // O useMemo garante que a cópia da cena só seja criada uma vez
   const copiedScene = useMemo(() => scene.clone(), [scene]);
-  const modelRef = useRef<any>(null);
 
-  // Animação de rotação no próprio eixo
-  useFrame((_state, delta) => {
-    if (modelRef.current) {
-      // Altere para .x, .y ou .z dependendo de qual eixo você quer que gire
-      modelRef.current.rotation.z += delta * 0.5;
-    }
-  });
+  // LIMPAMOS O useFrame DAQUI! 
+  // O objeto ficará estático. Assim, o <Stage> calcula seu tamanho perfeitamente 
+  // apenas 1 vez e o erro do "zoom infinito" é resolvido.
 
   // Limpeza de memória
   useEffect(() => {
@@ -42,9 +36,8 @@ function Model({ url }: { url: string }) {
   }, [copiedScene]);
 
   return (
-    /* O group recebe a inclinação desejada (PI/3) e a referência da animação */
-    /* O Center garante que o giro aconteça em volta do meio da placa */
-    <group ref={modelRef} rotation={[Math.PI / -4, -3, 4]}>
+    /* Mantemos a inclinação do grupo para uma visão bonita */
+    <group rotation={[Math.PI / -4, -3, 4]}>
       <Center>
         <primitive object={copiedScene} />
       </Center>
@@ -77,13 +70,14 @@ export default function ModelViewer({
           </Stage>
         </Suspense>
         
+        {/* A MÁGICA ACONTECE AQUI NO ORBIT CONTROLS */}
         <OrbitControls 
-          autoRotate={false} 
-          enableZoom={enableZoom} 
+          autoRotate={true}          // DELEGA A ROTAÇÃO PARA O CONTROLE
+          autoRotateSpeed={2.5}      // VELOCIDADE (Ajuste conforme preferir, ex: 2.0 ou 3.0)
+          enableZoom={enableZoom}    // TRAVA O ZOOM QUANDO FOR MINIATURA
           enablePan={enableZoom}
           enableRotate={enableRotate}
           makeDefault 
-          target={enableZoom ? [0, 0, 0] : [0, 0, 0]} 
         />
       </Canvas>
     </div>
