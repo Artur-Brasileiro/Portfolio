@@ -202,15 +202,16 @@ const ProjectsPage = () => {
             {(categoryData as typeof projectData['hardware']).projects.map((project) => (
               <Card 
                 key={project.id} 
-                className="group relative p-6 md:p-8 bg-card/80 backdrop-blur-sm border-border/50 shadow-lg transition-all duration-500 hover:shadow-orange-500/10 hover:border-orange-500/30 overflow-hidden"
+                className="group relative p-6 md:p-8 bg-card/80 backdrop-blur-sm border-border/50 shadow-lg transition-all duration-500 hover:shadow-glow hover:border-primary/30 overflow-hidden"
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                {/* Fundo sutil ao passar o mouse usando primary e accent */}
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
                 <div className="relative z-10 grid md:grid-cols-3 gap-8 md:gap-10">
                   
                   {/* Coluna da Imagem / Vídeo */}
                   <div className="md:col-span-1 flex flex-col gap-4">
-                    <div className="relative rounded-xl overflow-hidden border border-white/10 group-hover:border-orange-500/40 transition-colors duration-500">
+                    <div className="relative rounded-xl overflow-hidden border border-white/10 group-hover:border-primary/40 transition-colors duration-500">
                       <AspectRatio ratio={16 / 9} className="bg-secondary">
                           <img 
                               src={`${import.meta.env.BASE_URL}${project.image}`} 
@@ -225,7 +226,7 @@ const ProjectsPage = () => {
                     {(project as any).internalLink ? (
                       <Button 
                         asChild
-                        className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white shadow-[0_0_15px_rgba(249,115,22,0.4)] border-0 transition-all" 
+                        className="w-full bg-[image:var(--gradient-primary)] hover:opacity-90 text-primary-foreground shadow-glow border-0 transition-all" 
                       >
                         <Link to={(project as any).internalLink}>
                           Ver Página do Projeto
@@ -234,7 +235,7 @@ const ProjectsPage = () => {
                       </Button>
                     ) : (
                       <Button 
-                        className="w-full bg-primary/90 hover:bg-primary shadow-[0_0_15px_rgba(234,88,12,0.3)] transition-all" 
+                        className="w-full bg-primary/90 hover:bg-primary shadow-glow text-primary-foreground transition-all" 
                         onClick={() => handleOpenVideo((project as any).youtubeId || "")} 
                       >
                           <PlayCircle className="w-5 h-5 mr-2" /> 
@@ -247,7 +248,8 @@ const ProjectsPage = () => {
                   <div className="md:col-span-2 flex flex-col h-full justify-between">
                     <div className="space-y-4">
                       <div>
-                        <h3 className="text-3xl font-bold text-foreground group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-orange-400 group-hover:to-red-500 transition-all duration-300">
+                        {/* Título com o gradiente correto ao passar o mouse */}
+                        <h3 className="text-3xl font-bold text-foreground group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-accent transition-all duration-300">
                           {project.name}
                         </h3>
                         <p className="text-lg font-medium text-muted-foreground mt-1">
@@ -274,7 +276,7 @@ const ProjectsPage = () => {
                     
                     <div className="pt-6 mt-auto">
                         {(project as any).technicalLink && (
-                            <Button asChild variant="outline" className="group/btn border-white/10 hover:border-orange-500/50 hover:bg-orange-500/10">
+                            <Button asChild variant="outline" className="group/btn border-white/10 hover:border-primary/50 hover:bg-primary/10 hover:text-primary">
                                 <a 
                                     href={(project as any).technicalLink} 
                                     target="_blank" 

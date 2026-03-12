@@ -7,6 +7,7 @@ import Projects from "@/components/Projects";
 import Education from "@/components/Education";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import ScrollReveal from "@/components/ScrollReveal"; // <-- Importamos o componente aqui
 
 const Index = () => {
   const location = useLocation();
@@ -43,10 +44,24 @@ const Index = () => {
     <div className="min-h-screen">
       <Navbar />
       <Hero />
-      <About />
-      <Projects />
-      <Education />
-      <Contact />
+      
+      {/* Envolvemos as seções com o ScrollReveal */}
+      <ScrollReveal>
+        <About />
+      </ScrollReveal>
+
+      <ScrollReveal>
+        <Projects />
+      </ScrollReveal>
+
+      <ScrollReveal>
+        <Education />
+      </ScrollReveal>
+
+      <ScrollReveal>
+        <Contact />
+      </ScrollReveal>
+
       <Footer />
     </div>
   );
