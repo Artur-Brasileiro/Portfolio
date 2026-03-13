@@ -1,14 +1,45 @@
 import { useEffect } from "react";
-// O import do useLocation e da Navbar foram removidos
+import { useLocation } from "react-router-dom";
+import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Projects from "@/components/Projects";
 import Education from "@/components/Education";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
-import ScrollReveal from "@/components/ScrollReveal";
+
+// Se o GhostCursor não for ser usado, pode remover a linha abaixo
+import GhostCursor from "@/components/GhostCursor";
 
 const Index = () => {
+  const location = useLocation();
+
+  // Força rolagem para o topo ao carregar a página inicialmente (refresh)
+  useEffect(() => {
+    // Se não tiver hash e não tiver state, significa que é um load simples
+    if (!location.hash && !location.state) {
+      window.scrollTo(0, 0);
+    }
+  }, [location.hash, location.state]);
+
+  useEffect(() => {
+    const stateTarget = location.state && (location.state as { targetId?: string }).targetId;
+    const hashTarget = location.hash ? location.hash.replace("#", "") : null;
+    
+    const targetId = stateTarget || hashTarget;
+
+    if (location.pathname !== "/") return;
+
+    // Use a small timeout to allow AnimatePresence to finish its job before scrolling
+    setTimeout(() => {
+      if (targetId) {
+        const element = document.getElementById(targetId);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    }, 100);
+  }, [location]);
 
   useEffect(() => {
     const imagesToPreload = [
@@ -23,36 +54,14 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen">
-      
-      {/* O Hero fica no topo, geralmente não precisa de ID para o menu */}
+    <div className="min-h-screen relative z-10 bg-transparent">
+      {/* <GhostCursor /> - Descomente se for usar o cursor dele */}
+      <Navbar />
       <Hero />
-      
-      {/* Aqui está o segredo: o id="sobre" conecta com o href="#sobre" da Navbar */}
-      <section id="sobre" className="scroll-mt-24">
-        <ScrollReveal>
-          <About />
-        </ScrollReveal>
-      </section>
-
-      <section id="projetos" className="scroll-mt-24">
-        <ScrollReveal>
-          <Projects />
-        </ScrollReveal>
-      </section>
-
-      <section id="educacao" className="scroll-mt-24">
-        <ScrollReveal>
-          <Education />
-        </ScrollReveal>
-      </section>
-
-      <section id="contato" className="scroll-mt-24">
-        <ScrollReveal>
-          <Contact />
-        </ScrollReveal>
-      </section>
-
+      <About />
+      <Projects />
+      <Education />
+      <Contact />
       <Footer />
     </div>
   );

@@ -103,7 +103,7 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
     font-feature-settings: 'liga' 1, 'calt' 1;
-    overflow-x: hidden; /* Adiciona esta linha para evitar barras de scroll laterais indesejadas */
+    overflow-x: clip; /* <-- TROQUE AQUI: 'clip' corta o scroll lateral sem quebrar a animação! */
   }
   
   html {
