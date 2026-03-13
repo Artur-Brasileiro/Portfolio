@@ -1,41 +1,14 @@
-import { useLayoutEffect, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import Navbar from "@/components/Navbar";
+import { useEffect } from "react";
+// O import do useLocation e da Navbar foram removidos
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Projects from "@/components/Projects";
 import Education from "@/components/Education";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
-import ScrollReveal from "@/components/ScrollReveal"; // <-- Importamos o componente aqui
+import ScrollReveal from "@/components/ScrollReveal";
 
 const Index = () => {
-  const location = useLocation();
-
-  // Alterado para useEffect para evitar bloqueio da thread de pintura
-  useEffect(() => {
-    const stateTarget = location.state && (location.state as { targetId?: string }).targetId;
-    const hashTarget = location.hash ? location.hash.replace("#", "") : null;
-    
-    const targetId = stateTarget || hashTarget;
-
-    // requestAnimationFrame aninhado garante que a DOM foi atualizada e pintada
-    let rafId: number;
-    rafId = requestAnimationFrame(() => {
-      rafId = requestAnimationFrame(() => {
-        if (targetId) {
-          const element = document.getElementById(targetId);
-          if (element) {
-            element.scrollIntoView({ behavior: "instant", block: "start" });
-          }
-        } else {
-          window.scrollTo({ top: 0, behavior: "instant" });
-        }
-      });
-    });
-
-    return () => cancelAnimationFrame(rafId);
-  }, [location]);
 
   useEffect(() => {
     const imagesToPreload = [
@@ -51,25 +24,34 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
-      <Navbar />
+      
+      {/* O Hero fica no topo, geralmente não precisa de ID para o menu */}
       <Hero />
       
-      {/* Envolvemos as seções com o ScrollReveal */}
-      <ScrollReveal>
-        <About />
-      </ScrollReveal>
+      {/* Aqui está o segredo: o id="sobre" conecta com o href="#sobre" da Navbar */}
+      <section id="sobre" className="scroll-mt-24">
+        <ScrollReveal>
+          <About />
+        </ScrollReveal>
+      </section>
 
-      <ScrollReveal>
-        <Projects />
-      </ScrollReveal>
+      <section id="projetos" className="scroll-mt-24">
+        <ScrollReveal>
+          <Projects />
+        </ScrollReveal>
+      </section>
 
-      <ScrollReveal>
-        <Education />
-      </ScrollReveal>
+      <section id="educacao" className="scroll-mt-24">
+        <ScrollReveal>
+          <Education />
+        </ScrollReveal>
+      </section>
 
-      <ScrollReveal>
-        <Contact />
-      </ScrollReveal>
+      <section id="contato" className="scroll-mt-24">
+        <ScrollReveal>
+          <Contact />
+        </ScrollReveal>
+      </section>
 
       <Footer />
     </div>

@@ -4,12 +4,15 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HashRouter, Routes, Route, useLocation } from "react-router-dom"; 
 import { AnimatePresence } from "framer-motion";
-import { Suspense, lazy } from "react"; // <-- Adicionado
+import { Suspense, lazy } from "react";
 
 import GhostCursor from "./components/GhostCursor";
-import PageTransition from "./components/PageTransition"; 
+// 1. Substituímos o PageTransition pelo novo PageWrapper
+import PageWrapper from "./components/PageWrapper"; 
+// 2. Importamos a Navbar
+import Navbar from "./components/Navbar"; 
 
-// Lazy loading das páginas!
+// Lazy loading das páginas
 const Index = lazy(() => import("./pages/Index"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const ProjectsPage = lazy(() => import("./pages/ProjectsPage"));
@@ -23,13 +26,13 @@ const AnimatedRoutes = () => {
   const location = useLocation();
 
   return (
-    <AnimatePresence mode="wait">
+    // 3. Adicionamos onExitComplete para voltar ao topo na troca de página
+    <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo(0, 0)}>
       <Routes location={location} key={location.pathname}>
-        {/* Adicionado Suspense para lidar com o carregamento suave */}
-        <Route path="/" element={<Suspense fallback={<PageLoader />}><PageTransition><Index /></PageTransition></Suspense>} />
-        <Route path="/:category" element={<Suspense fallback={<PageLoader />}><PageTransition><ProjectsPage /></PageTransition></Suspense>} /> 
-        <Route path="/projeto/macropad" element={<Suspense fallback={<PageLoader />}><PageTransition><MacropadPage /></PageTransition></Suspense>} />
-        <Route path="*" element={<Suspense fallback={<PageLoader />}><PageTransition><NotFound /></PageTransition></Suspense>} />
+        <Route path="/" element={<Suspense fallback={<PageLoader />}><PageWrapper><Index /></PageWrapper></Suspense>} />
+        <Route path="/:category" element={<Suspense fallback={<PageLoader />}><PageWrapper><ProjectsPage /></PageWrapper></Suspense>} /> 
+        <Route path="/projeto/macropad" element={<Suspense fallback={<PageLoader />}><PageWrapper><MacropadPage /></PageWrapper></Suspense>} />
+        <Route path="*" element={<Suspense fallback={<PageLoader />}><PageWrapper><NotFound /></PageWrapper></Suspense>} />
       </Routes>
     </AnimatePresence>
   );
@@ -42,6 +45,8 @@ const App = () => (
       <Toaster />
       <Sonner />
       <HashRouter>
+        {/* 4. A Navbar fica aqui para aparecer por cima de todas as rotas */}
+        <Navbar />
         <AnimatedRoutes />
       </HashRouter>
     </TooltipProvider>
