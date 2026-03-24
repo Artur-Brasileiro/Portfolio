@@ -10,14 +10,14 @@ const Hero = () => {
   }
 
   return (
-    <section className="min-h-[calc(100vh-60px)] flex items-center justify-center relative bg-gradient-hero">
+    <section className="min-h-[calc(100vh-0px)] flex items-center justify-center relative bg-gradient-hero">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-4 relative z-30">
         <div className="text-center space-y-6 animate-fade-in">
           <h1 className="text-5xl md:text-7xl font-bold">
             Olá, eu sou{" "}
@@ -53,7 +53,7 @@ const Hero = () => {
       <NavHashLink
         smooth to="/#sobre"
         scroll={scrollWithOffset}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce cursor-pointer z-20"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce cursor-pointer z-30"
       >
         <ArrowDown className="w-6 h-6 text-muted-foreground" />
       </NavHashLink>

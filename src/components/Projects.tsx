@@ -53,12 +53,14 @@ const Projects = () => {
   ];
 
   return (
-    <section id="projetos" className="py-20 relative overflow-hidden">
+    <section id="projetos" className="py-20 relative">
       {/* Luzes de fundo para dar profundidade */}
-      <div className="absolute top-1/2 left-0 w-72 h-72 bg-primary/5 rounded-full blur-[100px] pointer-events-none -translate-y-1/2"></div>
-      <div className="absolute top-1/2 right-0 w-72 h-72 bg-accent/5 rounded-full blur-[100px] pointer-events-none -translate-y-1/2"></div>
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/2 left-0 w-72 h-72 bg-primary/5 rounded-full blur-[100px] -translate-y-1/2"></div>
+        <div className="absolute top-1/2 right-0 w-72 h-72 bg-accent/5 rounded-full blur-[100px] -translate-y-1/2"></div>
+      </div>
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-4 relative z-30">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">
             Meus <span className="gradient-text drop-shadow-sm">Projetos</span>
@@ -173,6 +175,29 @@ const Projects = () => {
           </div>
           </div>
         </div>
+      </div>
+
+      {/* Borda ondulada (Wave SVG) com Neon de cabeça para baixo */}
+      <div className="absolute left-0 right-0 top-full -mt-[2px] w-full leading-none z-10 pointer-events-none">
+        <svg
+          viewBox="0 0 1440 120"
+          className="block w-full h-[70px] md:h-[90px] -scale-y-100"
+          preserveAspectRatio="none"
+        >
+          {/* Path base sólido (mesma cor da base da seção) */}
+          <path
+            className="fill-background"
+            d="M0,64 C30,88 60,88 90,64 C120,40 150,40 180,64 C210,88 240,88 270,64 C300,40 330,40 360,64 C390,88 420,88 450,64 C480,40 510,40 540,64 C570,88 600,88 630,64 C660,40 690,40 720,64 C750,88 780,88 810,64 C840,40 870,40 900,64 C930,88 960,88 990,64 C1020,40 1050,40 1080,64 C1110,88 1140,88 1170,64 C1200,40 1230,40 1260,64 C1290,88 1320,88 1350,64 C1380,40 1410,40 1440,64 L1440,120 L0,120 Z"
+          />
+          {/* Path Neon animado aprimorado (sem fechar embaixo) */}
+          <path
+            className="neon-wave"
+            stroke="hsl(var(--primary))"
+            strokeWidth="3"
+            fill="none"
+            d="M0,64 C30,88 60,88 90,64 C120,40 150,40 180,64 C210,88 240,88 270,64 C300,40 330,40 360,64 C390,88 420,88 450,64 C480,40 510,40 540,64 C570,88 600,88 630,64 C660,40 690,40 720,64 C750,88 780,88 810,64 C840,40 870,40 900,64 C930,88 960,88 990,64 C1020,40 1050,40 1080,64 C1110,88 1140,88 1170,64 C1200,40 1230,40 1260,64 C1290,88 1320,88 1350,64 C1380,40 1410,40 1440,64"
+          />
+        </svg>
       </div>
     </section>
   );

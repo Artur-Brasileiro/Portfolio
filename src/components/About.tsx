@@ -60,7 +60,7 @@ const About = () => {
       {/* Luzes de fundo */}
       <div className="absolute top-20 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[120px] pointer-events-none"></div>
 
-      <div className="container mx-auto px-4 max-w-5xl relative z-10">
+      <div className="container mx-auto px-4 max-w-5xl relative z-30">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -113,7 +113,7 @@ const About = () => {
       </div>
 
       {/* CARROSSEL INFINITO */}
-      <div className="mt-32 relative w-full">
+      <div className="mt-32 relative w-full z-30">
         <div className="text-center mb-10">
           <h3 className="text-sm font-mono text-muted-foreground uppercase tracking-widest">Tecnologias que utilizo</h3>
         </div>

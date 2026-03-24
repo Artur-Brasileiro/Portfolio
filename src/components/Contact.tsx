@@ -65,7 +65,7 @@ const Contact = () => {
 
   return (
     <section id="contato" className="py-20">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 relative z-30">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold mb-4">
             Entre em <span className="gradient-text">Contato</span>

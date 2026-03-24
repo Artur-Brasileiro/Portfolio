@@ -27,7 +27,7 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen relative z-10 bg-transparent">
+    <div className="min-h-screen bg-transparent">
       {/* <GhostCursor /> - Descomente se for usar o cursor dele */}
       <Navbar />
       <Hero />

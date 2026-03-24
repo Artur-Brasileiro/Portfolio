@@ -55,7 +55,7 @@ const GhostCursor = () => {
   return (
     <div
       ref={cursorRef} 
-      className="fixed pointer-events-none z-[-1] will-change-transform" 
+      className="fixed pointer-events-none z-20 will-change-transform" 
       style={{
         width: "240px", // Adicionado "px" para evitar recálculo
         height: "240px",
