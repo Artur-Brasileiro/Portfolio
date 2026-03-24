@@ -40,7 +40,7 @@ const Projects = () => {
     },
     {
       id: "macropad-oled", 
-      title: "Macropad 18 Teclas com OLED",
+      title: "Macropad Inteligente",
       category: "Hardware & PCB",
       description: "Teclado auxiliar com display integrado e app multiplataforma que deteta programas ativos para mudar o contexto.",
       image: "projeto_macropad.png",
@@ -93,7 +93,7 @@ const Projects = () => {
         </div>
 
         {/* =============== SEÇÃO DE PROJETOS DESTAQUE =============== */}
-        <div className="max-w-5xl mx-auto"> {/* Voltou para max-w-5xl para ficar bem proporcionado com 2 colunas */}
+        <div className="max-w-5xl mx-auto">
           <div className="flex items-center justify-center gap-3 mb-10">
             <h3 className="text-3xl font-bold flex items-center gap-3">
               Projetos Destaque
@@ -101,8 +101,9 @@ const Projects = () => {
             </h3>
           </div>
 
-          {/* Grid ajustado para 2 colunas (md:grid-cols-2) */}
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="relative pt-10">
+            {/* Grid ajustado para 2 colunas (md:grid-cols-2) */}
+            <div className="grid md:grid-cols-2 gap-8">
             {featuredProjects.map((project, index) => (
               <Card 
                 key={index} 
@@ -169,6 +170,7 @@ const Projects = () => {
                 </div>
               </Card>
             ))}
+          </div>
           </div>
         </div>
       </div>

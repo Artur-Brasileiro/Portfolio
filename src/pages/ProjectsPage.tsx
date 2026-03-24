@@ -14,6 +14,20 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 
+export type ProjectItem = {
+  id: number;
+  name: string;
+  description: string;
+  githubLink?: string;
+  siteLink?: string;
+  image?: string;
+  youtubeId?: string;
+  longDescription?: string;
+  technicalLink?: string;
+  tags?: string[];
+  internalLink?: string;
+};
+
 const projectData = {
   programacao: {
     title: "Projetos de Programação (Software)",
@@ -135,7 +149,7 @@ const projectData = {
       },
       {
         id: 14,
-        name: "Macropad 15-Teclas com OLED",
+        name: "Macropad Inteligente",
         description: "Teclado auxiliar com display integrado e app multiplataforma que detecta programas ativos.",
         image: "projeto_macropad.png",
         internalLink: "/projeto/macropad",
@@ -185,7 +199,7 @@ const ProjectsPage = () => {
       <div className="container mx-auto px-4">
         
         <Button asChild variant="ghost" className="p-0 h-auto mb-12 hover:bg-transparent">
-          <Link to="/#projetos" className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 w-max">
+          <Link to="/" state={{ targetId: "projetos" }} className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 w-max">
             <ArrowLeft className="w-4 h-4" />
             Voltar para Projetos
           </Link>
@@ -223,12 +237,12 @@ const ProjectsPage = () => {
                     </div>
                     
                     {/* Renderização condicional do Botão */}
-                    {(project as any).internalLink ? (
+                    {(project as ProjectItem).internalLink ? (
                       <Button 
                         asChild
                         className="w-full bg-[image:var(--gradient-primary)] hover:opacity-90 text-primary-foreground shadow-glow border-0 transition-all" 
                       >
-                        <Link to={(project as any).internalLink}>
+                        <Link to={(project as ProjectItem).internalLink}>
                           Ver Página do Projeto
                           <ArrowRight className="w-5 h-5 ml-2" />
                         </Link>
@@ -236,7 +250,7 @@ const ProjectsPage = () => {
                     ) : (
                       <Button 
                         className="w-full bg-primary/90 hover:bg-primary shadow-glow text-primary-foreground transition-all" 
-                        onClick={() => handleOpenVideo((project as any).youtubeId || "")} 
+                        onClick={() => handleOpenVideo((project as ProjectItem).youtubeId || "")} 
                       >
                           <PlayCircle className="w-5 h-5 mr-2" /> 
                           Ver Demonstração
@@ -275,10 +289,10 @@ const ProjectsPage = () => {
                     </div>
                     
                     <div className="pt-6 mt-auto">
-                        {(project as any).technicalLink && (
+                        {(project as ProjectItem).technicalLink && (
                             <Button asChild variant="outline" className="group/btn border-white/10 hover:border-primary/50 hover:bg-primary/10 hover:text-primary">
                                 <a 
-                                    href={(project as any).technicalLink} 
+                                    href={(project as ProjectItem).technicalLink} 
                                     target="_blank" 
                                     rel="noopener noreferrer"
                                     className="flex items-center gap-2"
@@ -314,10 +328,10 @@ const ProjectsPage = () => {
                       </CardHeader>
                         <CardContent>
                           <div className="flex flex-col gap-3">
-                            {(project as any).siteLink && (
+                            {(project as ProjectItem).siteLink && (
                               <Button asChild variant="default" className="w-full group shadow-sm">
                                 <a 
-                                  href={(project as any).siteLink} 
+                                  href={(project as ProjectItem).siteLink} 
                                   target="_blank" 
                                   rel="noopener noreferrer"
                                   className="flex items-center justify-center"

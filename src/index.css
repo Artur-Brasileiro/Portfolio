@@ -37,7 +37,7 @@ All colors MUST be HSL.
     --ring: 189 95% 52%;
 
     --radius: 0.75rem;
-    
+
     --gradient-primary: linear-gradient(135deg, hsl(189 95% 52%) 0%, hsl(142 76% 55%) 100%);
     --gradient-hero: linear-gradient(180deg, hsl(220 25% 10%) 0%, hsl(220 20% 14%) 100%);
     --shadow-glow: 0 0 40px hsl(189 95% 52% / 0.2);
@@ -88,7 +88,7 @@ All colors MUST be HSL.
     --border: 214 32% 91%;
     --input: 214 32% 91%;
     --ring: 189 95% 52%;
-    
+
     --gradient-primary: linear-gradient(135deg, hsl(189 95% 52%) 0%, hsl(142 76% 55%) 100%);
     --gradient-hero: linear-gradient(180deg, hsl(210 100% 98%) 0%, hsl(0 0% 100%) 100%);
     --shadow-glow: 0 0 40px hsl(189 95% 52% / 0.15);
@@ -103,11 +103,11 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground;
     font-feature-settings: 'liga' 1, 'calt' 1;
-    overflow-x: clip; /* <-- TROQUE AQUI: 'clip' corta o scroll lateral sem quebrar a animação! */
   }
-  
+
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 90px;
   }
 }
 
@@ -118,7 +118,7 @@ All colors MUST be HSL.
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
-  
+
   .shadow-glow {
     box-shadow: var(--shadow-glow);
   }
@@ -126,18 +126,78 @@ All colors MUST be HSL.
 
 /* --- Estilização Profissional da Barra de Rolagem --- */
 ::-webkit-scrollbar {
-  width: 8px; /* Barra mais fina e elegante */
+  width: 8px;
+  /* Barra mais fina e elegante */
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(var(--background)); /* Fundo combinando com o site */
+  background: hsl(var(--background));
+  /* Fundo combinando com o site */
 }
 
 ::-webkit-scrollbar-thumb {
   background: hsl(var(--muted-foreground) / 0.3);
-  border-radius: 10px; /* Bordas arredondadas */
+  border-radius: 10px;
+  /* Bordas arredondadas */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--primary)); /* Fica com a sua cor principal ao passar o mouse */
+  background: hsl(var(--primary));
+  /* Fica com a sua cor principal ao passar o mouse */
+}
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes spin {
+  0% { --angle: 0deg; }
+  100% { --angle: 360deg; }
+}
+
+.animated-border-card {
+  position: relative;
+  border-radius: 12px;
+}
+
+.animated-border-card::before,
+.animated-border-card::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from var(--angle),
+    transparent 20%,
+    transparent 45%,
+    hsl(var(--primary)) 50%,
+    transparent 55%,
+    transparent 80%,
+    hsl(var(--primary)) 100%
+  );
+  animation: spin 4s linear infinite;
+  z-index: -1;
+}
+
+.animated-border-card::after {
+  filter: blur(10px);
+  opacity: 0.8;
+}
+
+@keyframes neonRun {
+  0% {
+    stroke-dashoffset: 600;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.neon-wave {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 600;
+  animation: neonRun 2s linear infinite;
+  filter: drop-shadow(0 0 6px hsl(var(--primary))) drop-shadow(0 0 12px hsl(var(--primary)));
 }

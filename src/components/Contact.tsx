@@ -107,7 +107,8 @@ const Contact = () => {
             ))}
           </div>
 
-          <Card className="p-8 bg-card border-border">
+          <div className="animated-border-card p-[2px]">
+            <Card className="p-8 bg-card border-border relative z-10 w-full h-full">
             <h3 className="text-2xl font-bold mb-6">Envie uma Mensagem</h3>
 
             <form onSubmit={handleSubmit} className="space-y-4" noValidate>
@@ -147,8 +148,13 @@ const Contact = () => {
                   name="message"
                   placeholder="Sua mensagem..."
                   rows={5}
-                  className="bg-secondary border-border"
+                  className="bg-secondary border-border resize-none overflow-hidden"
                   required
+                  onInput={(e) => {
+                    const target = e.target as HTMLTextAreaElement;
+                    target.style.height = "auto";
+                    target.style.height = `${target.scrollHeight}px`;
+                  }}
                 />
               </div>
 
@@ -162,7 +168,8 @@ const Contact = () => {
                 </p>
               )}
             </form>
-          </Card>
+            </Card>
+          </div>
         </div>
       </div>
 

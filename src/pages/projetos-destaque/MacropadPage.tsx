@@ -50,7 +50,7 @@ const MacropadPage = () => {
     <div className="min-h-screen pt-24 pb-12 bg-background">
       <div className="container mx-auto px-4 max-w-5xl"> 
         <Button asChild variant="ghost" className="mb-8 hover:bg-transparent pl-0">
-          <Link to="/#projetos" className="text-muted-foreground hover:text-primary flex items-center gap-2">
+          <Link to="/" state={{ targetId: "projetos" }} className="text-muted-foreground hover:text-primary flex items-center gap-2">
             <ArrowLeft className="w-4 h-4" /> Voltar para Projetos
           </Link>
         </Button>
@@ -66,7 +66,7 @@ const MacropadPage = () => {
             </Badge>
           </div>
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground">
-            Macropad 18 Teclas com OLED
+            Macropad Inteligente
           </h1>
           <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl">
             Um teclado auxiliar customizado do zero, unindo design de circuito impresso, eletrônica embarcada e desenvolvimento de software multiplataforma.
