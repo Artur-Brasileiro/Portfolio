@@ -236,6 +236,13 @@ html.lenis body {
 .animate-aurora-1 { animation: aurora-1 18s ease-in-out infinite; }
 .animate-aurora-2 { animation: aurora-2 22s ease-in-out infinite; }
 
+/* --- Marquee infinito --- */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee { animation: marquee linear infinite; }
+
 /* Respeita quem prefere menos movimento */
 @media (prefers-reduced-motion: reduce) {
   *,
