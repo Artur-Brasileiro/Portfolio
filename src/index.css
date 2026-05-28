@@ -224,6 +224,18 @@ html.lenis body {
   pointer-events: none;
 }
 
+/* --- Aurora (fundo do hero) --- */
+@keyframes aurora-1 {
+  0%, 100% { transform: translate(-50%, 0) scale(1); }
+  50% { transform: translate(-42%, 8%) scale(1.12); }
+}
+@keyframes aurora-2 {
+  0%, 100% { transform: translate(50%, 0) scale(1); }
+  50% { transform: translate(42%, -8%) scale(1.06); }
+}
+.animate-aurora-1 { animation: aurora-1 18s ease-in-out infinite; }
+.animate-aurora-2 { animation: aurora-2 22s ease-in-out infinite; }
+
 /* Respeita quem prefere menos movimento */
 @media (prefers-reduced-motion: reduce) {
   *,
