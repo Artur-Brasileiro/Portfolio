@@ -11,6 +11,7 @@ import GhostCursor from "./components/GhostCursor";
 import PageWrapper from "./components/PageWrapper";
 // 2. Importamos a Navbar
 import Navbar from "./components/Navbar";
+import SmoothScroll, { scrollToTop } from "./components/motion/SmoothScroll";
 
 // Lazy loading das páginas
 const Index = lazy(() => import("./pages/Index"));
@@ -27,7 +28,7 @@ const AnimatedRoutes = () => {
 
   return (
     // 3. Adicionamos onExitComplete para voltar ao topo na troca de página
-    <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo(0, 0)}>
+    <AnimatePresence mode="wait" onExitComplete={() => scrollToTop(true)}>
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Suspense fallback={<PageLoader />}><PageWrapper><Index /></PageWrapper></Suspense>} />
         <Route path="/:category" element={<Suspense fallback={<PageLoader />}><PageWrapper><ProjectsPage /></PageWrapper></Suspense>} />
@@ -41,14 +42,16 @@ const AnimatedRoutes = () => {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <GhostCursor />
-      <Toaster />
-      <Sonner />
-      <HashRouter>
-        {/* 4. A Navbar fica aqui para aparecer por cima de todas as rotas */}
-        <Navbar />
-        <AnimatedRoutes />
-      </HashRouter>
+      <SmoothScroll>
+        <GhostCursor />
+        <Toaster />
+        <Sonner />
+        <HashRouter>
+          {/* 4. A Navbar fica aqui para aparecer por cima de todas as rotas */}
+          <Navbar />
+          <AnimatedRoutes />
+        </HashRouter>
+      </SmoothScroll>
     </TooltipProvider>
   </QueryClientProvider>
 );
