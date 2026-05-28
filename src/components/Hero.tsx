@@ -1,11 +1,12 @@
 import { ArrowDown } from "lucide-react";
 import { Button } from "./ui/button";
-import { NavHashLink } from "react-router-hash-link";
+import { HashLink } from "react-router-hash-link";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { wordContainer, wordItem, EASE_OUT_EXPO } from "@/lib/motion";
 import Aurora from "./motion/Aurora";
 import MagneticButton from "./motion/MagneticButton";
+import { getLenis } from "./motion/SmoothScroll";
 
 const titleStart = ["Olá,", "eu", "sou"];
 const titleName = ["Artur", "Brasileiro"];
@@ -34,9 +35,13 @@ const Hero = () => {
   const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   const scrollWithOffset = (el: HTMLElement) => {
-    const yCoordinate = el.getBoundingClientRect().top + window.pageYOffset;
-    const yOffset = -90;
-    window.scrollTo({ top: yCoordinate + yOffset, behavior: "smooth" });
+    const lenis = getLenis();
+    if (lenis) {
+      lenis.scrollTo(el, { offset: -80 });
+    } else {
+      const yCoordinate = el.getBoundingClientRect().top + window.pageYOffset;
+      window.scrollTo({ top: yCoordinate - 80, behavior: "smooth" });
+    }
   };
 
   return (
@@ -100,17 +105,17 @@ const Hero = () => {
           >
             <MagneticButton className="inline-flex w-full sm:w-auto">
               <Button size="lg" className="shadow-glow w-full" asChild>
-                <NavHashLink smooth to="/#projetos" scroll={scrollWithOffset}>
+                <HashLink smooth to="/#projetos" scroll={scrollWithOffset}>
                   Ver Projetos
-                </NavHashLink>
+                </HashLink>
               </Button>
             </MagneticButton>
 
             <MagneticButton className="inline-flex w-full sm:w-auto">
               <Button size="lg" variant="secondary" className="w-full" asChild>
-                <NavHashLink smooth to="/#contato" scroll={scrollWithOffset}>
+                <HashLink smooth to="/#contato" scroll={scrollWithOffset}>
                   Entrar em Contato
-                </NavHashLink>
+                </HashLink>
               </Button>
             </MagneticButton>
           </motion.div>
@@ -118,14 +123,14 @@ const Hero = () => {
       </motion.div>
 
       {/* Seta para baixo */}
-      <NavHashLink
+      <HashLink
         smooth
         to="/#sobre"
         scroll={scrollWithOffset}
         className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce cursor-pointer z-30"
       >
         <ArrowDown className="w-6 h-6 text-muted-foreground" />
-      </NavHashLink>
+      </HashLink>
 
       {/* Borda ondulada (Wave SVG) com Neon */}
       <div className="absolute left-0 right-0 top-full -mt-[2px] w-full leading-none z-10 pointer-events-none">

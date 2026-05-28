@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { Code2, Menu, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { useNavigate, useLocation } from "react-router-dom";
-import { NavHashLink } from 'react-router-hash-link';
+import { HashLink } from 'react-router-hash-link';
+import { getLenis } from "./motion/SmoothScroll";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -94,9 +95,13 @@ const Navbar = () => {
   };
 
   const scrollWithOffset = (el: HTMLElement) => {
-    const yCoordinate = el.getBoundingClientRect().top + window.pageYOffset;
-    const yOffset = -60;
-    window.scrollTo({ top: yCoordinate + yOffset, behavior: 'smooth' });
+    const lenis = getLenis();
+    if (lenis) {
+      lenis.scrollTo(el, { offset: -80 });
+    } else {
+      const yCoordinate = el.getBoundingClientRect().top + window.pageYOffset;
+      window.scrollTo({ top: yCoordinate - 80, behavior: 'smooth' });
+    }
   }
 
   if (location.pathname === "/programacao" || location.pathname === "/hardware" || location.pathname.startsWith("/projeto/")) {
@@ -113,10 +118,10 @@ const Navbar = () => {
           }`}
       >
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <NavHashLink smooth to="/#" scroll={scrollWithOffset} onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2">
+          <HashLink smooth to="/#" scroll={scrollWithOffset} onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2">
             <Code2 className="w-8 h-8 text-primary" />
             <span className="font-bold text-xl gradient-text">Artur</span>
-          </NavHashLink>
+          </HashLink>
           <Button
             variant="ghost"
             size="icon"
@@ -141,19 +146,19 @@ const Navbar = () => {
           `}
         >
           {/* Logo */}
-          <NavHashLink
+          <HashLink
             smooth to="/#"
             scroll={scrollWithOffset}
             className="flex items-center gap-2 shrink-0 group"
           >
             <Code2 className="w-7 h-7 text-primary transition-transform group-hover:scale-110" />
             <span className="font-bold text-xl gradient-text block">Artur</span>
-          </NavHashLink>
+          </HashLink>
 
           {/* Links com Scroll Spy */}
           <div className="flex items-center gap-8 shrink-0">
             {navItems.map((item) => (
-              <NavHashLink
+              <HashLink
                 key={item.name}
                 smooth to={`/${item.href}`}
                 scroll={scrollWithOffset}
@@ -168,7 +173,7 @@ const Navbar = () => {
                     ${activeSection === item.id ? "scale-x-100" : "scale-x-0"}
                   `}
                 />
-              </NavHashLink>
+              </HashLink>
             ))}
           </div>
         </nav>
@@ -179,7 +184,7 @@ const Navbar = () => {
         <div className="md:hidden fixed top-20 left-4 right-4 z-50 bg-background/95 backdrop-blur-xl border border-border rounded-2xl p-4 shadow-2xl">
           <div className="flex flex-col gap-2">
             {navItems.map((item) => (
-              <NavHashLink
+              <HashLink
                 key={item.name}
                 smooth to={`/${item.href}`}
                 scroll={scrollWithOffset}
@@ -192,7 +197,7 @@ const Navbar = () => {
                 `}
               >
                 {item.name}
-              </NavHashLink>
+              </HashLink>
             ))}
           </div>
         </div>
