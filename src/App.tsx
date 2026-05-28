@@ -46,7 +46,7 @@ const App = () => (
         <GhostCursor />
         <Toaster />
         <Sonner />
-        <HashRouter>
+        <HashRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           {/* 4. A Navbar fica aqui para aparecer por cima de todas as rotas */}
           <Navbar />
           <AnimatedRoutes />
