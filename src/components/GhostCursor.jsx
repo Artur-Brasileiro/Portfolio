@@ -53,18 +53,25 @@ const GhostCursor = () => {
   if (!visible) return null;
 
   return (
+    // Container que cobre exatamente a viewport e recorta o glow,
+    // pra ele nunca extrapolar a tela e criar barra de rolagem.
     <div
-      ref={cursorRef} 
-      className="fixed pointer-events-none z-20 will-change-transform" 
-      style={{
-        width: "240px", // Adicionado "px" para evitar recálculo
-        height: "240px",
-        borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(0, 255, 200, 0.45) 0%, rgba(0,255,200,0.08) 40%, transparent 70%)",
-        filter: "blur(70px)",
-        mixBlendMode: "screen",
-      }}
-    />
+      className="fixed inset-0 z-20 overflow-hidden pointer-events-none"
+      aria-hidden="true"
+    >
+      <div
+        ref={cursorRef}
+        className="absolute top-0 left-0 pointer-events-none will-change-transform"
+        style={{
+          width: "240px",
+          height: "240px",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(0, 255, 200, 0.45) 0%, rgba(0,255,200,0.08) 40%, transparent 70%)",
+          filter: "blur(70px)",
+          mixBlendMode: "screen",
+        }}
+      />
+    </div>
   );
 };
 
