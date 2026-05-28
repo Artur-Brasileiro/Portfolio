@@ -124,7 +124,7 @@ const Education = () => {
               <Reveal key={item.title} y={30}>
                 <div className="relative">
                   {/* Ponto na linha */}
-                  <span className="absolute -left-[34px] md:-left-[42px] top-5 flex h-5 w-5 items-center justify-center rounded-full bg-primary ring-4 ring-background" />
+                  <span className="absolute -left-[31.5px] md:-left-[37.5px] top-5 flex h-5 w-5 items-center justify-center rounded-full bg-primary ring-4 ring-background" />
 
                   <Card className="group relative p-6 bg-card/50 backdrop-blur-sm border-border transition-all duration-500 hover:border-primary/40 hover:shadow-glow overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
