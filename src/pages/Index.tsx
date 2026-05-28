@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import About from "@/components/About";
 import Projects from "@/components/Projects";
@@ -29,7 +28,6 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-transparent">
       {/* <GhostCursor /> - Descomente se for usar o cursor dele */}
-      <Navbar />
       <Hero />
       <About />
       <Projects />
