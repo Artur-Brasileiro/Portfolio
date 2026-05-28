@@ -34,6 +34,10 @@ const Hero = () => {
   const y = useTransform(scrollYProgress, [0, 1], [0, 120]);
   const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
+  // Parallax das camadas decorativas (profundidades diferentes)
+  const yDeep = useTransform(scrollYProgress, [0, 1], [0, 80]);
+  const yNear = useTransform(scrollYProgress, [0, 1], [0, 220]);
+
   const scrollWithOffset = (el: HTMLElement) => {
     const lenis = getLenis();
     if (lenis) {
@@ -50,6 +54,42 @@ const Hero = () => {
       className="min-h-screen flex items-center justify-center relative bg-gradient-hero"
     >
       <Aurora />
+
+      {/* Camadas de parallax decorativo (clipadas pra nunca vazar da tela) */}
+      {!reduce && (
+        <div
+          className="absolute inset-0 z-[1] overflow-hidden pointer-events-none select-none"
+          aria-hidden="true"
+        >
+          {/* Profunda — movimento lento */}
+          <motion.div style={{ y: yDeep }} className="absolute inset-0">
+            <span className="absolute left-[7%] top-[20%] font-display text-6xl md:text-8xl font-bold text-primary/[0.06]">
+              {"</>"}
+            </span>
+            <span className="absolute right-[9%] top-[26%] font-mono text-5xl md:text-7xl text-accent/[0.06]">
+              {"{ }"}
+            </span>
+            <span className="absolute left-[16%] bottom-[18%] font-mono text-4xl md:text-6xl text-primary/[0.05]">
+              {"010110"}
+            </span>
+            <div className="absolute right-[14%] bottom-[22%] h-28 w-28 md:h-40 md:w-40 rounded-full border border-primary/[0.07]" />
+          </motion.div>
+
+          {/* Próxima — movimento rápido */}
+          <motion.div style={{ y: yNear }} className="absolute inset-0">
+            <span className="absolute right-[19%] bottom-[28%] font-display text-7xl md:text-9xl font-bold text-accent/[0.07]">
+              {"( )"}
+            </span>
+            <span className="absolute left-[21%] top-[14%] font-mono text-4xl md:text-6xl text-accent/[0.05]">
+              {"=>"}
+            </span>
+            <div className="absolute left-[10%] top-[42%] h-16 w-16 md:h-24 md:w-24 rotate-45 border border-accent/[0.08]" />
+            <div className="absolute right-[30%] top-[20%] h-2 w-2 rounded-full bg-primary/30" />
+            <div className="absolute left-[42%] bottom-[14%] h-2 w-2 rounded-full bg-accent/30" />
+            <div className="absolute right-[24%] bottom-[40%] h-1.5 w-1.5 rounded-full bg-primary/20" />
+          </motion.div>
+        </div>
+      )}
 
       <motion.div
         style={reduce ? undefined : { y, opacity }}
