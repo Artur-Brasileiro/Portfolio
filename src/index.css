@@ -108,6 +108,11 @@ All colors MUST be HSL.
 
   html {
     scroll-padding-top: 90px;
+    overflow-x: clip;
+  }
+
+  body {
+    overflow-x: clip;
   }
 }
 

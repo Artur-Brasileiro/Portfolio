@@ -140,7 +140,7 @@ const Navbar = () => {
         <nav
           className={`flex items-center justify-between pointer-events-auto transition-all duration-700 ease-in-out overflow-hidden
             ${!isScrolled
-              ? "w-full max-w-[100vw] px-12 py-4 bg-transparent border-transparent rounded-none"
+              ? "w-full max-w-full px-12 py-4 bg-transparent border-transparent rounded-none"
               : "w-[90%] max-w-3xl px-8 py-3 bg-background/80 backdrop-blur-lg border border-border shadow-[0_5px_20px_-10px_rgba(0,0,0,0.5)] rounded-full"
             }
           `}
