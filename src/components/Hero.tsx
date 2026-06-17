@@ -1,4 +1,4 @@
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, Github, Linkedin } from "lucide-react";
 import { Button } from "./ui/button";
 import { HashLink } from "react-router-hash-link";
 import {
@@ -14,6 +14,10 @@ import Aurora from "./motion/Aurora";
 import MagneticButton from "./motion/MagneticButton";
 import { usePointerParallax } from "./motion/usePointerParallax";
 import { getLenis } from "./motion/SmoothScroll";
+import ProfileAvatar from "./ProfileAvatar";
+
+const GITHUB_URL = "https://github.com/Artur-Brasileiro";
+const LINKEDIN_URL = "https://www.linkedin.com/in/artur-brasileiro/";
 
 const titleStart = ["Olá,", "eu", "sou"];
 const titleName = ["Artur", "Brasileiro"];
@@ -110,15 +114,22 @@ const Hero = () => {
               style={{ x: deepPointerX, y: deepPointerY }}
               className="absolute inset-[-6%] blur-[2px] will-change-transform"
             >
+              {/* Grade de pontos sutil, desvanecendo nas bordas */}
+              <div
+                className="absolute inset-0 bg-dot-grid opacity-50"
+                style={{
+                  maskImage:
+                    "radial-gradient(ellipse 62% 52% at 50% 45%, black, transparent 75%)",
+                  WebkitMaskImage:
+                    "radial-gradient(ellipse 62% 52% at 50% 45%, black, transparent 75%)",
+                }}
+              />
               <div className="absolute left-[10%] top-[18%] h-72 w-72 rounded-full bg-primary/[0.10] blur-3xl" />
               <div className="absolute right-[8%] bottom-[12%] h-80 w-80 rounded-full bg-accent/[0.08] blur-3xl" />
-              <span className="absolute left-[7%] top-[20%] font-display text-6xl md:text-8xl font-bold text-primary/[0.10]">
+              <span className="absolute left-[7%] top-[20%] font-display text-6xl md:text-8xl font-bold text-primary/[0.12]">
                 {"</>"}
               </span>
-              <span className="absolute right-[9%] top-[26%] font-mono text-5xl md:text-7xl text-accent/[0.09]">
-                {"{ }"}
-              </span>
-              <div className="absolute right-[14%] bottom-[22%] h-28 w-28 md:h-44 md:w-44 rounded-full border border-primary/[0.10]" />
+              <div className="absolute right-[14%] bottom-[22%] h-28 w-28 md:h-44 md:w-44 rounded-full border border-primary/[0.18]" />
             </motion.div>
           </motion.div>
 
@@ -132,13 +143,7 @@ const Hero = () => {
               className="absolute inset-0 will-change-transform"
             >
               <div className="absolute right-[16%] top-[28%] h-56 w-56 rounded-full bg-accent/[0.10] blur-3xl" />
-              <span className="absolute left-[16%] bottom-[18%] font-mono text-4xl md:text-6xl text-primary/[0.13]">
-                {"010110"}
-              </span>
-              <span className="absolute left-[21%] top-[14%] font-mono text-4xl md:text-6xl text-accent/[0.12]">
-                {"=>"}
-              </span>
-              <div className="absolute left-[10%] top-[42%] h-16 w-16 md:h-24 md:w-24 rotate-45 border border-accent/[0.16]" />
+              <div className="absolute left-[10%] top-[42%] h-16 w-16 md:h-24 md:w-24 rotate-45 border border-accent/[0.22]" />
             </motion.div>
           </motion.div>
 
@@ -151,9 +156,6 @@ const Hero = () => {
               style={{ x: nearPointerX, y: nearPointerY }}
               className="absolute inset-0 will-change-transform"
             >
-              <span className="absolute right-[19%] bottom-[28%] font-display text-7xl md:text-9xl font-bold text-accent/[0.14]">
-                {"( )"}
-              </span>
               <div className="absolute right-[30%] top-[20%] h-2.5 w-2.5 rounded-full bg-primary shadow-[0_0_14px_2px_hsl(var(--primary)/0.7)]" />
               <div className="absolute left-[42%] bottom-[14%] h-2 w-2 rounded-full bg-accent shadow-[0_0_12px_2px_hsl(var(--accent)/0.7)]" />
               <div className="absolute right-[24%] bottom-[40%] h-1.5 w-1.5 rounded-full bg-primary/90 shadow-[0_0_10px_1px_hsl(var(--primary)/0.6)]" />
@@ -169,8 +171,16 @@ const Hero = () => {
       >
         <motion.div
           style={reduce ? undefined : { x: contentPointerX, y: contentPointerY }}
-          className="text-center space-y-6"
+          className="flex flex-col items-center text-center space-y-6"
         >
+          <motion.div
+            initial={reduce ? false : { opacity: 0, scale: 0.85 }}
+            animate={reduce ? {} : { opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, ease: EASE_OUT_EXPO, delay: reduce ? 0 : 0.1 }}
+          >
+            <ProfileAvatar src={`${import.meta.env.BASE_URL}avatar.jpg`} />
+          </motion.div>
+
           {reduce ? (
             <h1 className="font-display text-5xl md:text-7xl font-bold tracking-tight">
               Olá, eu sou <span className="gradient-text">Artur Brasileiro</span>
@@ -208,8 +218,8 @@ const Hero = () => {
             transition={{ duration: 0.6, ease: EASE_OUT_EXPO, delay: reduce ? 0 : 0.75 }}
             className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto"
           >
-            Desenvolvedor de software e hardware, criando soluções web modernas e
-            sistemas embarcados
+            Construo software web moderno e sistemas embarcados — da lógica do
+            código à placa que executa.
           </motion.p>
 
           <motion.div
@@ -234,18 +244,56 @@ const Hero = () => {
               </Button>
             </MagneticButton>
           </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: EASE_OUT_EXPO, delay: reduce ? 0 : 1.05 }}
+            className="flex items-center justify-center gap-3 pt-2"
+          >
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary"
+            >
+              <Github className="h-5 w-5" />
+            </a>
+            <a
+              href={LINKEDIN_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-border text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary"
+            >
+              <Linkedin className="h-5 w-5" />
+            </a>
+          </motion.div>
         </motion.div>
       </motion.div>
 
-      {/* Seta para baixo */}
-      <HashLink
-        smooth
-        to="/#sobre"
-        scroll={scrollWithOffset}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce cursor-pointer z-30"
+      {/* Indicador de scroll (rolar para Sobre) */}
+      <motion.div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30"
+        animate={reduce ? undefined : { y: [0, 8, 0] }}
+        transition={
+          reduce
+            ? undefined
+            : { duration: 1.8, repeat: Infinity, ease: "easeInOut" }
+        }
       >
-        <ArrowDown className="w-6 h-6 text-muted-foreground" />
-      </HashLink>
+        <HashLink
+          smooth
+          to="/#sobre"
+          scroll={scrollWithOffset}
+          aria-label="Rolar para a seção Sobre"
+          className="flex flex-col items-center gap-1 text-muted-foreground transition-colors hover:text-primary cursor-pointer"
+        >
+          <span className="text-[11px] font-mono uppercase tracking-widest">Rolar</span>
+          <ArrowDown className="w-5 h-5" />
+        </HashLink>
+      </motion.div>
 
       {/* Transição ondulada para a próxima seção.
           Antes: um bloco chapado de --background (a cor mais escura) ficava na faixa
@@ -266,9 +314,9 @@ const Hero = () => {
             {/* y2=1 (base do viewBox) cai no TOPO visual por causa do -scale-y-100:
                 topo = cor do hero (--background); aresta neon/abaixo = tom da seção (--card). */}
             <linearGradient id="heroWaveFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="hsl(193 32% 9%)" />
-              <stop offset="0.55" stopColor="hsl(193 32% 9%)" />
-              <stop offset="1" stopColor="hsl(192 40% 6%)" />
+              <stop offset="0" className="hero-wave-from" />
+              <stop offset="0.55" className="hero-wave-from" />
+              <stop offset="1" className="hero-wave-to" />
             </linearGradient>
           </defs>
           <path
