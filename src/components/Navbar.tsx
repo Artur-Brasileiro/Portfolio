@@ -1,110 +1,142 @@
 import { useState, useEffect } from "react";
 import { Code2, Menu, X } from "lucide-react";
 import { Button } from "./ui/button";
-import { useNavigate, useLocation } from "react-router-dom";
-import { HashLink } from 'react-router-hash-link';
+import { useLocation } from "react-router-dom";
+import { HashLink } from "react-router-hash-link";
 import { getLenis } from "./motion/SmoothScroll";
+import ThemeToggle from "./ThemeToggle";
+
+const navItems = [
+  { name: "Sobre", href: "#sobre", id: "sobre" },
+  { name: "Projetos", href: "#projetos", id: "projetos" },
+  { name: "Educação", href: "#educacao", id: "educacao" },
+  { name: "Contato", href: "#contato", id: "contato" },
+];
+
+const scrollWithOffset = (el: HTMLElement) => {
+  const lenis = getLenis();
+  if (lenis) {
+    lenis.scrollTo(el, { offset: -80 });
+  } else {
+    const yCoordinate = el.getBoundingClientRect().top + window.pageYOffset;
+    window.scrollTo({ top: yCoordinate - 80, behavior: "smooth" });
+  }
+};
+
+type NavLinksProps = {
+  variant: "desktop" | "mobile";
+  activeSection: string;
+  onNavigate?: () => void;
+};
+
+/** Fonte única dos links — reusada por desktop e mobile (sem duplicação). */
+const NavLinks = ({ variant, activeSection, onNavigate }: NavLinksProps) => (
+  <>
+    {navItems.map((item) => {
+      const active = activeSection === item.id;
+      if (variant === "mobile") {
+        return (
+          <HashLink
+            key={item.name}
+            smooth
+            to={`/${item.href}`}
+            scroll={scrollWithOffset}
+            onClick={onNavigate}
+            className={`block py-3 px-4 text-center font-medium rounded-xl transition-colors ${
+              active
+                ? "text-primary bg-primary/10"
+                : "text-muted-foreground hover:text-primary hover:bg-secondary/50"
+            }`}
+          >
+            {item.name}
+          </HashLink>
+        );
+      }
+      return (
+        <HashLink
+          key={item.name}
+          smooth
+          to={`/${item.href}`}
+          scroll={scrollWithOffset}
+          onClick={onNavigate}
+          className={`relative text-[15px] font-medium transition-colors py-1 ${
+            active ? "text-primary" : "text-muted-foreground hover:text-primary"
+          }`}
+        >
+          {item.name}
+          <span
+            className={`absolute left-0 bottom-0 w-full h-[2px] bg-primary transition-transform duration-300 origin-left ${
+              active ? "scale-x-100" : "scale-x-0"
+            }`}
+          />
+        </HashLink>
+      );
+    })}
+  </>
+);
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
-
-  const navigate = useNavigate();
   const location = useLocation();
 
+  // isScrolled (morph da pílula) — listener leve com guard de rAF.
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.pageYOffset;
-
-      setIsScrolled(scrollY > 20);
-
-      // Scroll Spy - Verifica qual seção está na tela
-      const sections = ["sobre", "projetos", "educacao", "contato"];
-      let current = "";
-      for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          if (rect.top <= 200 && rect.bottom >= 200) {
-            current = section;
-            break;
-          }
-        }
-      }
-
-      // Se estiver no topo, tira a marcação
-      if (scrollY < 100) {
-        current = "";
-      }
-      setActiveSection(current);
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        setIsScrolled(window.scrollY > 20);
+        if (window.scrollY < 100) setActiveSection("");
+        ticking = false;
+      });
     };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Lida com a mudança de rota voltando para a Home
+  // Scroll-spy via IntersectionObserver (sem getBoundingClientRect por evento).
+  // Re-tenta até as seções existirem no DOM (Index é lazy/Suspense).
   useEffect(() => {
-    if (location.pathname === "/") {
-      const state = location.state as { targetId?: string };
-      if (state && state.targetId) {
-        setTimeout(() => {
-          const element = document.getElementById(state.targetId as string);
-          if (element) {
-            const yCoordinate = element.getBoundingClientRect().top + window.pageYOffset;
-            const yOffset = -60;
-            window.scrollTo({ top: yCoordinate + yOffset, behavior: 'smooth' });
-          }
-        }, 500);
-        window.history.replaceState({}, document.title);
-      }
-    }
-  }, [location]);
-
-  const navItems = [
-    { name: "Sobre", href: "#sobre", id: "sobre" },
-    { name: "Projetos", href: "#projetos", id: "projetos" },
-    { name: "Educação", href: "#educacao", id: "educacao" },
-    { name: "Contato", href: "#contato", id: "contato" },
-  ];
-
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    const targetId = href.replace("#", "");
-
-    if (href === "#") {
-      if (location.pathname !== "/") {
-        navigate("/");
-      } else {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
+    if (location.pathname !== "/") {
+      setActiveSection("");
       return;
     }
-
-    if (location.pathname !== "/") {
-      navigate("/", { state: { targetId } });
-    } else {
-      const element = document.getElementById(targetId);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
+    let obs: IntersectionObserver | null = null;
+    let raf = 0;
+    const setup = () => {
+      const els = navItems
+        .map((i) => document.getElementById(i.id))
+        .filter((el): el is HTMLElement => el !== null);
+      if (els.length === 0) {
+        raf = requestAnimationFrame(setup);
+        return;
       }
-    }
+      obs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) setActiveSection((e.target as HTMLElement).id);
+          });
+        },
+        { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
+      );
+      els.forEach((el) => obs!.observe(el));
+    };
+    raf = requestAnimationFrame(setup);
+    return () => {
+      cancelAnimationFrame(raf);
+      obs?.disconnect();
+    };
+  }, [location.pathname]);
 
-    setIsMobileMenuOpen(false);
-  };
-
-  const scrollWithOffset = (el: HTMLElement) => {
-    const lenis = getLenis();
-    if (lenis) {
-      lenis.scrollTo(el, { offset: -80 });
-    } else {
-      const yCoordinate = el.getBoundingClientRect().top + window.pageYOffset;
-      window.scrollTo({ top: yCoordinate - 80, behavior: 'smooth' });
-    }
-  }
-
-  if (location.pathname === "/programacao" || location.pathname === "/hardware" || location.pathname.startsWith("/projeto/")) {
+  if (
+    location.pathname === "/programacao" ||
+    location.pathname === "/hardware" ||
+    location.pathname.startsWith("/projeto/")
+  ) {
     return null;
   }
 
@@ -112,42 +144,51 @@ const Navbar = () => {
     <>
       {/* --- NAVBAR MOBILE / TABLET --- */}
       <nav
-        className={`md:hidden fixed top-0 w-full z-50 transition-all duration-300 border-b translate-y-0 opacity-100 ${isScrolled
+        className={`md:hidden fixed top-0 w-full z-50 transition-all duration-300 border-b ${
+          isScrolled
             ? "bg-background/90 backdrop-blur-lg border-border"
             : "bg-transparent border-transparent"
-          }`}
+        }`}
       >
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <HashLink smooth to="/#" scroll={scrollWithOffset} onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2">
+          <HashLink
+            smooth
+            to="/#"
+            scroll={scrollWithOffset}
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="flex items-center gap-2"
+          >
             <Code2 className="w-8 h-8 text-primary" />
             <span className="font-bold text-xl gradient-text">Artur</span>
           </HashLink>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="text-foreground"
-          >
-            {isMobileMenuOpen ? <X /> : <Menu />}
-          </Button>
+          <div className="flex items-center gap-1">
+            <ThemeToggle />
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="text-foreground"
+            >
+              {isMobileMenuOpen ? <X /> : <Menu />}
+            </Button>
+          </div>
         </div>
       </nav>
 
-      {/* --- NAVBAR DESKTOP (Com animação de pílula e Scroll Spy) --- */}
-      <div
-        className={`hidden md:flex fixed w-full z-50 justify-center transition-all duration-700 ease-in-out pointer-events-none translate-y-0 opacity-100 top-0 pt-4`}
-      >
+      {/* --- NAVBAR DESKTOP (pílula + scroll spy) --- */}
+      <div className="hidden md:flex fixed w-full z-50 justify-center transition-all duration-700 ease-in-out pointer-events-none top-0 pt-4">
         <nav
-          className={`flex items-center justify-between pointer-events-auto transition-all duration-700 ease-in-out overflow-hidden
-            ${!isScrolled
+          className={`flex items-center justify-between pointer-events-auto transition-all duration-700 ease-in-out overflow-hidden ${
+            !isScrolled
               ? "w-full max-w-full px-12 py-4 bg-transparent border-transparent rounded-none"
-              : "w-[90%] max-w-3xl px-8 py-3 bg-background/80 backdrop-blur-lg border border-border shadow-[0_5px_20px_-10px_rgba(0,0,0,0.5)] rounded-full"
-            }
-          `}
+              : "w-[90%] max-w-3xl px-8 py-3 bg-background/80 backdrop-blur-lg border border-border shadow-soft-lg rounded-full"
+          }`}
         >
           {/* Logo */}
           <HashLink
-            smooth to="/#"
+            smooth
+            to="/#"
             scroll={scrollWithOffset}
             className="flex items-center gap-2 shrink-0 group"
           >
@@ -155,50 +196,23 @@ const Navbar = () => {
             <span className="font-bold text-xl gradient-text block">Artur</span>
           </HashLink>
 
-          {/* Links com Scroll Spy */}
-          <div className="flex items-center gap-8 shrink-0">
-            {navItems.map((item) => (
-              <HashLink
-                key={item.name}
-                smooth to={`/${item.href}`}
-                scroll={scrollWithOffset}
-                className={`relative text-[15px] font-medium transition-colors py-1
-                  ${activeSection === item.id ? "text-primary" : "text-muted-foreground hover:text-primary"}
-                `}
-              >
-                {item.name}
-                {/* Linha que aparece quando ativo */}
-                <span
-                  className={`absolute left-0 bottom-0 w-full h-[2px] bg-primary transition-transform duration-300 origin-left 
-                    ${activeSection === item.id ? "scale-x-100" : "scale-x-0"}
-                  `}
-                />
-              </HashLink>
-            ))}
+          {/* Links + toggle */}
+          <div className="flex items-center gap-6 shrink-0">
+            <NavLinks variant="desktop" activeSection={activeSection} />
+            <ThemeToggle />
           </div>
         </nav>
       </div>
 
       {/* MENU MOBILE DROPDOWN */}
       {isMobileMenuOpen && (
-        <div className="md:hidden fixed top-20 left-4 right-4 z-50 bg-background/95 backdrop-blur-xl border border-border rounded-2xl p-4 shadow-2xl">
+        <div className="md:hidden fixed top-20 left-4 right-4 z-50 bg-background/95 backdrop-blur-xl border border-border rounded-2xl p-4 shadow-soft-lg">
           <div className="flex flex-col gap-2">
-            {navItems.map((item) => (
-              <HashLink
-                key={item.name}
-                smooth to={`/${item.href}`}
-                scroll={scrollWithOffset}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className={`block py-3 px-4 text-center font-medium rounded-xl transition-colors
-                  ${activeSection === item.id
-                    ? "text-primary bg-primary/10"
-                    : "text-muted-foreground hover:text-primary hover:bg-secondary/50"
-                  }
-                `}
-              >
-                {item.name}
-              </HashLink>
-            ))}
+            <NavLinks
+              variant="mobile"
+              activeSection={activeSection}
+              onNavigate={() => setIsMobileMenuOpen(false)}
+            />
           </div>
         </div>
       )}
