@@ -71,6 +71,16 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      boxShadow: {
+        "soft-sm": "var(--shadow-sm)",
+        "soft-md": "var(--shadow-md)",
+        "soft-lg": "var(--shadow-lg)",
+        glow: "var(--shadow-glow)",
+      },
+      fontSize: {
+        "display-xl": ["clamp(2.75rem, 6vw, 4.5rem)", { lineHeight: "1.05", letterSpacing: "-0.02em" }],
+        "display-lg": ["clamp(2rem, 4.5vw, 3rem)", { lineHeight: "1.1", letterSpacing: "-0.01em" }],
+      },
       keyframes: {
         "accordion-down": {
           from: {

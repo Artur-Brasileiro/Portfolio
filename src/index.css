@@ -2,12 +2,72 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here.
 All colors MUST be HSL.
+
+Convenção (next-themes, attribute="class"):
+  :root  -> tema CLARO (light)
+  .dark  -> tema ESCURO (dark) — padrão do site (defaultTheme="dark")
 */
 
 @layer base {
   :root {
+    --background: 165 30% 97%;
+    --foreground: 200 30% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 200 30% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 200 30% 12%;
+
+    --primary: 158 72% 34%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 170 24% 93%;
+    --secondary-foreground: 200 30% 14%;
+
+    --muted: 170 22% 94%;
+    --muted-foreground: 195 14% 38%;
+
+    --accent: 188 72% 36%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 75% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 190 18% 87%;
+    --input: 190 18% 87%;
+    --ring: 158 72% 34%;
+
+    --radius: 0.75rem;
+
+    --gradient-primary: linear-gradient(135deg, hsl(158 72% 34%) 0%, hsl(188 72% 40%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(170 30% 98%) 0%, hsl(165 30% 96%) 100%);
+    --shadow-glow: 0 0 40px hsl(158 72% 34% / 0.16);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Cores das stops da onda do hero (theme-aware) */
+    --hero-wave-from: 0 0% 100%;
+    --hero-wave-to: 165 30% 97%;
+
+    /* Escala de elevação */
+    --shadow-sm: 0 1px 2px hsl(200 20% 20% / 0.06), 0 1px 3px hsl(200 20% 20% / 0.10);
+    --shadow-md: 0 4px 12px hsl(200 20% 20% / 0.08), 0 2px 6px hsl(200 20% 20% / 0.06);
+    --shadow-lg: 0 12px 32px hsl(200 20% 20% / 0.12), 0 6px 12px hsl(200 20% 20% / 0.08);
+
+    /* Sidebar (alinhado à paleta) */
+    --sidebar-background: 170 24% 96%;
+    --sidebar-foreground: 200 30% 20%;
+    --sidebar-primary: 158 72% 34%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 170 22% 92%;
+    --sidebar-accent-foreground: 200 30% 14%;
+    --sidebar-border: 190 18% 87%;
+    --sidebar-ring: 158 72% 34%;
+  }
+
+  .dark {
     --background: 192 40% 6%;
     --foreground: 165 25% 96%;
 
@@ -36,62 +96,25 @@ All colors MUST be HSL.
     --input: 190 22% 16%;
     --ring: 158 78% 45%;
 
-    --radius: 0.75rem;
-
     --gradient-primary: linear-gradient(135deg, hsl(158 78% 45%) 0%, hsl(185 75% 52%) 100%);
     --gradient-hero: linear-gradient(180deg, hsl(193 32% 9%) 0%, hsl(192 40% 6%) 100%);
     --shadow-glow: 0 0 40px hsl(158 78% 45% / 0.22);
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-    --sidebar-background: 0 0% 98%;
+    --hero-wave-from: 193 32% 9%;
+    --hero-wave-to: 192 40% 6%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    --shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.3);
+    --shadow-md: 0 6px 18px hsl(0 0% 0% / 0.4);
+    --shadow-lg: 0 16px 40px hsl(0 0% 0% / 0.5);
 
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 210 100% 98%;
-    --foreground: 220 25% 10%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 220 25% 10%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 25% 10%;
-
-    --primary: 158 78% 38%;
-    --primary-foreground: 210 100% 98%;
-
-    --secondary: 180 30% 95%;
-    --secondary-foreground: 192 40% 10%;
-
-    --muted: 180 30% 95%;
-    --muted-foreground: 193 18% 40%;
-
-    --accent: 185 75% 40%;
-    --accent-foreground: 210 100% 98%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 100% 98%;
-
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 158 78% 45%;
-
-    --gradient-primary: linear-gradient(135deg, hsl(158 78% 45%) 0%, hsl(185 75% 52%) 100%);
-    --gradient-hero: linear-gradient(180deg, hsl(180 30% 98%) 0%, hsl(0 0% 100%) 100%);
-    --shadow-glow: 0 0 40px hsl(158 78% 45% / 0.15);
+    --sidebar-background: 193 32% 9%;
+    --sidebar-foreground: 165 25% 90%;
+    --sidebar-primary: 158 78% 45%;
+    --sidebar-primary-foreground: 192 40% 6%;
+    --sidebar-accent: 193 25% 15%;
+    --sidebar-accent-foreground: 165 25% 96%;
+    --sidebar-border: 190 22% 16%;
+    --sidebar-ring: 158 78% 45%;
   }
 }
 
@@ -131,6 +154,20 @@ All colors MUST be HSL.
   .shadow-glow {
     box-shadow: var(--shadow-glow);
   }
+
+  /* Grade de pontos sutil para fundos decorativos (hero) */
+  .bg-dot-grid {
+    background-image: radial-gradient(hsl(var(--primary) / 0.18) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+}
+
+/* Stops da onda do hero — leem o token por tema (atributo SVG não aceita var()) */
+.hero-wave-from {
+  stop-color: hsl(var(--hero-wave-from));
+}
+.hero-wave-to {
+  stop-color: hsl(var(--hero-wave-to));
 }
 
 /* --- Estilização Profissional da Barra de Rolagem --- */

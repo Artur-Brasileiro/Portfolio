@@ -1,11 +1,18 @@
 import { ArrowDown } from "lucide-react";
 import { Button } from "./ui/button";
 import { HashLink } from "react-router-hash-link";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { useRef } from "react";
 import { wordContainer, wordItem, EASE_OUT_EXPO } from "@/lib/motion";
 import Aurora from "./motion/Aurora";
 import MagneticButton from "./motion/MagneticButton";
+import { usePointerParallax } from "./motion/usePointerParallax";
 import { getLenis } from "./motion/SmoothScroll";
 
 const titleStart = ["Olá,", "eu", "sou"];
@@ -31,12 +38,45 @@ const Hero = () => {
     target: sectionRef,
     offset: ["start start", "end start"],
   });
-  const y = useTransform(scrollYProgress, [0, 1], [0, 120]);
+
+  // Conteúdo (foreground): sobe de leve e some ao rolar — mola pra desaceleração macia.
+  const contentY = useSpring(useTransform(scrollYProgress, [0, 1], [0, 120]), {
+    stiffness: 90,
+    damping: 24,
+    mass: 0.5,
+  });
   const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
-  // Parallax das camadas decorativas (profundidades diferentes)
-  const yDeep = useTransform(scrollYProgress, [0, 1], [0, 80]);
-  const yNear = useTransform(scrollYProgress, [0, 1], [0, 220]);
+  // Camadas decorativas — parallax de SCROLL em 3 profundidades, suavizado por mola.
+  const deepScrollY = useSpring(useTransform(scrollYProgress, [0, 1], [0, 70]), {
+    stiffness: 70,
+    damping: 20,
+    mass: 0.9,
+  });
+  const midScrollY = useSpring(useTransform(scrollYProgress, [0, 1], [0, 150]), {
+    stiffness: 75,
+    damping: 20,
+    mass: 0.7,
+  });
+  const nearScrollY = useSpring(useTransform(scrollYProgress, [0, 1], [0, 280]), {
+    stiffness: 80,
+    damping: 20,
+    mass: 0.55,
+  });
+  // Escala cinematográfica: o fundo "afunda" levemente ao rolar.
+  const deepScale = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
+
+  // Parallax de PONTEIRO (desktop): o fundo desliza ao contrário do cursor ("olhar por uma janela");
+  // planos mais próximos se deslocam mais. O conteúdo reage de leve, na mesma direção, pra ganhar vida.
+  const { x: px, y: py } = usePointerParallax();
+  const deepPointerX = useTransform(px, [-0.5, 0.5], [24, -24]);
+  const deepPointerY = useTransform(py, [-0.5, 0.5], [18, -18]);
+  const midPointerX = useTransform(px, [-0.5, 0.5], [44, -44]);
+  const midPointerY = useTransform(py, [-0.5, 0.5], [32, -32]);
+  const nearPointerX = useTransform(px, [-0.5, 0.5], [72, -72]);
+  const nearPointerY = useTransform(py, [-0.5, 0.5], [52, -52]);
+  const contentPointerX = useTransform(px, [-0.5, 0.5], [-12, 12]);
+  const contentPointerY = useTransform(py, [-0.5, 0.5], [-8, 8]);
 
   const scrollWithOffset = (el: HTMLElement) => {
     const lenis = getLenis();
@@ -61,41 +101,76 @@ const Hero = () => {
           className="absolute inset-0 z-[1] overflow-hidden pointer-events-none select-none"
           aria-hidden="true"
         >
-          {/* Profunda — movimento lento */}
-          <motion.div style={{ y: yDeep }} className="absolute inset-0">
-            <span className="absolute left-[7%] top-[20%] font-display text-6xl md:text-8xl font-bold text-primary/[0.06]">
-              {"</>"}
-            </span>
-            <span className="absolute right-[9%] top-[26%] font-mono text-5xl md:text-7xl text-accent/[0.06]">
-              {"{ }"}
-            </span>
-            <span className="absolute left-[16%] bottom-[18%] font-mono text-4xl md:text-6xl text-primary/[0.05]">
-              {"010110"}
-            </span>
-            <div className="absolute right-[14%] bottom-[22%] h-28 w-28 md:h-40 md:w-40 rounded-full border border-primary/[0.07]" />
+          {/* PLANO FUNDO — lento, levemente desfocado e com leve zoom ao rolar */}
+          <motion.div
+            style={{ y: deepScrollY, scale: deepScale }}
+            className="absolute inset-0 will-change-transform"
+          >
+            <motion.div
+              style={{ x: deepPointerX, y: deepPointerY }}
+              className="absolute inset-[-6%] blur-[2px] will-change-transform"
+            >
+              <div className="absolute left-[10%] top-[18%] h-72 w-72 rounded-full bg-primary/[0.10] blur-3xl" />
+              <div className="absolute right-[8%] bottom-[12%] h-80 w-80 rounded-full bg-accent/[0.08] blur-3xl" />
+              <span className="absolute left-[7%] top-[20%] font-display text-6xl md:text-8xl font-bold text-primary/[0.10]">
+                {"</>"}
+              </span>
+              <span className="absolute right-[9%] top-[26%] font-mono text-5xl md:text-7xl text-accent/[0.09]">
+                {"{ }"}
+              </span>
+              <div className="absolute right-[14%] bottom-[22%] h-28 w-28 md:h-44 md:w-44 rounded-full border border-primary/[0.10]" />
+            </motion.div>
           </motion.div>
 
-          {/* Próxima — movimento rápido */}
-          <motion.div style={{ y: yNear }} className="absolute inset-0">
-            <span className="absolute right-[19%] bottom-[28%] font-display text-7xl md:text-9xl font-bold text-accent/[0.07]">
-              {"( )"}
-            </span>
-            <span className="absolute left-[21%] top-[14%] font-mono text-4xl md:text-6xl text-accent/[0.05]">
-              {"=>"}
-            </span>
-            <div className="absolute left-[10%] top-[42%] h-16 w-16 md:h-24 md:w-24 rotate-45 border border-accent/[0.08]" />
-            <div className="absolute right-[30%] top-[20%] h-2 w-2 rounded-full bg-primary/30" />
-            <div className="absolute left-[42%] bottom-[14%] h-2 w-2 rounded-full bg-accent/30" />
-            <div className="absolute right-[24%] bottom-[40%] h-1.5 w-1.5 rounded-full bg-primary/20" />
+          {/* PLANO MÉDIO — velocidade intermediária, nítido */}
+          <motion.div
+            style={{ y: midScrollY }}
+            className="absolute inset-0 will-change-transform"
+          >
+            <motion.div
+              style={{ x: midPointerX, y: midPointerY }}
+              className="absolute inset-0 will-change-transform"
+            >
+              <div className="absolute right-[16%] top-[28%] h-56 w-56 rounded-full bg-accent/[0.10] blur-3xl" />
+              <span className="absolute left-[16%] bottom-[18%] font-mono text-4xl md:text-6xl text-primary/[0.13]">
+                {"010110"}
+              </span>
+              <span className="absolute left-[21%] top-[14%] font-mono text-4xl md:text-6xl text-accent/[0.12]">
+                {"=>"}
+              </span>
+              <div className="absolute left-[10%] top-[42%] h-16 w-16 md:h-24 md:w-24 rotate-45 border border-accent/[0.16]" />
+            </motion.div>
+          </motion.div>
+
+          {/* PLANO FRENTE — rápido, nítido, partículas com brilho */}
+          <motion.div
+            style={{ y: nearScrollY }}
+            className="absolute inset-0 will-change-transform"
+          >
+            <motion.div
+              style={{ x: nearPointerX, y: nearPointerY }}
+              className="absolute inset-0 will-change-transform"
+            >
+              <span className="absolute right-[19%] bottom-[28%] font-display text-7xl md:text-9xl font-bold text-accent/[0.14]">
+                {"( )"}
+              </span>
+              <div className="absolute right-[30%] top-[20%] h-2.5 w-2.5 rounded-full bg-primary shadow-[0_0_14px_2px_hsl(var(--primary)/0.7)]" />
+              <div className="absolute left-[42%] bottom-[14%] h-2 w-2 rounded-full bg-accent shadow-[0_0_12px_2px_hsl(var(--accent)/0.7)]" />
+              <div className="absolute right-[24%] bottom-[40%] h-1.5 w-1.5 rounded-full bg-primary/90 shadow-[0_0_10px_1px_hsl(var(--primary)/0.6)]" />
+              <div className="absolute left-[14%] top-[30%] h-1.5 w-1.5 rounded-full bg-accent/90 shadow-[0_0_10px_1px_hsl(var(--accent)/0.6)]" />
+            </motion.div>
           </motion.div>
         </div>
       )}
 
       <motion.div
-        style={reduce ? undefined : { y, opacity }}
+        style={reduce ? undefined : { y: contentY, opacity }}
         className="container mx-auto px-4 relative z-30"
       >
-        <div className="text-center space-y-6">
+        <motion.div
+          style={reduce ? undefined : { x: contentPointerX, y: contentPointerY }}
+          className="text-center space-y-6"
+        >
           {reduce ? (
             <h1 className="font-display text-5xl md:text-7xl font-bold tracking-tight">
               Olá, eu sou <span className="gradient-text">Artur Brasileiro</span>
@@ -159,7 +234,7 @@ const Hero = () => {
               </Button>
             </MagneticButton>
           </motion.div>
-        </div>
+        </motion.div>
       </motion.div>
 
       {/* Seta para baixo */}
@@ -172,15 +247,32 @@ const Hero = () => {
         <ArrowDown className="w-6 h-6 text-muted-foreground" />
       </HashLink>
 
-      {/* Borda ondulada (Wave SVG) com Neon */}
-      <div className="absolute left-0 right-0 top-full -mt-[2px] w-full leading-none z-10 pointer-events-none">
+      {/* Transição ondulada para a próxima seção.
+          Antes: um bloco chapado de --background (a cor mais escura) ficava na faixa
+          ABAIXO do hero, onde o gradiente/aurora são clipados — uma "zona morta".
+          Agora: o preenchimento é um gradiente que parte da cor do hero (topo, encosta
+          no hero) e clareia até o tom da seção seguinte (borda neon), + um eco da aurora
+          que leva o brilho esmeralda/ciano do hero até a borda. */}
+      <div
+        className="absolute left-0 right-0 top-full -mt-[2px] w-full h-[70px] md:h-[90px] leading-none z-10 pointer-events-none"
+        aria-hidden="true"
+      >
         <svg
           viewBox="0 0 1440 120"
-          className="block w-full h-[70px] md:h-[90px] -scale-y-100"
+          className="absolute inset-0 block w-full h-full -scale-y-100"
           preserveAspectRatio="none"
         >
+          <defs>
+            {/* y2=1 (base do viewBox) cai no TOPO visual por causa do -scale-y-100:
+                topo = cor do hero (--background); aresta neon/abaixo = tom da seção (--card). */}
+            <linearGradient id="heroWaveFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="hsl(193 32% 9%)" />
+              <stop offset="0.55" stopColor="hsl(193 32% 9%)" />
+              <stop offset="1" stopColor="hsl(192 40% 6%)" />
+            </linearGradient>
+          </defs>
           <path
-            className="fill-background"
+            fill="url(#heroWaveFill)"
             d="M0,64 C30,88 60,88 90,64 C120,40 150,40 180,64 C210,88 240,88 270,64 C300,40 330,40 360,64 C390,88 420,88 450,64 C480,40 510,40 540,64 C570,88 600,88 630,64 C660,40 690,40 720,64 C750,88 780,88 810,64 C840,40 870,40 900,64 C930,88 960,88 990,64 C1020,40 1050,40 1080,64 C1110,88 1140,88 1170,64 C1200,40 1230,40 1260,64 C1290,88 1320,88 1350,64 C1380,40 1410,40 1440,64 L1440,120 L0,120 Z"
           />
           <path
@@ -191,6 +283,15 @@ const Hero = () => {
             d="M0,64 C30,88 60,88 90,64 C120,40 150,40 180,64 C210,88 240,88 270,64 C300,40 330,40 360,64 C390,88 420,88 450,64 C480,40 510,40 540,64 C570,88 600,88 630,64 C660,40 690,40 720,64 C750,88 780,88 810,64 C840,40 870,40 900,64 C930,88 960,88 990,64 C1020,40 1050,40 1080,64 C1110,88 1140,88 1170,64 C1200,40 1230,40 1260,64 C1290,88 1320,88 1350,64 C1380,40 1410,40 1440,64"
           />
         </svg>
+
+        {/* Eco da aurora: o brilho do hero alcança a borda (mata a zona morta) */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(70% 140% at 50% -25%, hsl(var(--primary) / 0.14), transparent 60%), radial-gradient(46% 120% at 82% -30%, hsl(var(--accent) / 0.12), transparent 60%)",
+          }}
+        />
       </div>
     </section>
   );
