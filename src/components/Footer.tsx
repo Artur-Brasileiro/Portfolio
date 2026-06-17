@@ -31,7 +31,7 @@ const Footer = () => {
           <div className="flex flex-col items-center gap-3 text-center md:items-start md:text-left">
             <div className="flex items-center gap-2">
               <Code2 className="w-6 h-6 text-primary" />
-              <span className="font-display text-lg font-bold gradient-text">Artur Brasileiro</span>
+              <span className="font-display text-xl font-bold gradient-text">Artur Brasileiro</span>
             </div>
             <p className="text-sm text-muted-foreground max-w-xs">
               Engenheiro da Computação · software web e sistemas embarcados.
