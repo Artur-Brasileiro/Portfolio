@@ -30,7 +30,7 @@ const featuredProjects = [
     category: "Software",
     description:
       "Plataforma web para aprendizado de inglês com recursos interativos e design moderno.",
-    image: "englishup.png",
+    image: "englishup.webp",
     tags: ["React", "TypeScript", "Web"],
     demoLink: "https://playenglishup.com.br/",
     githubLink: "https://github.com/Artur-Brasileiro/English-Hub",

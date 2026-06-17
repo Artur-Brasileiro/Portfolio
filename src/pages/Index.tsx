@@ -8,7 +8,7 @@ import Footer from "@/components/Footer";
 
 const Index = () => {
   useEffect(() => {
-    const imagesToPreload = ["projeto_espectro.jpg", "projeto_deauther.jpg"];
+    const imagesToPreload = ["projeto_espectro.webp", "projeto_deauther.webp"];
 
     imagesToPreload.forEach((imageName) => {
       const img = new Image();
