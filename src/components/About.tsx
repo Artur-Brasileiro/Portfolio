@@ -23,7 +23,7 @@ const skills = [
   {
     icon: Code2,
     title: "Desenvolvimento Web",
-    description: "JavaScript, React, Node.js e frameworks modernos",
+    description: "JavaScript, React, TypeScript e frameworks modernos",
   },
   {
     icon: Cpu,

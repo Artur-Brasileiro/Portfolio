@@ -23,7 +23,7 @@ const education = [
     institution: "Udemy",
     period: "2022",
     description: "Certificação em Python avançado, abordando estruturas de dados e automação.",
-    imageUrl: "/placeholder-certificado.jpg",
+    imageUrl: "certificados/cert-python.jpg",
   },
   {
     icon: Award,
@@ -55,7 +55,7 @@ const education = [
     institution: "Udemy",
     period: "2024",
     description: "Treinamento avançado em Angular e arquitetura de front-end.",
-    imageUrl: "/placeholder-certificado.jpg",
+    imageUrl: "certificados/cert-angular.jpg",
   },
 ];
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Mail, Github, Linkedin, MapPin } from "lucide-react";
+import { Mail, Github, Linkedin, MapPin, Copy, Check } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
@@ -35,9 +35,22 @@ const contactInfo = [
   },
 ];
 
+const EMAIL = "arturbrasileiro00@gmail.com";
+
 const Contact = () => {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [showModal, setShowModal] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(EMAIL);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      /* clipboard indisponível — ignora silenciosamente */
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -95,7 +108,7 @@ const Contact = () => {
                         <div className="p-3 bg-primary/10 rounded-lg">
                           <info.icon className="w-6 h-6 text-primary" />
                         </div>
-                        <div>
+                        <div className="min-w-0">
                           <p className="text-sm text-muted-foreground">{info.label}</p>
                           {info.link ? (
                             <a
@@ -110,6 +123,21 @@ const Contact = () => {
                             <p className="text-foreground">{info.value}</p>
                           )}
                         </div>
+                        {info.label === "Email" && (
+                          <button
+                            type="button"
+                            onClick={copyEmail}
+                            aria-label={copied ? "E-mail copiado" : "Copiar e-mail"}
+                            title={copied ? "Copiado!" : "Copiar e-mail"}
+                            className="ml-auto shrink-0 inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary"
+                          >
+                            {copied ? (
+                              <Check className="h-4 w-4 text-primary" />
+                            ) : (
+                              <Copy className="h-4 w-4" />
+                            )}
+                          </button>
+                        )}
                       </div>
                     </Card>
                   </TiltCard>

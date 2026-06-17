@@ -90,7 +90,7 @@ const Projects = () => {
                       className="group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 w-full sm:w-auto border-white/10"
                     >
                       <Link to={category.link} className="flex items-center gap-2">
-                        Acessar Repositório
+                        Ver Projetos
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </Link>
                     </Button>
