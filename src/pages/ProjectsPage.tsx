@@ -1,5 +1,4 @@
 import { useLayoutEffect, useState } from "react";
-// Importei o ArrowRight para o novo botão
 import { ArrowLeft, ArrowRight, Code2, Cpu, ExternalLink, PlayCircle, Globe } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -116,9 +115,8 @@ const projectData = {
     title: "Projetos de Hardware e Embarcados",
     icon: Cpu,
     projects: [
-      // ADICIONADO: Macropad como o primeiro item do Hardware
-      { 
-        id: 3, 
+      {
+        id: 3,
         name: "Analisador de Espectro de Áudio", 
         description: "Visualização de espectro em tempo real.",
         image: "projeto_espectro.jpg",
