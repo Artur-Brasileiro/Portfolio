@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { Code2, ArrowRight, Microchip, Star, Github, Globe } from "lucide-react";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
@@ -5,6 +6,14 @@ import { Badge } from "./ui/badge";
 import { Link } from "react-router-dom";
 import { Reveal, StaggerContainer, StaggerItem } from "./motion/Reveal";
 import TiltCard from "./motion/TiltCard";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "./ui/carousel";
 
 const projectCategories = [
   {
@@ -25,12 +34,26 @@ const projectCategories = [
 
 const featuredProjects = [
   {
+    id: "viewcongresso",
+    title: "ViewCongresso",
+    category: "Software",
+    description:
+      "Plataforma para organização e participação em congressos, simpósios e eventos acadêmicos — com submissão de trabalhos, inscrições e avaliação por pares.",
+    image: "viewcongresso.svg",
+    logoCover: true,
+    tags: ["Next.js", "React", "Web"],
+    demoLink: "https://viewcongresso.com.br",
+    githubLink: "",
+    isInternal: false,
+  },
+  {
     id: "englishup",
     title: "EnglishUp",
     category: "Software",
     description:
       "Plataforma web para aprendizado de inglês com recursos interativos e design moderno.",
     image: "englishup.webp",
+    logoCover: false,
     tags: ["React", "TypeScript", "Web"],
     demoLink: "https://playenglishup.com.br/",
     githubLink: "https://github.com/Artur-Brasileiro/English-Hub",
@@ -42,7 +65,8 @@ const featuredProjects = [
     category: "Hardware & PCB",
     description:
       "Teclado auxiliar com display integrado e app multiplataforma que detecta programas ativos para mudar o contexto.",
-    image: "projeto_macropad.png",
+    image: "capa_macropad.jpg",
+    logoCover: false,
     tags: ["C++", "EasyEDA", "PCB", "Python"],
     demoLink: "/projeto/macropad",
     githubLink: "https://github.com/Artur-Brasileiro/Macropad-TCC",
@@ -51,6 +75,21 @@ const featuredProjects = [
 ];
 
 const Projects = () => {
+  const [api, setApi] = useState<CarouselApi>();
+  const pausedRef = useRef(false);
+
+  // Autoplay: avança um card a cada 4s. Pausa enquanto o mouse está sobre o
+  // carrossel (pra dar tempo de ler/clicar) e quando a aba está em segundo plano.
+  // Com loop, percorre os projetos continuamente (ativa quando há mais de 2).
+  useEffect(() => {
+    if (!api) return;
+    const id = setInterval(() => {
+      if (pausedRef.current || document.hidden) return;
+      api.scrollNext();
+    }, 4000);
+    return () => clearInterval(id);
+  }, [api]);
+
   return (
     <section id="projetos" className="py-20 relative">
       {/* Luzes de fundo */}
@@ -112,13 +151,24 @@ const Projects = () => {
             </div>
           </Reveal>
 
-          <StaggerContainer className="grid md:grid-cols-2 gap-8 pt-4">
-            {featuredProjects.map((project) => (
-              <StaggerItem key={project.id} className="h-full">
-                <TiltCard className="rounded-xl h-full">
+          <Carousel
+            opts={{ align: "start", loop: true }}
+            setApi={setApi}
+            onMouseEnter={() => (pausedRef.current = true)}
+            onMouseLeave={() => (pausedRef.current = false)}
+            className="px-2 sm:px-0"
+          >
+            <CarouselContent className="py-4">
+              {featuredProjects.map((project) => (
+                <CarouselItem key={project.id} className="sm:basis-1/2">
+                  <TiltCard className="rounded-xl h-full">
                   <Card className="group flex h-full flex-col overflow-hidden bg-card border-border/50 shadow-lg transition-all duration-500 hover:border-primary/40 hover:shadow-glow">
-                    {/* Imagem */}
-                    <div className="relative aspect-video overflow-hidden bg-secondary">
+                    {/* Imagem (logoCover: logo centralizado sobre branco; senão, foto em object-cover) */}
+                    <div
+                      className={`relative aspect-video overflow-hidden ${
+                        project.logoCover ? "bg-white" : "bg-secondary"
+                      }`}
+                    >
                       <img
                         src={
                           project.image.startsWith("http")
@@ -127,7 +177,9 @@ const Projects = () => {
                         }
                         alt={project.title}
                         loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        className={`w-full h-full transition-transform duration-700 group-hover:scale-105 ${
+                          project.logoCover ? "object-contain p-8" : "object-cover"
+                        }`}
                       />
                       <div className="absolute top-4 left-4">
                         <Badge
@@ -188,9 +240,12 @@ const Projects = () => {
                     </div>
                   </Card>
                 </TiltCard>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="left-1 sm:-left-4 lg:-left-12" />
+            <CarouselNext className="right-1 sm:-right-4 lg:-right-12" />
+          </Carousel>
         </div>
       </div>
 

@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Pasta de trabalho / imagens-fonte (assets usados já ficam em public/)
+prints/

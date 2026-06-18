@@ -47,10 +47,6 @@ Convenção (next-themes, attribute="class"):
     --shadow-glow: 0 0 40px hsl(158 72% 34% / 0.16);
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-    /* Cores das stops da onda do hero (theme-aware) */
-    --hero-wave-from: 165 30% 96%;
-    --hero-wave-to: 165 30% 97%;
-
     /* Escala de elevação */
     --shadow-sm: 0 1px 2px hsl(200 20% 20% / 0.06), 0 1px 3px hsl(200 20% 20% / 0.10);
     --shadow-md: 0 4px 12px hsl(200 20% 20% / 0.08), 0 2px 6px hsl(200 20% 20% / 0.06);
@@ -99,9 +95,6 @@ Convenção (next-themes, attribute="class"):
     --gradient-primary: linear-gradient(135deg, hsl(158 78% 45%) 0%, hsl(185 75% 52%) 100%);
     --gradient-hero: linear-gradient(180deg, hsl(193 32% 9%) 0%, hsl(192 40% 6%) 100%);
     --shadow-glow: 0 0 40px hsl(158 78% 45% / 0.22);
-
-    --hero-wave-from: 193 32% 9%;
-    --hero-wave-to: 192 40% 6%;
 
     --shadow-sm: 0 1px 2px hsl(0 0% 0% / 0.3);
     --shadow-md: 0 6px 18px hsl(0 0% 0% / 0.4);
@@ -160,14 +153,6 @@ Convenção (next-themes, attribute="class"):
     background-image: radial-gradient(hsl(var(--primary) / 0.18) 1px, transparent 1px);
     background-size: 28px 28px;
   }
-}
-
-/* Stops da onda do hero — leem o token por tema (atributo SVG não aceita var()) */
-.hero-wave-from {
-  stop-color: hsl(var(--hero-wave-from));
-}
-.hero-wave-to {
-  stop-color: hsl(var(--hero-wave-to));
 }
 
 /* --- Estilização Profissional da Barra de Rolagem --- */
@@ -232,20 +217,25 @@ Convenção (next-themes, attribute="class"):
   opacity: 0.8;
 }
 
-@keyframes neonRun {
-  0% {
-    stroke-dashoffset: 600;
-  }
-  100% {
-    stroke-dashoffset: 0;
-  }
+/* Pausada quando fora da viewport (alternada por IntersectionObserver no Contact):
+   a animação do conic-gradient + blur não re-renderiza enquanto o card não é visto. */
+.animated-border-card.is-paused::before,
+.animated-border-card.is-paused::after {
+  animation-play-state: paused;
 }
 
+@keyframes neonPulse {
+  0%, 100% { opacity: 0.72; }
+  50% { opacity: 1; }
+}
+
+/* Onda neon: brilho estático (rasterizado UMA vez) + pulso de opacidade — que é
+   apenas composição, barato. Antes a animação de `stroke-dashoffset` combinada com
+   `drop-shadow` forçava re-rasterizar a região borrada de toda a onda (1440px de
+   largura, ×2 ondas) a cada frame — principal causa do alto uso de CPU/GPU. */
 .neon-wave {
-  stroke-dasharray: 300;
-  stroke-dashoffset: 600;
-  animation: neonRun 2s linear infinite;
-  filter: drop-shadow(0 0 6px hsl(var(--primary))) drop-shadow(0 0 12px hsl(var(--primary)));
+  filter: drop-shadow(0 0 5px hsl(var(--primary))) drop-shadow(0 0 10px hsl(var(--primary) / 0.6));
+  animation: neonPulse 3.6s ease-in-out infinite;
 }
 
 /* --- Lenis smooth scroll --- */
@@ -266,17 +256,20 @@ html.lenis body {
   pointer-events: none;
 }
 
-/* --- Aurora (fundo do hero) --- */
+/* --- Aurora (fundo do hero) ---
+   Só `translate` (composição na GPU, sem re-raster). Antes o `scale` mudava o tamanho
+   rasterizado dos blobs com blur de 120px, forçando re-rasterizar essa área enorme a
+   cada frame. `will-change` promove a camada para o blur ser rasterizado uma única vez. */
 @keyframes aurora-1 {
-  0%, 100% { transform: translate(-50%, 0) scale(1); }
-  50% { transform: translate(-42%, 8%) scale(1.12); }
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-44%, 7%); }
 }
 @keyframes aurora-2 {
-  0%, 100% { transform: translate(50%, 0) scale(1); }
-  50% { transform: translate(42%, -8%) scale(1.06); }
+  0%, 100% { transform: translate(50%, 0); }
+  50% { transform: translate(44%, -7%); }
 }
-.animate-aurora-1 { animation: aurora-1 18s ease-in-out infinite; }
-.animate-aurora-2 { animation: aurora-2 22s ease-in-out infinite; }
+.animate-aurora-1 { animation: aurora-1 18s ease-in-out infinite; will-change: transform; }
+.animate-aurora-2 { animation: aurora-2 22s ease-in-out infinite; will-change: transform; }
 
 /* --- Marquee infinito --- */
 @keyframes marquee {

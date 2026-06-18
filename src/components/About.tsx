@@ -128,7 +128,7 @@ const About = () => {
                     src={tech.icon}
                     alt={tech.name}
                     loading="lazy"
-                    className="w-full h-full object-contain grayscale opacity-70 transition duration-300 hover:grayscale-0 hover:opacity-100 hover:scale-110"
+                    className="w-full h-full object-contain transition duration-300 hover:scale-110"
                   />
                 </div>
                 <span className="text-sm font-medium text-muted-foreground">

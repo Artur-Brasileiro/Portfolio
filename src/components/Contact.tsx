@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Mail, Github, Linkedin, MapPin, Copy, Check } from "lucide-react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
@@ -41,6 +41,20 @@ const Contact = () => {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [showModal, setShowModal] = useState(false);
   const [copied, setCopied] = useState(false);
+  const borderRef = useRef<HTMLDivElement>(null);
+
+  // Pausa a borda giratória (conic-gradient + blur) quando o formulário está fora da
+  // viewport — evita repaints contínuos caros enquanto o card não está sendo visto.
+  useEffect(() => {
+    const el = borderRef.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => el.classList.toggle("is-paused", !entry.isIntersecting),
+      { threshold: 0 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
   const copyEmail = async () => {
     try {
@@ -148,7 +162,7 @@ const Contact = () => {
 
           {/* Coluna do formulário */}
           <Reveal delay={0.15}>
-            <div className="animated-border-card p-[2px] h-full">
+            <div ref={borderRef} className="animated-border-card is-paused p-[2px] h-full">
               <Card className="p-8 bg-card border-border relative z-10 w-full h-full">
                 <h3 className="font-display text-2xl font-bold mb-6">Envie uma Mensagem</h3>
 

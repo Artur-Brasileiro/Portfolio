@@ -4,6 +4,7 @@ import { ArrowLeft, Lightbulb, Calendar, CheckCircle2, CircleDashed, Github, Box
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import ModelViewer from "@/components/ModelViewer";
+import { useLenisLock } from "@/components/motion/useLenisLock";
 import {
   Dialog,
   DialogContent,
@@ -12,35 +13,56 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 
+type TimelineItem = {
+  status: "completed" | "current" | "planned";
+  date: string;
+  title: string;
+  description: string;
+  image?: string;
+  images?: string[];
+  modelUrl?: string;
+};
+
 const MacropadPage = () => {
   useLayoutEffect(() => { window.scrollTo(0, 0); }, []);
 
   const [maximizedMedia, setMaximizedMedia] = useState<{ type: 'image' | 'model', url: string } | null>(null);
 
-  const timeline = [
+  // Pausa o smooth-scroll enquanto o lightbox de mídia está aberto (senão a roda do
+  // mouse rola a página atrás; com isso, o wheel também passa a dar zoom no modelo 3D).
+  useLenisLock(!!maximizedMedia);
+
+  const timeline: TimelineItem[] = [
     {
       status: "completed",
       date: "Fase 1",
       title: "Desenho da PCB no EasyEDA",
       description: "Elaboração do esquemático e roteamento completo da placa no EasyEDA. O layout foi cuidadosamente planejado para acomodar as 18 teclas mecânicas e o display OLED de forma ergonômica.",
-      image: "macropadpage/etapa1.png"
+      modelUrl: "macropadpage/macropad.glb"
+    },
+    {
+      status: "completed",
+      date: "Fase 2",
+      title: "Fabricação e Chegada da PCB",
+      description: "Os arquivos Gerber foram enviados à JLCPCB e a placa foi fabricada. O protótipo chegou ao Brasil, pronto para a etapa de montagem.",
+      images: ["macropadpage/macropad1.jpg", "macropadpage/macropad2.jpg"]
+    },
+    {
+      status: "completed",
+      date: "Fase 3",
+      title: "Montagem da Placa",
+      description: "Com a PCB em mãos, foi feita a montagem: soldagem dos diodos, dos switches mecânicos, do microcontrolador e a conexão do display OLED. A placa está montada e funcional — o próximo passo é a criação da case em impressão 3D.",
+      image: "capa_macropad.jpg"
     },
     {
       status: "current",
-      date: "Fase 2",
-      title: "Visualização 3D e Fabricação",
-      description: "Os arquivos Gerber foram gerados e o pedido do protótipo foi feito na JLCPCB. Atualmente, a placa está em processo de fabricação e estamos aguardando o envio e a chegada ao Brasil.",
-      modelUrl: "macropadpage/macropad.glb" 
-    },
-    {
-      status: "planned",
-      date: "Fase 3",
-      title: "Montagem da Placa",
-      description: "Assim que as placas chegarem, será feita a montagem física do projeto. Isso inclui a soldagem dos diodos, switches mecânicos, o microcontrolador e a conexão do display OLED na PCB." 
-    },
-    {
-      status: "planned",
       date: "Fase 4",
+      title: "Criação da Case (Impressão 3D)",
+      description: "Modelagem e impressão 3D de uma case sob medida para abrigar a placa montada, protegendo a eletrônica e dando ao Macropad um acabamento final ergonômico e compacto."
+    },
+    {
+      status: "planned",
+      date: "Fase 5",
       title: "Desenvolvimento C++ e Python",
       description: "Criação do código em C++ para o firmware (varredura da matriz e controle do display) e desenvolvimento do software em Python para o computador, responsável por detectar a janela ativa e enviar os contextos corretos ao Macropad."
     }
@@ -153,37 +175,58 @@ const MacropadPage = () => {
                   </div>
                 </div>
 
-                {/* Coluna 2: A Imagem ou Modelo 3D */}
-                {(item.image || item.modelUrl) && (
+                {/* Coluna 2: Imagem(ns) ou Modelo 3D */}
+                {(item.image || item.modelUrl || item.images) && (
                     <div className="w-[calc(100%-4rem)] ml-auto md:ml-0 md:w-1/2 md:pl-12 group-odd:md:pl-0 group-odd:md:pr-12">
-                        <div className="relative aspect-video rounded-2xl overflow-hidden border border-border/50 shadow-sm bg-secondary/30 flex items-center justify-center group/media">
-                        
-                        {/* Miniatura não tem zoom habilitado para não travar a rolagem da página */}
-                        {item.modelUrl ? (
-                            <ModelViewer url={item.modelUrl} enableZoom={false} />
+                        {item.images ? (
+                          /* Fotos verticais lado a lado (ex.: a PCB recebida — frente e verso) */
+                          <div className="grid grid-cols-2 gap-3">
+                            {item.images.map((img) => (
+                              <div key={img} className="relative aspect-[3/4] rounded-2xl overflow-hidden border border-border/50 shadow-sm bg-secondary/30 group/media">
+                                <img
+                                  src={`${import.meta.env.BASE_URL}${img}`}
+                                  alt={item.title}
+                                  className="w-full h-full object-cover transition-transform duration-700 group-hover/media:scale-105"
+                                />
+                                <Button
+                                  variant="secondary"
+                                  size="icon"
+                                  className="absolute top-4 right-4 opacity-0 group-hover/media:opacity-100 transition-opacity z-20 shadow-lg bg-background/80 backdrop-blur-sm hover:bg-background"
+                                  onClick={() => setMaximizedMedia({ type: 'image', url: img })}
+                                >
+                                  <Maximize2 className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            ))}
+                          </div>
                         ) : (
-                            <img 
-                            src={`${import.meta.env.BASE_URL}${item.image}`} 
-                            alt={item.title} 
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover/media:scale-105"
-                            />
-                        )}
-
-                        {/* Botão de Maximizar */}
-                        <Button
-                            variant="secondary"
-                            size="icon"
-                            className="absolute top-4 right-4 opacity-0 group-hover/media:opacity-100 transition-opacity z-20 shadow-lg bg-background/80 backdrop-blur-sm hover:bg-background"
-                            onClick={() => setMaximizedMedia(
-                            item.modelUrl 
-                                ? { type: 'model', url: item.modelUrl } 
-                                : { type: 'image', url: item.image as string }
+                          <div className="relative aspect-video rounded-2xl overflow-hidden border border-border/50 shadow-sm bg-secondary/30 flex items-center justify-center group/media">
+                            {/* Miniatura não tem zoom habilitado para não travar a rolagem da página */}
+                            {item.modelUrl ? (
+                                <ModelViewer url={item.modelUrl} enableZoom={false} />
+                            ) : (
+                                <img
+                                src={`${import.meta.env.BASE_URL}${item.image}`}
+                                alt={item.title}
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover/media:scale-105"
+                                />
                             )}
-                        >
-                            <Maximize2 className="w-4 h-4" />
-                        </Button>
-                        
-                        </div>
+
+                            {/* Botão de Maximizar */}
+                            <Button
+                                variant="secondary"
+                                size="icon"
+                                className="absolute top-4 right-4 opacity-0 group-hover/media:opacity-100 transition-opacity z-20 shadow-lg bg-background/80 backdrop-blur-sm hover:bg-background"
+                                onClick={() => setMaximizedMedia(
+                                item.modelUrl
+                                    ? { type: 'model', url: item.modelUrl }
+                                    : { type: 'image', url: item.image as string }
+                                )}
+                            >
+                                <Maximize2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        )}
                     </div>
                     )}
 

@@ -95,7 +95,7 @@ const Hero = () => {
   return (
     <section
       ref={sectionRef}
-      className="min-h-screen flex items-center justify-center relative bg-gradient-hero"
+      className="min-h-screen flex flex-col relative bg-gradient-hero"
     >
       <Aurora />
 
@@ -165,13 +165,21 @@ const Hero = () => {
         </div>
       )}
 
+      {/* Desvanecimento do fundo para --background chapado na base do hero: neutraliza
+          o brilho da aurora antes da borda, para o preenchimento da onda (também
+          --background) encostar sem degrau — a única fronteira fica sendo a ondulação. */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-44 z-[2] pointer-events-none bg-gradient-to-b from-transparent to-background"
+        aria-hidden="true"
+      />
+
       <motion.div
         style={reduce ? undefined : { y: contentY, opacity }}
-        className="container mx-auto px-4 relative z-30"
+        className="container mx-auto px-4 relative z-30 flex flex-1 items-center justify-center"
       >
         <motion.div
           style={reduce ? undefined : { x: contentPointerX, y: contentPointerY }}
-          className="flex flex-col items-center text-center space-y-6"
+          className="flex flex-col items-center text-center space-y-6 [@media(max-height:800px)]:space-y-4"
         >
           <motion.div
             initial={reduce ? false : { opacity: 0, scale: 0.85 }}
@@ -226,7 +234,7 @@ const Hero = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: EASE_OUT_EXPO, delay: reduce ? 0 : 0.9 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center pt-4"
+            className="flex flex-col sm:flex-row gap-4 justify-center pt-4 [@media(max-height:800px)]:pt-1"
           >
             <MagneticButton className="inline-flex w-full sm:w-auto">
               <Button size="lg" className="shadow-glow w-full" asChild>
@@ -273,9 +281,10 @@ const Hero = () => {
         </motion.div>
       </motion.div>
 
-      {/* Indicador de scroll (rolar para Sobre) */}
+      {/* Indicador de scroll (rolar para Sobre) — em fluxo, centralizado e
+          abaixo do conteúdo, para nunca sobrepor os ícones sociais em telas baixas. */}
       <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30"
+        className="relative z-30 flex shrink-0 justify-center pb-8 [@media(max-height:720px)]:hidden"
         animate={reduce ? undefined : { y: [0, 8, 0] }}
         transition={
           reduce
@@ -295,32 +304,21 @@ const Hero = () => {
         </HashLink>
       </motion.div>
 
-      {/* Transição ondulada para a próxima seção.
-          Antes: um bloco chapado de --background (a cor mais escura) ficava na faixa
-          ABAIXO do hero, onde o gradiente/aurora são clipados — uma "zona morta".
-          Agora: o preenchimento é um gradiente que parte da cor do hero (topo, encosta
-          no hero) e clareia até o tom da seção seguinte (borda neon), + um eco da aurora
-          que leva o brilho esmeralda/ciano do hero até a borda. */}
+      {/* Borda ondulada para a próxima seção. O preenchimento usa a MESMA cor do
+          fundo do hero (--background, onde o gradient-hero termina), então a única
+          fronteira visível é a própria ondulação neon — sem linha reta separando
+          as seções (mesma abordagem da onda de Projetos). */}
       <div
-        className="absolute left-0 right-0 top-full -mt-[2px] w-full h-[70px] md:h-[90px] leading-none z-10 pointer-events-none"
+        className="absolute left-0 right-0 top-full -mt-[2px] w-full leading-none z-10 pointer-events-none"
         aria-hidden="true"
       >
         <svg
           viewBox="0 0 1440 120"
-          className="absolute inset-0 block w-full h-full -scale-y-100"
+          className="block w-full h-[70px] md:h-[90px] -scale-y-100"
           preserveAspectRatio="none"
         >
-          <defs>
-            {/* y2=1 (base do viewBox) cai no TOPO visual por causa do -scale-y-100:
-                topo = cor do hero (--background); aresta neon/abaixo = tom da seção (--card). */}
-            <linearGradient id="heroWaveFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" className="hero-wave-from" />
-              <stop offset="0.55" className="hero-wave-from" />
-              <stop offset="1" className="hero-wave-to" />
-            </linearGradient>
-          </defs>
           <path
-            fill="url(#heroWaveFill)"
+            className="fill-background"
             d="M0,64 C30,88 60,88 90,64 C120,40 150,40 180,64 C210,88 240,88 270,64 C300,40 330,40 360,64 C390,88 420,88 450,64 C480,40 510,40 540,64 C570,88 600,88 630,64 C660,40 690,40 720,64 C750,88 780,88 810,64 C840,40 870,40 900,64 C930,88 960,88 990,64 C1020,40 1050,40 1080,64 C1110,88 1140,88 1170,64 C1200,40 1230,40 1260,64 C1290,88 1320,88 1350,64 C1380,40 1410,40 1440,64 L1440,120 L0,120 Z"
           />
           <path
@@ -331,15 +329,6 @@ const Hero = () => {
             d="M0,64 C30,88 60,88 90,64 C120,40 150,40 180,64 C210,88 240,88 270,64 C300,40 330,40 360,64 C390,88 420,88 450,64 C480,40 510,40 540,64 C570,88 600,88 630,64 C660,40 690,40 720,64 C750,88 780,88 810,64 C840,40 870,40 900,64 C930,88 960,88 990,64 C1020,40 1050,40 1080,64 C1110,88 1140,88 1170,64 C1200,40 1230,40 1260,64 C1290,88 1320,88 1350,64 C1380,40 1410,40 1440,64"
           />
         </svg>
-
-        {/* Eco da aurora: o brilho do hero alcança a borda (mata a zona morta) */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(70% 140% at 50% -25%, hsl(var(--primary) / 0.14), transparent 60%), radial-gradient(46% 120% at 82% -30%, hsl(var(--accent) / 0.12), transparent 60%)",
-          }}
-        />
       </div>
     </section>
   );

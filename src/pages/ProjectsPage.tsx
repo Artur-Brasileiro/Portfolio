@@ -12,6 +12,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { useLenisLock } from "@/components/motion/useLenisLock";
 
 export type ProjectItem = {
   id: number;
@@ -58,6 +59,12 @@ const projectData = {
       {
         title: "Desenvolvimento Web",
         projects: [
+          {
+            id: 15,
+            name: "ViewCongresso",
+            description: "Plataforma web para organização e participação em congressos e eventos acadêmicos, com submissão de trabalhos, inscrições e avaliação por pares.",
+            siteLink: "https://viewcongresso.com.br"
+          },
           {
             id: 11,
             name: "EnglishUp",
@@ -149,7 +156,7 @@ const projectData = {
         id: 14,
         name: "Macropad Inteligente",
         description: "Teclado auxiliar com display integrado e app multiplataforma que detecta programas ativos.",
-        image: "projeto_macropad.png",
+        image: "capa_macropad.jpg",
         internalLink: "/projeto/macropad",
         longDescription: "Um teclado auxiliar customizado do zero, unindo design de circuito impresso, eletrônica embarcada e desenvolvimento de software multiplataforma. Ele possui um aplicativo desktop em Python que detecta a janela ativa para alterar dinamicamente o contexto e as funções das teclas do hardware.",
         technicalLink: "https://github.com/Artur-Brasileiro/Macropad-TCC",
@@ -165,6 +172,9 @@ const ProjectsPage = () => {
   
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  // Trava o scroll de fundo (Lenis) enquanto o vídeo está aberto.
+  useLenisLock(isDialogOpen);
 
   useLayoutEffect(() => {
     window.scrollTo(0, 0);
@@ -340,17 +350,19 @@ const ProjectsPage = () => {
                               </Button>
                             )}
 
-                            <Button asChild variant="outline" className="w-full group">
-                              <a 
-                                href={project.githubLink} 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                className="flex items-center justify-center"
-                              >
-                                Detalhes no GitHub
-                                <ExternalLink className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-                              </a>
-                            </Button>
+                            {(project as ProjectItem).githubLink && (
+                              <Button asChild variant="outline" className="w-full group">
+                                <a
+                                  href={(project as ProjectItem).githubLink}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="flex items-center justify-center"
+                                >
+                                  Detalhes no GitHub
+                                  <ExternalLink className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+                                </a>
+                              </Button>
+                            )}
                           </div>
                         </CardContent>
                     </Card>

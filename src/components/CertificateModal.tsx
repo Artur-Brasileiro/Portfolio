@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ImageOff } from "lucide-react";
+import { useLenisLock } from "./motion/useLenisLock";
 
 interface Props {
   isOpen: boolean;
@@ -11,6 +12,9 @@ interface Props {
 
 const CertificateModal = ({ isOpen, onClose, image, title }: Props) => {
   const [errored, setErrored] = useState(false);
+
+  // Trava o scroll de fundo (Lenis) enquanto o certificado está aberto.
+  useLenisLock(isOpen);
 
   // Reseta o estado de erro sempre que a imagem mudar (modal reaproveitado).
   useEffect(() => {
