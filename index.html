@@ -1,8 +1,19 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="dark light" />
+    <!-- Aplica o tema antes do primeiro paint (evita flash de tema claro). Default: dark. -->
+    <script>
+      try {
+        if (localStorage.getItem("theme") !== "light") {
+          document.documentElement.classList.add("dark");
+        }
+      } catch (e) {
+        document.documentElement.classList.add("dark");
+      }
+    </script>
     <title>Portfólio - Artur Brasileiro</title>
 
     <link rel="icon" type="image/x-icon" href="/Portfolio/favicon.ico" />
@@ -10,12 +21,19 @@
     <meta name="description" content="Portfólio de Engenheiro da Computação" />
     <meta name="author" content="Artur Brasileiro" />
 
-    <script type="module" crossorigin src="/Portfolio/assets/index-D5adzyze.js"></script>
-    <link rel="modulepreload" crossorigin href="/Portfolio/assets/vendor-CrQFulg4.js">
-    <link rel="stylesheet" crossorigin href="/Portfolio/assets/index-DNwyo9Ff.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script type="module" crossorigin src="/Portfolio/assets/index-CAOBnpMa.js"></script>
+    <link rel="modulepreload" crossorigin href="/Portfolio/assets/vendor-a3hKBEq4.js">
+    <link rel="stylesheet" crossorigin href="/Portfolio/assets/index-enGr5wjX.css">
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root"></div>
   </body>
 </html>
