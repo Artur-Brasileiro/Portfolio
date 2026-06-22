@@ -243,8 +243,16 @@ const Projects = () => {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="left-1 sm:-left-4 lg:-left-12" />
-            <CarouselNext className="right-1 sm:-right-4 lg:-right-12" />
+            {/* Setas laterais: apenas em telas com espaço (sm+), fora do card */}
+            <CarouselPrevious className="hidden sm:inline-flex sm:-left-4 lg:-left-12" />
+            <CarouselNext className="hidden sm:inline-flex sm:-right-4 lg:-right-12" />
+
+            {/* Mobile: setas abaixo do carrossel para não sobrepor o card
+                (resetam o `absolute` base para ficar em fluxo normal) */}
+            <div className="mt-3 flex items-center justify-center gap-4 sm:hidden">
+              <CarouselPrevious className="static left-auto right-auto top-auto translate-y-0" />
+              <CarouselNext className="static left-auto right-auto top-auto translate-y-0" />
+            </div>
           </Carousel>
         </div>
       </div>
