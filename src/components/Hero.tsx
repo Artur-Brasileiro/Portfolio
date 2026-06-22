@@ -175,7 +175,7 @@ const Hero = () => {
 
       <motion.div
         style={reduce ? undefined : { y: contentY, opacity }}
-        className="container mx-auto px-4 relative z-30 flex flex-1 items-center justify-center"
+        className="container mx-auto px-4 pt-20 md:pt-28 relative z-30 flex flex-1 items-center justify-center"
       >
         <motion.div
           style={reduce ? undefined : { x: contentPointerX, y: contentPointerY }}
