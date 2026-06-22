@@ -88,7 +88,7 @@ const Navbar = () => {
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
-        setIsScrolled(window.scrollY > 20);
+        setIsScrolled(window.scrollY > 40);
         if (window.scrollY < 100) setActiveSection("");
         ticking = false;
       });
