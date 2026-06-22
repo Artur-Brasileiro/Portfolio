@@ -299,7 +299,7 @@ const Hero = () => {
           aria-label="Rolar para a seção Sobre"
           className="flex flex-col items-center gap-1 text-muted-foreground transition-colors hover:text-primary cursor-pointer"
         >
-          <span className="text-[11px] font-mono uppercase tracking-widest">Rolar</span>
+          <span className="hidden md:block text-[11px] font-mono uppercase tracking-widest">Rolar</span>
           <ArrowDown className="w-5 h-5" />
         </HashLink>
       </motion.div>
