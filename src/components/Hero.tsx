@@ -284,7 +284,7 @@ const Hero = () => {
       {/* Indicador de scroll (rolar para Sobre) — em fluxo, centralizado e
           abaixo do conteúdo, para nunca sobrepor os ícones sociais em telas baixas. */}
       <motion.div
-        className="relative z-30 flex shrink-0 justify-center pb-8 [@media(max-height:720px)]:hidden"
+        className="relative z-30 flex shrink-0 justify-center pb-8 max-md:hidden [@media(max-height:720px)]:hidden"
         animate={reduce ? undefined : { y: [0, 8, 0] }}
         transition={
           reduce
@@ -299,7 +299,7 @@ const Hero = () => {
           aria-label="Rolar para a seção Sobre"
           className="flex flex-col items-center gap-1 text-muted-foreground transition-colors hover:text-primary cursor-pointer"
         >
-          <span className="hidden md:block text-[11px] font-mono uppercase tracking-widest">Rolar</span>
+          <span className="text-[11px] font-mono uppercase tracking-widest">Rolar</span>
           <ArrowDown className="w-5 h-5" />
         </HashLink>
       </motion.div>
