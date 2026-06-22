@@ -2,6 +2,12 @@ import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
+  // Aplica utilitarios `hover:` apenas em dispositivos com hover real
+  // (@media (hover: hover)). Em telas de toque o hover nao "gruda" mais
+  // apos o tap — corrige o estado azul preso no botao de tema, etc.
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
   prefix: "",
   theme: {
