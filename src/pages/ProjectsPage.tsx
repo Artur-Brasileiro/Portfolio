@@ -5,7 +5,6 @@ import {
   ChevronRight,
   ExternalLink,
   Github,
-  Lock,
   PlayCircle,
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
@@ -246,13 +245,6 @@ const ProjectsPage = () => {
                               GitHub
                               <Github className="h-3.5 w-3.5" />
                             </a>
-                          )}
-
-                          {project.privateCode && (
-                            <span className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
-                              <Lock className="h-3.5 w-3.5" />
-                              Código proprietário
-                            </span>
                           )}
                         </div>
                       </article>

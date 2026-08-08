@@ -79,60 +79,72 @@ const MacropadPage = () => {
             <span className="font-medium text-foreground">{macropad.title}</span>
           </nav>
 
-          <div className="mt-8 flex flex-wrap items-center gap-2">
-            <span className="rounded-md border border-border bg-background px-2.5 py-1 text-xs font-medium text-muted-foreground">
-              {macropad.category}
-            </span>
-            <span className="inline-flex items-center gap-1.5 rounded-md border border-primary/20 bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
-              <Loader className="h-3 w-3" aria-hidden />
-              {macropad.status}
-            </span>
+          {/* Resumo à esquerda, ficha de especificações à direita: sem a coluna
+              da direita, metade da largura ficava vazia. */}
+          <div className="mt-8 grid gap-10 lg:grid-cols-[1.3fr_1fr] lg:gap-16">
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="rounded-md border border-border bg-background px-2.5 py-1 text-xs font-medium text-muted-foreground">
+                  {macropad.category}
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-md border border-primary/20 bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
+                  <Loader className="h-3 w-3" aria-hidden />
+                  {macropad.status}
+                </span>
+              </div>
+
+              <h1 className="font-display mt-5 text-display-xl font-bold">{macropad.title}</h1>
+
+              <p className="mt-5 text-lg leading-relaxed text-muted-foreground">
+                {macropad.summary}
+              </p>
+
+              <a
+                href={macropad.repository}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-8 inline-flex h-11 items-center gap-2 rounded-md border border-border bg-background px-5 text-sm font-medium text-foreground shadow-soft-sm transition-colors hover:text-primary"
+              >
+                <Github className="h-4 w-4" />
+                Acompanhar no GitHub
+              </a>
+            </div>
+
+            <div className="rounded-lg border border-border bg-background p-6">
+              <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                Especificações
+              </h2>
+              <dl className="mt-5 divide-y divide-border">
+                {macropad.specs.map((spec) => (
+                  <div
+                    key={spec.label}
+                    className="flex items-baseline justify-between gap-6 py-3 first:pt-0 last:pb-0"
+                  >
+                    <dt className="text-xs uppercase tracking-wider text-muted-foreground">
+                      {spec.label}
+                    </dt>
+                    <dd className="text-right text-sm font-medium text-foreground">
+                      {spec.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* A ideia — título fixo à esquerda, texto à direita. */}
+      <div className="border-b border-border bg-background">
+        <div className="rail grid gap-10 py-16 md:py-20 lg:grid-cols-[1fr_2fr] lg:gap-16">
+          <div>
+            <p className="eyebrow">Contexto</p>
+            <h2 className="font-display mt-5 text-display-lg font-semibold lg:sticky lg:top-24">
+              A ideia do projeto
+            </h2>
           </div>
 
-          <h1 className="font-display mt-5 text-display-xl font-bold">{macropad.title}</h1>
-
-          <p className="mt-5 max-w-3xl text-lg leading-relaxed text-muted-foreground">
-            {macropad.summary}
-          </p>
-
-          <a
-            href={macropad.repository}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-8 inline-flex h-11 items-center gap-2 rounded-md border border-border bg-background px-5 text-sm font-medium text-foreground shadow-soft-sm transition-colors hover:text-primary"
-          >
-            <Github className="h-4 w-4" />
-            Acompanhar no GitHub
-          </a>
-        </div>
-      </div>
-
-      {/* Especificações */}
-      <div className="border-b border-border bg-background">
-        <div className="rail py-10">
-          <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
-            Especificações
-          </h2>
-          <dl className="mt-6 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-5">
-            {macropad.specs.map((spec) => (
-              <div key={spec.label}>
-                <dt className="text-xs uppercase tracking-wider text-muted-foreground">
-                  {spec.label}
-                </dt>
-                <dd className="mt-1.5 text-sm font-medium text-foreground">{spec.value}</dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </div>
-
-      {/* A ideia */}
-      <div className="border-b border-border bg-surface">
-        <div className="rail py-16 md:py-20">
-          <p className="eyebrow">Contexto</p>
-          <h2 className="font-display mt-5 text-display-lg font-semibold">A ideia do projeto</h2>
-
-          <div className="mt-8 max-w-3xl space-y-5">
+          <div className="space-y-5">
             {macropad.rationale.map((paragraph, i) => (
               <p key={i} className="text-lg leading-relaxed text-muted-foreground">
                 {paragraph}
@@ -176,37 +188,47 @@ const MacropadPage = () => {
                 {/* Conteúdo */}
                 <div className={cn("min-w-0 flex-1", isLast ? "pb-0" : "pb-14")}>
                   <Reveal>
-                    <div className="flex flex-wrap items-center gap-3">
-                      <span className="tabular font-mono text-sm font-medium text-foreground">
-                        {item.date}
-                      </span>
-                      <span
-                        className={cn(
-                          "rounded-md border px-2 py-0.5 text-xs font-medium",
-                          badgeClass[item.status],
+                    {/* Com mídia, texto e imagem dividem a linha; sem mídia, o
+                        texto ocupa a largura toda em vez de deixar um vazio. */}
+                    <div
+                      className={cn(
+                        "grid gap-8",
+                        hasMedia && "lg:grid-cols-2 lg:items-start lg:gap-12",
+                      )}
+                    >
+                      <div>
+                        <div className="flex flex-wrap items-center gap-3">
+                          <span className="tabular font-mono text-sm font-medium text-foreground">
+                            {item.date}
+                          </span>
+                          <span
+                            className={cn(
+                              "rounded-md border px-2 py-0.5 text-xs font-medium",
+                              badgeClass[item.status],
+                            )}
+                          >
+                            {statusLabel[item.status]}
+                          </span>
+                        </div>
+
+                        <h3 className="mt-3 text-xl font-semibold text-foreground">{item.title}</h3>
+                        <p className="mt-3 leading-relaxed text-muted-foreground">
+                          {item.description}
+                        </p>
+
+                        {item.modelUrl && (
+                          <p className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary">
+                            <Rotate3d className="h-4 w-4 shrink-0" />
+                            Expanda o modelo para girar a placa em 3D.
+                          </p>
                         )}
-                      >
-                        {statusLabel[item.status]}
-                      </span>
-                    </div>
-
-                    <h3 className="mt-3 text-xl font-semibold text-foreground">{item.title}</h3>
-                    <p className="mt-3 max-w-3xl leading-relaxed text-muted-foreground">
-                      {item.description}
-                    </p>
-
-                    {item.modelUrl && (
-                      <p className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary">
-                        <Rotate3d className="h-4 w-4 shrink-0" />
-                        Expanda o modelo para girar a placa em 3D.
-                      </p>
-                    )}
+                      </div>
 
                     {hasMedia && (
                       <div
                         className={cn(
-                          "mt-6 grid max-w-3xl gap-4",
-                          item.images ? "grid-cols-2 sm:max-w-md" : "grid-cols-1 sm:max-w-xl",
+                          "grid gap-4",
+                          item.images ? "grid-cols-2" : "grid-cols-1",
                         )}
                       >
                         {item.images
@@ -250,6 +272,7 @@ const MacropadPage = () => {
                             )}
                       </div>
                     )}
+                    </div>
                   </Reveal>
                 </div>
               </li>

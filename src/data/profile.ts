@@ -3,6 +3,8 @@
  * a pessoa — os componentes só apresentam.
  */
 
+const DEVICON = "https://cdn.jsdelivr.net/gh/devicons/devicon/icons";
+
 export const GITHUB_URL = "https://github.com/Artur-Brasileiro";
 export const LINKEDIN_URL = "https://www.linkedin.com/in/artur-brasileiro/";
 export const EMAIL = "arturbrasileiro00@gmail.com";
@@ -52,22 +54,20 @@ export const profile = {
   university: "UEMG (Universidade do Estado de Minas Gerais)",
 
   /**
-   * Stack agrupada por domínio. Agrupar comunica profundidade; uma lista plana
-   * de dez pílulas comunica apenas quantidade.
+   * Stack exibida na faixa rolante da seção Sobre. Ícones vêm do devicon
+   * (CDN jsDelivr); caminhos relativos são resolvidos contra /public.
    */
-  stack: [
-    {
-      domain: "Web & Front-end",
-      items: ["JavaScript", "TypeScript", "React", "Next.js"],
-    },
-    {
-      domain: "Linguagens & Dados",
-      items: ["Python", "C++"],
-    },
-    {
-      domain: "Sistemas & Ferramentas",
-      items: ["Linux", "Git", "Arduino", "Raspberry Pi"],
-    },
+  technologies: [
+    { name: "JavaScript", icon: `${DEVICON}/javascript/javascript-original.svg` },
+    { name: "TypeScript", icon: `${DEVICON}/typescript/typescript-original.svg` },
+    { name: "React", icon: `${DEVICON}/react/react-original.svg` },
+    { name: "Next.js", icon: `${DEVICON}/nextjs/nextjs-original.svg` },
+    { name: "Python", icon: `${DEVICON}/python/python-original.svg` },
+    { name: "C++", icon: `${DEVICON}/cplusplus/cplusplus-original.svg` },
+    { name: "Linux", icon: `${DEVICON}/linux/linux-original.svg` },
+    { name: "Git", icon: `${DEVICON}/git/git-original.svg` },
+    { name: "Arduino", icon: `${DEVICON}/arduino/arduino-original.svg` },
+    { name: "Raspberry Pi", icon: `${DEVICON}/raspberrypi/raspberrypi-original.svg` },
   ],
 } as const;
 

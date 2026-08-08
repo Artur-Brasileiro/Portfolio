@@ -1,4 +1,4 @@
-import { ArrowRight, Github, ExternalLink, Lock } from "lucide-react";
+import { ArrowRight, Github, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 import Section from "./layout/Section";
 import SectionHeader from "./layout/SectionHeader";
@@ -87,13 +87,6 @@ const Projects = () => (
                     Código
                     <Github className="h-3.5 w-3.5" />
                   </a>
-                )}
-
-                {project.privateCode && (
-                  <span className="ml-auto inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
-                    <Lock className="h-3.5 w-3.5" />
-                    Código proprietário
-                  </span>
                 )}
               </div>
             </div>

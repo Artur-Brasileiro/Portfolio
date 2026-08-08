@@ -35,61 +35,68 @@ const Hero = () => (
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: EASE_OUT_EXPO }}
-          className="max-w-3xl"
         >
-          {/* Identidade compacta — o retrato é um elemento de interface, não o assunto. */}
-          <div className="flex items-center gap-4">
-            <ProfileAvatar src={`${import.meta.env.BASE_URL}avatar1.jpg`} />
-            <div className="min-w-0">
-              <p className="text-sm font-semibold tracking-tight text-foreground">
-                {profile.name}
-              </p>
-              <p className="mt-0.5 text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
-                {profile.role}
-              </p>
+          {/* Faixa de identidade — ocupa a largura toda, disponibilidade à direita. */}
+          <div className="flex flex-wrap items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <ProfileAvatar src={`${import.meta.env.BASE_URL}avatar1.jpg`} />
+              <div className="min-w-0">
+                <p className="text-sm font-semibold tracking-tight text-foreground">
+                  {profile.name}
+                </p>
+                <p className="mt-0.5 text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                  {profile.role}
+                </p>
+              </div>
+            </div>
+
+            <span className="inline-flex items-center gap-2.5 rounded-full border border-border bg-surface py-1 pl-2.5 pr-3.5 text-xs font-medium text-muted-foreground">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-60" />
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-success" />
+              </span>
+              {profile.availability}
+            </span>
+          </div>
+
+          {/*
+           * Título à esquerda, texto de apoio e ações à direita. Sem a foto na
+           * lateral, uma coluna única deixava metade da largura vazia.
+           */}
+          <div className="mt-12 grid gap-10 border-t border-border pt-12 lg:grid-cols-[1.1fr_1fr] lg:items-end lg:gap-16">
+            <h1 className="font-display text-display-xl font-bold">
+              {profile.headline.lead}
+              <br />
+              <span className="text-muted-foreground">{profile.headline.accent}</span>
+            </h1>
+
+            <div className="lg:pb-2">
+              <p className="text-lg leading-relaxed text-muted-foreground">{profile.summary}</p>
+
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <HashLink
+                  smooth
+                  to="/#projetos"
+                  scroll={scrollWithOffset}
+                  className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground shadow-soft-sm transition-colors hover:bg-primary-hover"
+                >
+                  Ver projetos
+                  <ArrowRight className="h-4 w-4" />
+                </HashLink>
+
+                <HashLink
+                  smooth
+                  to="/#contato"
+                  scroll={scrollWithOffset}
+                  className="inline-flex h-11 items-center justify-center rounded-md border border-border bg-background px-6 text-sm font-medium text-foreground shadow-soft-sm transition-colors hover:bg-surface"
+                >
+                  Entrar em contato
+                </HashLink>
+              </div>
             </div>
           </div>
 
-          <span className="mt-10 inline-flex items-center gap-2.5 rounded-full border border-border bg-surface py-1 pl-2.5 pr-3.5 text-xs font-medium text-muted-foreground">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-60" />
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-success" />
-            </span>
-            {profile.availability}
-          </span>
-
-          <h1 className="font-display mt-6 text-display-xl font-bold">
-            {profile.headline.lead}
-            <br />
-            <span className="text-muted-foreground">{profile.headline.accent}</span>
-          </h1>
-
-          <p className="mt-7 max-w-2xl text-lg leading-relaxed text-muted-foreground">
-            {profile.summary}
-          </p>
-
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <HashLink
-              smooth
-              to="/#projetos"
-              scroll={scrollWithOffset}
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground shadow-soft-sm transition-colors hover:bg-primary-hover"
-            >
-              Ver projetos
-              <ArrowRight className="h-4 w-4" />
-            </HashLink>
-
-            <HashLink
-              smooth
-              to="/#contato"
-              scroll={scrollWithOffset}
-              className="inline-flex h-11 items-center justify-center rounded-md border border-border bg-background px-6 text-sm font-medium text-foreground shadow-soft-sm transition-colors hover:bg-surface"
-            >
-              Entrar em contato
-            </HashLink>
-          </div>
-
-          <div className="mt-10 flex items-center gap-6 border-t border-border pt-6">
+          <div className="mt-12 flex items-center gap-6 border-t border-border pt-6">
             <a
               href={GITHUB_URL}
               target="_blank"

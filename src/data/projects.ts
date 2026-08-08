@@ -13,8 +13,6 @@ export type FeaturedProject = {
   tags: string[];
   demoLink: string;
   githubLink: string;
-  /** Código fechado: exibe o aviso no lugar do link de repositório. */
-  privateCode?: boolean;
   /** `true` quando demoLink é uma rota interna do próprio site. */
   isInternal: boolean;
 };
@@ -44,7 +42,6 @@ export const featuredProjects: FeaturedProject[] = [
     tags: ["React", "TypeScript", "Tailwind CSS"],
     demoLink: "https://atlasfluency.com.br",
     githubLink: "",
-    privateCode: true,
     isInternal: false,
   },
   {
@@ -74,8 +71,6 @@ export type ProjectItem = {
   technicalLink?: string;
   tags?: string[];
   internalLink?: string;
-  /** Código fechado: exibe o aviso no lugar do link de repositório. */
-  privateCode?: boolean;
 };
 
 export type SoftwareCategory = {
@@ -146,7 +141,6 @@ export const projectData: {
             description:
               "Plataforma de aprendizado de idiomas e SaaS de gestão para professores: registro de aulas, controle de pagamentos e atribuição de atividades criadas na própria plataforma.",
             siteLink: "https://atlasfluency.com.br",
-            privateCode: true,
           },
           {
             id: 12,

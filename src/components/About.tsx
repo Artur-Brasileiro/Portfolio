@@ -1,6 +1,7 @@
 import Section from "./layout/Section";
 import SectionHeader from "./layout/SectionHeader";
 import { Reveal } from "./motion/Reveal";
+import Marquee from "./motion/Marquee";
 import { profile } from "@/data/profile";
 
 const About = () => (
@@ -38,29 +39,33 @@ const About = () => (
       </Reveal>
     </div>
 
-    {/* Stack agrupada por domínio */}
+    {/* Stack em faixa rolante contínua */}
     <Reveal delay={0.15} className="mt-16 border-t border-border pt-12 md:mt-20">
       <h3 className="eyebrow">Stack tecnológica</h3>
 
-      <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {profile.stack.map((group) => (
-          <div
-            key={group.domain}
-            className="rounded-lg border border-border bg-surface p-6"
-          >
-            <h4 className="text-sm font-semibold text-foreground">{group.domain}</h4>
-            <ul className="mt-4 flex flex-wrap gap-2">
-              {group.items.map((item) => (
-                <li
-                  key={item}
-                  className="rounded-md border border-border bg-background px-2.5 py-1 text-xs font-medium text-muted-foreground"
-                >
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+      <div className="relative mt-8">
+        {/* Máscaras de borda: os itens surgem e somem em vez de serem cortados. */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-background to-transparent md:w-24" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-background to-transparent md:w-24" />
+
+        <Marquee speed={45} className="py-2">
+          {profile.technologies.map((tech) => (
+            <div
+              key={tech.name}
+              className="mr-5 flex w-24 shrink-0 flex-col items-center gap-3 md:mr-6 md:w-28"
+            >
+              <div className="flex h-16 w-16 items-center justify-center rounded-lg border border-border bg-surface p-3.5">
+                <img
+                  src={tech.icon}
+                  alt=""
+                  loading="lazy"
+                  className="h-full w-full object-contain"
+                />
+              </div>
+              <span className="text-xs font-medium text-muted-foreground">{tech.name}</span>
+            </div>
+          ))}
+        </Marquee>
       </div>
     </Reveal>
   </Section>
