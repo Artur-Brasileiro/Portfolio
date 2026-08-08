@@ -39,8 +39,10 @@ const AnimatedRoutes = () => {
   );
 };
 
+// O site tem um único tema (claro). O ThemeProvider permanece porque
+// ui/sonner.tsx consome useTheme(); forcedTheme trava a escolha.
 const App = () => (
-  <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
+  <ThemeProvider attribute="class" forcedTheme="light" enableSystem={false} disableTransitionOnChange>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <SmoothScroll>

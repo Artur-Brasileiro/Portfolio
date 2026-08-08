@@ -1,10 +1,18 @@
 import { useLayoutEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Lightbulb, Calendar, CheckCircle2, CircleDashed, Github, Box, Maximize2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import {
+  ArrowLeft,
+  Check,
+  ChevronRight,
+  CircleDashed,
+  Github,
+  Loader,
+  Maximize2,
+  Rotate3d,
+} from "lucide-react";
 import ModelViewer from "@/components/ModelViewer";
 import { useLenisLock } from "@/components/motion/useLenisLock";
+import { Reveal } from "@/components/motion/Reveal";
 import {
   Dialog,
   DialogContent,
@@ -12,255 +20,310 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { macropad, type TimelineStatus } from "@/data/projects";
+import { cn } from "@/lib/utils";
 
-type TimelineItem = {
-  status: "completed" | "current" | "planned";
-  date: string;
-  title: string;
-  description: string;
-  image?: string;
-  images?: string[];
-  modelUrl?: string;
+const statusLabel: Record<TimelineStatus, string> = {
+  completed: "Concluído",
+  current: "Em progresso",
+  planned: "Planejado",
+};
+
+/**
+ * Um único par semântico: azul marca o que já existe ou está em curso, slate
+ * marca o que ainda não começou. Três cores diferentes viram decoração.
+ */
+const markerClass: Record<TimelineStatus, string> = {
+  completed: "border-primary bg-primary text-primary-foreground",
+  current: "border-primary bg-background text-primary",
+  planned: "border-border bg-surface text-muted-foreground",
+};
+
+const badgeClass: Record<TimelineStatus, string> = {
+  completed: "border-primary/20 bg-primary/10 text-primary",
+  current: "border-primary/20 bg-primary/10 text-primary",
+  planned: "border-border bg-surface text-muted-foreground",
 };
 
 const MacropadPage = () => {
-  useLayoutEffect(() => { window.scrollTo(0, 0); }, []);
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
-  const [maximizedMedia, setMaximizedMedia] = useState<{ type: 'image' | 'model', url: string } | null>(null);
+  const [maximizedMedia, setMaximizedMedia] = useState<{
+    type: "image" | "model";
+    url: string;
+  } | null>(null);
 
-  // Pausa o smooth-scroll enquanto o lightbox de mídia está aberto (senão a roda do
-  // mouse rola a página atrás; com isso, o wheel também passa a dar zoom no modelo 3D).
+  // Pausa o smooth-scroll enquanto o lightbox está aberto (senão a roda do mouse
+  // rola a página atrás; com isso, o wheel também passa a dar zoom no modelo 3D).
   useLenisLock(!!maximizedMedia);
 
-  const timeline: TimelineItem[] = [
-    {
-      status: "completed",
-      date: "Fase 1",
-      title: "Desenho da PCB no EasyEDA",
-      description: "Elaboração do esquemático e roteamento completo da placa no EasyEDA. O layout foi cuidadosamente planejado para acomodar as 18 teclas mecânicas e o display OLED de forma ergonômica.",
-      modelUrl: "macropadpage/macropad.glb"
-    },
-    {
-      status: "completed",
-      date: "Fase 2",
-      title: "Fabricação e Chegada da PCB",
-      description: "Os arquivos Gerber foram enviados à JLCPCB e a placa foi fabricada. O protótipo chegou ao Brasil, pronto para a etapa de montagem.",
-      images: ["macropadpage/macropad1.jpg", "macropadpage/macropad2.jpg"]
-    },
-    {
-      status: "completed",
-      date: "Fase 3",
-      title: "Montagem da Placa",
-      description: "Com a PCB em mãos, foi feita a montagem: soldagem dos diodos, dos switches mecânicos, do microcontrolador e a conexão do display OLED. A placa está montada e funcional — o próximo passo é a criação da case em impressão 3D.",
-      image: "capa_macropad.jpg"
-    },
-    {
-      status: "current",
-      date: "Fase 4",
-      title: "Criação da Case (Impressão 3D)",
-      description: "Modelagem e impressão 3D de uma case sob medida para abrigar a placa montada, protegendo a eletrônica e dando ao Macropad um acabamento final ergonômico e compacto."
-    },
-    {
-      status: "planned",
-      date: "Fase 5",
-      title: "Desenvolvimento C++ e Python",
-      description: "Criação do código em C++ para o firmware (varredura da matriz e controle do display) e desenvolvimento do software em Python para o computador, responsável por detectar a janela ativa e enviar os contextos corretos ao Macropad."
-    }
-  ];
-
   return (
-    <div className="min-h-screen pt-24 pb-12 bg-background">
-      <div className="container mx-auto px-4 max-w-5xl"> 
-        <Button asChild variant="ghost" className="mb-8 hover:bg-transparent pl-0">
-          <Link to="/" state={{ targetId: "projetos" }} className="text-muted-foreground hover:text-primary flex items-center gap-2">
-            <ArrowLeft className="w-4 h-4" /> Voltar para Projetos
-          </Link>
-        </Button>
+    <div className="min-h-screen bg-background pt-16">
+      {/* Cabeçalho */}
+      <div className="border-b border-border bg-surface">
+        <div className="rail py-12 md:py-16">
+          <nav aria-label="Trilha de navegação" className="flex items-center gap-2 text-sm">
+            <Link to="/" className="text-muted-foreground transition-colors hover:text-primary">
+              Início
+            </Link>
+            <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />
+            <Link
+              to="/hardware"
+              className="text-muted-foreground transition-colors hover:text-primary"
+            >
+              Hardware
+            </Link>
+            <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />
+            <span className="font-medium text-foreground">{macropad.title}</span>
+          </nav>
 
-        {/* Hero Section */}
-        <div className="space-y-6 mb-16">
-          <div className="flex items-center gap-3">
-            <Badge variant="secondary" className="bg-purple-500/10 text-purple-400 border-purple-500/20">
-              Hardware & PCB
-            </Badge>
-            <Badge variant="outline" className="border-yellow-500/50 text-yellow-500 animate-pulse">
-              Em Desenvolvimento
-            </Badge>
+          <div className="mt-8 flex flex-wrap items-center gap-2">
+            <span className="rounded-md border border-border bg-background px-2.5 py-1 text-xs font-medium text-muted-foreground">
+              {macropad.category}
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-md border border-primary/20 bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary">
+              <Loader className="h-3 w-3" aria-hidden />
+              {macropad.status}
+            </span>
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground">
-            Macropad Inteligente
-          </h1>
-          <p className="text-xl text-muted-foreground leading-relaxed max-w-3xl">
-            Um teclado auxiliar customizado do zero, unindo design de circuito impresso, eletrônica embarcada e desenvolvimento de software multiplataforma.
+
+          <h1 className="font-display mt-5 text-display-xl font-bold">{macropad.title}</h1>
+
+          <p className="mt-5 max-w-3xl text-lg leading-relaxed text-muted-foreground">
+            {macropad.summary}
           </p>
-          
-          <div className="pt-4">
-            <Button asChild variant="outline" className="border-white/10 hover:bg-secondary">
-              <a href="https://github.com/Artur-Brasileiro/Macropad-TCC" target="_blank" rel="noopener noreferrer">
-                <Github className="w-4 h-4 mr-2" /> Acompanhar no GitHub
-              </a>
-            </Button>
+
+          <a
+            href={macropad.repository}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-8 inline-flex h-11 items-center gap-2 rounded-md border border-border bg-background px-5 text-sm font-medium text-foreground shadow-soft-sm transition-colors hover:text-primary"
+          >
+            <Github className="h-4 w-4" />
+            Acompanhar no GitHub
+          </a>
+        </div>
+      </div>
+
+      {/* Especificações */}
+      <div className="border-b border-border bg-background">
+        <div className="rail py-10">
+          <h2 className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+            Especificações
+          </h2>
+          <dl className="mt-6 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-5">
+            {macropad.specs.map((spec) => (
+              <div key={spec.label}>
+                <dt className="text-xs uppercase tracking-wider text-muted-foreground">
+                  {spec.label}
+                </dt>
+                <dd className="mt-1.5 text-sm font-medium text-foreground">{spec.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+
+      {/* A ideia */}
+      <div className="border-b border-border bg-surface">
+        <div className="rail py-16 md:py-20">
+          <p className="eyebrow">Contexto</p>
+          <h2 className="font-display mt-5 text-display-lg font-semibold">A ideia do projeto</h2>
+
+          <div className="mt-8 max-w-3xl space-y-5">
+            {macropad.rationale.map((paragraph, i) => (
+              <p key={i} className="text-lg leading-relaxed text-muted-foreground">
+                {paragraph}
+              </p>
+            ))}
           </div>
         </div>
+      </div>
 
-        <div className="h-[1px] w-full bg-border/50 my-12" />
+      {/* Roadmap */}
+      <div className="rail py-16 md:py-20">
+        <p className="eyebrow">Execução</p>
+        <h2 className="font-display mt-5 text-display-lg font-semibold">Roadmap do projeto</h2>
 
-        {/* A Ideia Section */}
-        <section className="mb-24">
-          <h2 className="text-3xl font-bold mb-6 flex items-center gap-3 text-foreground">
-            <Lightbulb className="w-8 h-8 text-yellow-500" />
-            A Ideia do Projeto
-          </h2>
-          <div className="bg-card/50 border border-border/50 rounded-2xl p-6 md:p-8 text-lg text-muted-foreground leading-relaxed space-y-4 shadow-sm">
-            <p>
-              A motivação por trás deste projeto é criar uma ferramenta que realmente se adapte ao fluxo de trabalho do usuário, em vez de ser apenas um teclado genérico com atalhos fixos.
-            </p>
-            <p>
-              Ao integrar um display OLED e desenvolver uma aplicação desktop inteligente, o Macropad saberá exatamente o que você está fazendo. Se você abrir o seu editor de código, as 18 teclas e a tela assumem funções de compilação, debug e formatação. Se você alternar para o navegador, os atalhos mudam instantaneamente.
-            </p>
-            <p>
-              O grande desafio e diferencial deste projeto é construir a ponte completa: desenhar a própria placa, fabricar o protótipo, realizar a soldagem dos componentes e garantir que os códigos (C++ e Python) conversem perfeitamente com o sistema operacional.
-            </p>
-          </div>
-        </section>
+        <ol className="mt-12">
+          {macropad.timeline.map((item, index) => {
+            const isLast = index === macropad.timeline.length - 1;
+            const hasMedia = Boolean(item.image || item.images || item.modelUrl);
 
-        {/* Timeline Section */}
-        <section>
-          <h2 className="text-3xl font-bold mb-16 flex items-center gap-3 text-foreground">
-            <Calendar className="w-8 h-8 text-primary" />
-            Roadmap & Timeline
-          </h2>
-          
-          <div className="space-y-16 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-primary/50 before:via-border before:to-transparent">
-            {timeline.map((item, index) => (
-              <div key={index} className="relative flex flex-col md:flex-row items-center md:odd:flex-row-reverse group gap-6 md:gap-0">
-                
-                {/* Ícone Central */}
-                <div className={`absolute top-0 left-0 md:top-1/2 md:left-1/2 md:-translate-y-1/2 md:-translate-x-1/2 flex items-center justify-center w-10 h-10 rounded-full border-4 border-background shadow z-10 ${
-                  item.status === 'completed' ? 'bg-green-500 text-background' : 
-                  item.status === 'current' ? 'bg-yellow-500 text-background animate-pulse shadow-[0_0_15px_rgba(234,179,8,0.4)]' : 
-                  'bg-secondary text-muted-foreground'
-                }`}>
-                  {item.status === 'completed' ? <CheckCircle2 className="w-5 h-5" /> : <CircleDashed className="w-5 h-5" />}
+            return (
+              <li key={item.date} className="flex gap-5 md:gap-8">
+                {/* Trilho e marcador */}
+                <div className="flex w-9 shrink-0 flex-col items-center" aria-hidden>
+                  <span
+                    className={cn(
+                      "flex h-9 w-9 items-center justify-center rounded-full border-2",
+                      markerClass[item.status],
+                    )}
+                  >
+                    {item.status === "completed" && <Check className="h-4 w-4" />}
+                    {/* Em progresso: ponto sólido, não um check — o check afirma
+                        conclusão e contradiz o rótulo da fase. */}
+                    {item.status === "current" && (
+                      <span className="h-2.5 w-2.5 rounded-full bg-primary" />
+                    )}
+                    {item.status === "planned" && <CircleDashed className="h-4 w-4" />}
+                  </span>
+                  {!isLast && <span className="w-px flex-1 bg-border" />}
                 </div>
 
-                {/* Coluna 1: O Cartão de Texto */}
-                <div className="w-[calc(100%-4rem)] ml-auto md:ml-0 md:w-1/2 md:pr-12 group-odd:md:pr-0 group-odd:md:pl-12">
-                  <div className={`p-6 rounded-2xl border transition-all duration-300 ${
-                    item.status === 'current' ? 'bg-card border-yellow-500/30 shadow-[0_0_15px_rgba(234,179,8,0.1)]' : 
-                    'bg-card/50 border-border/50 hover:bg-card'
-                  }`}>
-                    <div className="flex items-center justify-between mb-2">
-                      <span className={`font-bold ${
-                        item.status === 'completed' ? 'text-green-500' : 
-                        item.status === 'current' ? 'text-yellow-500' : 
-                        'text-muted-foreground'
-                      }`}>
+                {/* Conteúdo */}
+                <div className={cn("min-w-0 flex-1", isLast ? "pb-0" : "pb-14")}>
+                  <Reveal>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span className="tabular font-mono text-sm font-medium text-foreground">
                         {item.date}
                       </span>
-                      <Badge variant="outline" className="text-xs uppercase tracking-wider opacity-70">
-                        {item.status === 'completed' ? 'Concluído' : item.status === 'current' ? 'Em Progresso' : 'Planejado'}
-                      </Badge>
+                      <span
+                        className={cn(
+                          "rounded-md border px-2 py-0.5 text-xs font-medium",
+                          badgeClass[item.status],
+                        )}
+                      >
+                        {statusLabel[item.status]}
+                      </span>
                     </div>
-                    <h3 className="font-bold text-xl mb-3 text-foreground">{item.title}</h3>
-                    <p className="text-muted-foreground leading-relaxed">{item.description}</p>
-                    
-                    {/* ADIÇÃO: Frase dinâmica que muda no celular e no PC */}
+
+                    <h3 className="mt-3 text-xl font-semibold text-foreground">{item.title}</h3>
+                    <p className="mt-3 max-w-3xl leading-relaxed text-muted-foreground">
+                      {item.description}
+                    </p>
+
                     {item.modelUrl && (
-                      <p className="mt-4 text-xs font-semibold text-primary flex items-center gap-2">
-                        <Box className="w-4 h-4 animate-bounce shrink-0" /> 
-                        <span>Clique no ícone de expandir para interagir com o modelo em 3D!</span>
+                      <p className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary">
+                        <Rotate3d className="h-4 w-4 shrink-0" />
+                        Expanda o modelo para girar a placa em 3D.
                       </p>
                     )}
-                  </div>
-                </div>
 
-                {/* Coluna 2: Imagem(ns) ou Modelo 3D */}
-                {(item.image || item.modelUrl || item.images) && (
-                    <div className="w-[calc(100%-4rem)] ml-auto md:ml-0 md:w-1/2 md:pl-12 group-odd:md:pl-0 group-odd:md:pr-12">
-                        {item.images ? (
-                          /* Fotos verticais lado a lado (ex.: a PCB recebida — frente e verso) */
-                          <div className="grid grid-cols-2 gap-3">
-                            {item.images.map((img) => (
-                              <div key={img} className="relative aspect-[3/4] rounded-2xl overflow-hidden border border-border/50 shadow-sm bg-secondary/30 group/media">
+                    {hasMedia && (
+                      <div
+                        className={cn(
+                          "mt-6 grid max-w-3xl gap-4",
+                          item.images ? "grid-cols-2 sm:max-w-md" : "grid-cols-1 sm:max-w-xl",
+                        )}
+                      >
+                        {item.images
+                          ? item.images.map((img) => (
+                              <MediaFrame
+                                key={img}
+                                ratio="aspect-[3/4]"
+                                onExpand={() => setMaximizedMedia({ type: "image", url: img })}
+                              >
                                 <img
                                   src={`${import.meta.env.BASE_URL}${img}`}
                                   alt={item.title}
-                                  className="w-full h-full object-cover transition-transform duration-700 group-hover/media:scale-105"
+                                  loading="lazy"
+                                  className="h-full w-full object-cover"
                                 />
-                                <Button
-                                  variant="secondary"
-                                  size="icon"
-                                  className="absolute top-4 right-4 opacity-0 group-hover/media:opacity-100 transition-opacity z-20 shadow-lg bg-background/80 backdrop-blur-sm hover:bg-background"
-                                  onClick={() => setMaximizedMedia({ type: 'image', url: img })}
-                                >
-                                  <Maximize2 className="w-4 h-4" />
-                                </Button>
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <div className="relative aspect-video rounded-2xl overflow-hidden border border-border/50 shadow-sm bg-secondary/30 flex items-center justify-center group/media">
-                            {/* Miniatura não tem zoom habilitado para não travar a rolagem da página */}
-                            {item.modelUrl ? (
-                                <ModelViewer url={item.modelUrl} enableZoom={false} />
-                            ) : (
-                                <img
-                                src={`${import.meta.env.BASE_URL}${item.image}`}
-                                alt={item.title}
-                                className="w-full h-full object-cover transition-transform duration-700 group-hover/media:scale-105"
-                                />
-                            )}
-
-                            {/* Botão de Maximizar */}
-                            <Button
-                                variant="secondary"
-                                size="icon"
-                                className="absolute top-4 right-4 opacity-0 group-hover/media:opacity-100 transition-opacity z-20 shadow-lg bg-background/80 backdrop-blur-sm hover:bg-background"
-                                onClick={() => setMaximizedMedia(
-                                item.modelUrl
-                                    ? { type: 'model', url: item.modelUrl }
-                                    : { type: 'image', url: item.image as string }
+                              </MediaFrame>
+                            ))
+                          : (
+                              <MediaFrame
+                                ratio="aspect-video"
+                                onExpand={() =>
+                                  setMaximizedMedia(
+                                    item.modelUrl
+                                      ? { type: "model", url: item.modelUrl }
+                                      : { type: "image", url: item.image as string },
+                                  )
+                                }
+                              >
+                                {/* A miniatura não habilita zoom para não travar a rolagem. */}
+                                {item.modelUrl ? (
+                                  <ModelViewer url={item.modelUrl} enableZoom={false} />
+                                ) : (
+                                  <img
+                                    src={`${import.meta.env.BASE_URL}${item.image}`}
+                                    alt={item.title}
+                                    loading="lazy"
+                                    className="h-full w-full object-cover"
+                                  />
                                 )}
-                            >
-                                <Maximize2 className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        )}
-                    </div>
+                              </MediaFrame>
+                            )}
+                      </div>
                     )}
-
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <Dialog open={!!maximizedMedia} onOpenChange={(open) => !open && setMaximizedMedia(null)}>
-          <DialogContent className="max-w-5xl w-[95vw] h-[85vh] p-2 bg-black/95 border-border flex flex-col items-center justify-center overflow-hidden">
-             <DialogHeader className="sr-only">
-                <DialogTitle>Mídia Expandida</DialogTitle>
-                <DialogDescription>Visualização em tela cheia da etapa do projeto.</DialogDescription>
-             </DialogHeader>
-             
-             {maximizedMedia?.type === 'image' && (
-                <img 
-                  src={`${import.meta.env.BASE_URL}${maximizedMedia.url}`} 
-                  className="w-full h-full object-contain" 
-                  alt="Mídia Expandida" 
-                />
-             )}
-
-             {maximizedMedia?.type === 'model' && (
-                <div className="w-full h-full rounded-lg overflow-hidden relative">
-                   <ModelViewer url={maximizedMedia.url} enableZoom={true} />
+                  </Reveal>
                 </div>
-             )}
-          </DialogContent>
-        </Dialog>
+              </li>
+            );
+          })}
+        </ol>
 
+        <div className="mt-16 border-t border-border pt-8">
+          <Link
+            to="/"
+            state={{ targetId: "projetos" }}
+            className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Voltar para projetos
+          </Link>
+        </div>
       </div>
+
+      <Dialog
+        open={!!maximizedMedia}
+        onOpenChange={(open) => !open && setMaximizedMedia(null)}
+      >
+        <DialogContent className="h-[85vh] w-[95vw] max-w-5xl overflow-hidden border-border bg-background p-2">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Mídia expandida</DialogTitle>
+            <DialogDescription>Visualização em tela cheia da etapa do projeto.</DialogDescription>
+          </DialogHeader>
+
+          {maximizedMedia?.type === "image" && (
+            <img
+              src={`${import.meta.env.BASE_URL}${maximizedMedia.url}`}
+              className="h-full w-full rounded-md object-contain"
+              alt="Mídia expandida"
+            />
+          )}
+
+          {maximizedMedia?.type === "model" && (
+            <div className="relative h-full w-full overflow-hidden rounded-md bg-surface">
+              <ModelViewer url={maximizedMedia.url} enableZoom />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
+
+/** Moldura de mídia com botão de expandir — mesma linguagem em foto e modelo 3D. */
+const MediaFrame = ({
+  ratio,
+  onExpand,
+  children,
+}: {
+  ratio: string;
+  onExpand: () => void;
+  children: React.ReactNode;
+}) => (
+  <div
+    className={cn(
+      "group/media relative overflow-hidden rounded-lg border border-border bg-surface shadow-soft-sm",
+      ratio,
+    )}
+  >
+    {children}
+    <button
+      type="button"
+      onClick={onExpand}
+      aria-label="Expandir mídia"
+      className="absolute right-3 top-3 z-20 inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-background/90 text-foreground opacity-0 shadow-soft-sm backdrop-blur-sm transition-opacity hover:bg-background focus-visible:opacity-100 group-hover/media:opacity-100"
+    >
+      <Maximize2 className="h-4 w-4" />
+    </button>
+  </div>
+);
 
 export default MacropadPage;

@@ -3,31 +3,33 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="dark light" />
-    <!-- Aplica o tema antes do primeiro paint (evita flash de tema claro). Default: dark. -->
-    <script>
-      try {
-        if (localStorage.getItem("theme") !== "light") {
-          document.documentElement.classList.add("dark");
-        }
-      } catch (e) {
-        document.documentElement.classList.add("dark");
-      }
-    </script>
-    <title>Portfólio - Artur Brasileiro</title>
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <title>Artur Brasileiro — Engenheiro da Computação</title>
 
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
-    <meta name="description" content="Portfólio de Engenheiro da Computação" />
+    <meta
+      name="description"
+      content="Portfólio de Artur Brasileiro, Engenheiro da Computação especializado em software web moderno e sistemas embarcados."
+    />
     <meta name="author" content="Artur Brasileiro" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Artur Brasileiro — Engenheiro da Computação" />
+    <meta
+      property="og:description"
+      content="Software web moderno e sistemas embarcados. Projetos, formação e contato."
+    />
+    <meta property="og:locale" content="pt_BR" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-
   </head>
 
   <body>

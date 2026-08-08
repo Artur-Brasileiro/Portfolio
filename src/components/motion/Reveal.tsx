@@ -12,19 +12,21 @@ interface RevealProps {
 }
 
 /**
- * Revela o conteúdo ao entrar na viewport (fade + blur + subida).
+ * Revela o conteúdo ao entrar na viewport com um fade e uma subida curta.
+ * Deslocamento discreto e sem blur — movimento contido lê como corporativo;
+ * deslocamento longo lê como landing page promocional.
  * Respeita prefers-reduced-motion (apenas fade, sem deslocamento).
  */
-export const Reveal = ({ children, delay = 0, y = 40, className }: RevealProps) => {
+export const Reveal = ({ children, delay = 0, y = 12, className }: RevealProps) => {
   const reduce = useReducedMotion();
 
   return (
     <motion.div
       className={className}
-      initial={reduce ? { opacity: 0 } : { opacity: 0, y, filter: "blur(6px)" }}
-      whileInView={reduce ? { opacity: 1 } : { opacity: 1, y: 0, filter: "blur(0px)" }}
-      viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.7, ease: EASE_OUT_EXPO, delay }}
+      initial={reduce ? { opacity: 0 } : { opacity: 0, y }}
+      whileInView={reduce ? { opacity: 1 } : { opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.5, ease: EASE_OUT_EXPO, delay }}
     >
       {children}
     </motion.div>
@@ -39,9 +41,7 @@ interface StaggerProps {
 /** Agrupa filhos para entrada escalonada. Use StaggerItem em cada filho. */
 export const StaggerContainer = ({ children, className }: StaggerProps) => {
   const reduce = useReducedMotion();
-  const variants: Variants = reduce
-    ? { hidden: {}, show: {} }
-    : containerVariants;
+  const variants: Variants = reduce ? { hidden: {}, show: {} } : containerVariants;
 
   return (
     <motion.div
@@ -49,7 +49,7 @@ export const StaggerContainer = ({ children, className }: StaggerProps) => {
       variants={variants}
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, margin: "-80px" }}
+      viewport={{ once: true, margin: "-60px" }}
     >
       {children}
     </motion.div>

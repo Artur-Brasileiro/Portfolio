@@ -1,91 +1,69 @@
-import { MapPin, GraduationCap } from "lucide-react";
+import Section from "./layout/Section";
+import SectionHeader from "./layout/SectionHeader";
 import { Reveal } from "./motion/Reveal";
+import { profile } from "@/data/profile";
 
-const techs = [
-  "JavaScript",
-  "TypeScript",
-  "React",
-  "Next.js",
-  "Python",
-  "C++",
-  "Linux",
-  "Git",
-  "Arduino",
-  "Raspberry Pi",
-];
+const About = () => (
+  <Section id="sobre">
+    <SectionHeader index="01" label="Sobre" title="Sobre Mim" />
 
-const About = () => {
-  return (
-    <section id="sobre" className="py-32 bg-secondary/20 border-b border-border/40">
-      <div className="container mx-auto px-4 max-w-5xl">
-        <div className="grid lg:grid-cols-[1fr_2fr] gap-16 items-start">
-          
-          {/* Esquerda: Título */}
-          <div>
-            <Reveal>
-              <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tight text-foreground sticky top-32">
-                Sobre Mim
-              </h2>
-            </Reveal>
-          </div>
+    <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr] lg:gap-16">
+      {/* Narrativa */}
+      <Reveal className="space-y-6">
+        {profile.bio.map((paragraph, i) => (
+          <p key={i} className="text-lg leading-relaxed text-muted-foreground">
+            {paragraph}
+          </p>
+        ))}
+      </Reveal>
 
-          {/* Direita: Texto Principal */}
-          <div className="space-y-10">
-            <Reveal delay={0.1}>
-              <div className="prose prose-lg text-muted-foreground leading-relaxed">
-                <p>
-                  Sou estudante do 9º período de Engenharia da Computação, movido pelo desafio de 
-                  transformar problemas complexos em soluções elegantes. Minha trajetória é marcada 
-                  pela intersecção entre o software de alto nível e as raízes da computação no hardware.
-                </p>
-                <p className="mt-6">
-                  Tenho sólida experiência prática na concepção de sistemas embarcados e no desenvolvimento 
-                  de aplicações web modernas. Acredito que um bom produto nasce da atenção meticulosa 
-                  aos detalhes, desde a arquitetura da informação até o último pixel renderizado na tela.
-                </p>
-                <p className="mt-6">
-                  Atualmente, busco aplicar boas práticas de engenharia de software para entregar 
-                  produtos com alto padrão de qualidade corporativa, garantindo não apenas que o código 
-                  funcione, mas que seja escalável, legível e seguro.
-                </p>
+      {/* Ficha técnica — pares chave/valor, a linguagem de documento corporativo */}
+      <Reveal delay={0.1}>
+        <div className="rounded-lg border border-border bg-surface p-6 lg:sticky lg:top-24">
+          <h3 className="text-xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+            Ficha técnica
+          </h3>
+
+          <dl className="mt-5 divide-y divide-border">
+            {profile.facts.map((fact) => (
+              <div key={fact.label} className="py-3.5 first:pt-0 last:pb-0">
+                <dt className="text-xs uppercase tracking-wider text-muted-foreground">
+                  {fact.label}
+                </dt>
+                <dd className="mt-1 text-sm font-medium text-foreground">{fact.value}</dd>
               </div>
-            </Reveal>
-
-            <Reveal delay={0.2}>
-              <div className="flex flex-col sm:flex-row gap-6 pt-6 border-t border-border/60">
-                <div className="flex items-center gap-3 text-foreground font-medium">
-                  <GraduationCap className="w-5 h-5 text-muted-foreground" />
-                  <span>UEMG (Universidade do Estado de Minas Gerais)</span>
-                </div>
-                <div className="flex items-center gap-3 text-foreground font-medium">
-                  <MapPin className="w-5 h-5 text-muted-foreground" />
-                  <span>Ituiutaba, MG - Brasil</span>
-                </div>
-              </div>
-            </Reveal>
-
-            <Reveal delay={0.3}>
-              <div className="pt-10">
-                <h3 className="font-display text-sm font-bold uppercase tracking-widest text-muted-foreground mb-6">
-                  Stack Tecnológica Principal
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {techs.map((tech, i) => (
-                    <span
-                      key={i}
-                      className="px-4 py-2 bg-background border border-border text-sm font-medium text-foreground rounded-full"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
-          </div>
+            ))}
+          </dl>
         </div>
+      </Reveal>
+    </div>
+
+    {/* Stack agrupada por domínio */}
+    <Reveal delay={0.15} className="mt-16 border-t border-border pt-12 md:mt-20">
+      <h3 className="eyebrow">Stack tecnológica</h3>
+
+      <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {profile.stack.map((group) => (
+          <div
+            key={group.domain}
+            className="rounded-lg border border-border bg-surface p-6"
+          >
+            <h4 className="text-sm font-semibold text-foreground">{group.domain}</h4>
+            <ul className="mt-4 flex flex-wrap gap-2">
+              {group.items.map((item) => (
+                <li
+                  key={item}
+                  className="rounded-md border border-border bg-background px-2.5 py-1 text-xs font-medium text-muted-foreground"
+                >
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
-    </section>
-  );
-};
+    </Reveal>
+  </Section>
+);
 
 export default About;

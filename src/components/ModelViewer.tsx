@@ -1,16 +1,25 @@
 import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Stage, Html, useProgress, Center } from '@react-three/drei';
-import { Suspense, useMemo, useRef, useState, useEffect } from 'react';
+import { Component, Suspense, useMemo, useRef, useState, useEffect, type ReactNode } from 'react';
 import { useReducedMotion } from 'framer-motion';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Box } from 'lucide-react';
+
+/**
+ * Resolve o caminho do modelo contra a base do site.
+ * Sem isso, uma URL relativa como "macropadpage/macropad.glb" é resolvida
+ * contra a rota atual (/projeto/macropad -> /projeto/macropadpage/...), o
+ * servidor responde o index.html do fallback SPA e o GLTFLoader estoura.
+ */
+const resolveAssetUrl = (url: string) =>
+  /^(https?:)?\/\//.test(url) || url.startsWith('/') ? url : `${import.meta.env.BASE_URL}${url}`;
 
 function CanvasLoader() {
   const { progress } = useProgress();
   return (
     <Html center>
-      <div className="flex flex-col items-center gap-2 text-primary bg-background/80 p-3 rounded-lg backdrop-blur-sm border border-border/50 shadow-lg">
-        <Loader2 className="w-6 h-6 animate-spin" />
-        <span className="text-sm font-bold">{progress.toFixed(0)}%</span>
+      <div className="flex flex-col items-center gap-2 rounded-md border border-border bg-background/90 p-3 text-primary shadow-soft-md backdrop-blur-sm">
+        <Loader2 className="h-5 w-5 animate-spin" />
+        <span className="tabular text-xs font-semibold">{progress.toFixed(0)}%</span>
       </div>
     </Html>
   );
@@ -40,6 +49,36 @@ function FrameNudge() {
   return null;
 }
 
+/**
+ * Isola a falha do WebGL/GLTF. Sem esta fronteira, um modelo que não carrega
+ * propaga a exceção pela árvore inteira e derruba a página toda.
+ */
+class ModelErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+
+  componentDidCatch(error: unknown) {
+    console.error('ModelViewer: falha ao renderizar o modelo 3D.', error);
+  }
+
+  render() {
+    if (this.state.failed) {
+      return (
+        <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-surface text-muted-foreground">
+          <Box className="h-6 w-6" />
+          <span className="px-4 text-center text-xs">
+            Não foi possível carregar o modelo 3D.
+          </span>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 const maxDpr = typeof window !== 'undefined' ? Math.min(2, window.devicePixelRatio) : 2;
 
 export default function ModelViewer({
@@ -54,15 +93,15 @@ export default function ModelViewer({
   const reduce = useReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(true);
+  const resolvedUrl = resolveAssetUrl(url);
 
   // Pausa o canvas quando fora da viewport (economia de GPU/bateria).
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => setVisible(entry.isIntersecting),
-      { threshold: 0.1 }
-    );
+    const obs = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), {
+      threshold: 0.1,
+    });
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
@@ -74,37 +113,41 @@ export default function ModelViewer({
   return (
     <div
       ref={containerRef}
-      className={`w-full h-full bg-secondary/20 ${isInteractive ? 'cursor-grab active:cursor-grabbing' : 'pointer-events-none'}`}
+      className={`h-full w-full bg-surface ${
+        isInteractive ? 'cursor-grab active:cursor-grabbing' : 'pointer-events-none'
+      }`}
     >
-      <Canvas
-        camera={{ position: [20, -50, 100], fov: 50 }}
-        dpr={[1, maxDpr]}
-        frameloop={autoRotate ? 'always' : 'demand'}
-        gl={{ antialias: true, powerPreference: 'high-performance' }}
-      >
-        <Suspense fallback={<CanvasLoader />}>
-          <Stage
-            environment="city"
-            intensity={0.6}
-            shadows={{ type: 'contact', opacity: 0.5, blur: 2 }}
-            adjustCamera={enableZoom ? 1.2 : 0.9}
-          >
-            <Model url={url} />
-          </Stage>
-          <FrameNudge />
-        </Suspense>
+      <ModelErrorBoundary>
+        <Canvas
+          camera={{ position: [20, -50, 100], fov: 50 }}
+          dpr={[1, maxDpr]}
+          frameloop={autoRotate ? 'always' : 'demand'}
+          gl={{ antialias: true, powerPreference: 'high-performance' }}
+        >
+          <Suspense fallback={<CanvasLoader />}>
+            <Stage
+              environment="city"
+              intensity={0.6}
+              shadows={{ type: 'contact', opacity: 0.5, blur: 2 }}
+              adjustCamera={enableZoom ? 1.2 : 0.9}
+            >
+              <Model url={resolvedUrl} />
+            </Stage>
+            <FrameNudge />
+          </Suspense>
 
-        <OrbitControls
-          autoRotate={autoRotate}
-          autoRotateSpeed={2.5}
-          enableZoom={enableZoom}
-          enablePan={enableZoom}
-          enableRotate={enableRotate}
-          makeDefault
-        />
-      </Canvas>
+          <OrbitControls
+            autoRotate={autoRotate}
+            autoRotateSpeed={2.5}
+            enableZoom={enableZoom}
+            enablePan={enableZoom}
+            enableRotate={enableRotate}
+            makeDefault
+          />
+        </Canvas>
+      </ModelErrorBoundary>
     </div>
   );
 }
 
-useGLTF.preload("macropadpage/macropad.glb");
+useGLTF.preload(resolveAssetUrl('macropadpage/macropad.glb'));

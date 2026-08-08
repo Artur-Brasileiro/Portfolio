@@ -53,7 +53,7 @@ const Index = () => {
   }, [location.state]);
 
   return (
-    <div className="min-h-screen bg-transparent">
+    <div className="min-h-screen bg-background">
       <Hero />
       <About />
       <Projects />

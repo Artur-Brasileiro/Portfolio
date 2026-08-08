@@ -1,10 +1,13 @@
 import { useLayoutEffect, useState } from "react";
-import { ArrowLeft, ArrowRight, Code2, Cpu, ExternalLink, PlayCircle, Globe } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  ChevronRight,
+  ExternalLink,
+  Github,
+  PlayCircle,
+} from "lucide-react";
 import { Link, useParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import {
   Dialog,
   DialogContent,
@@ -13,163 +16,16 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { useLenisLock } from "@/components/motion/useLenisLock";
-
-export type ProjectItem = {
-  id: number;
-  name: string;
-  description: string;
-  githubLink?: string;
-  siteLink?: string;
-  image?: string;
-  youtubeId?: string;
-  longDescription?: string;
-  technicalLink?: string;
-  tags?: string[];
-  internalLink?: string;
-};
-
-const projectData = {
-  programacao: {
-    title: "Projetos de Programação (Software)",
-    icon: Code2,
-    subsections: [
-      {
-        title: "Inteligência Artificial",
-        projects: [
-          { 
-            id: 9, 
-            name: "Introdução IA", 
-            description: "Projeto onde registro meu aprendizado e evolução no estudo de Inteligência Artificial.",
-            githubLink: "https://github.com/Artur-Brasileiro/Introducao-IA" 
-          },
-          { 
-            id: 5, 
-            name: "Perceptron Reconhecedor", 
-            description: "Desenvolvimento e treinamento de uma IA simples (Perceptron) para classificar a letra \"A\".",
-            githubLink: "https://github.com/Artur-Brasileiro/Perceptron-Reconhecedor" 
-          },
-          { 
-            id: 10, 
-            name: "Algoritmo KNN", 
-            description: "Implementação do algoritmo KNN para classificar dados com base nos vizinhos mais próximos.",
-            githubLink: "https://github.com/Artur-Brasileiro/Algoritmo-KNN" 
-          },
-        ]
-      },
-      {
-        title: "Desenvolvimento Web",
-        projects: [
-          {
-            id: 15,
-            name: "ViewCongresso",
-            description: "Plataforma web para organização e participação em congressos e eventos acadêmicos, com submissão de trabalhos, inscrições e avaliação por pares.",
-            siteLink: "https://viewcongresso.com.br"
-          },
-          {
-            id: 11,
-            name: "EnglishUp",
-            description: "Plataforma web para aprendizado de inglês com recursos interativos.",
-            githubLink: "https://github.com/Artur-Brasileiro/English-Hub",
-            siteLink: "https://playenglishup.com.br/"
-          },
-          {
-            id: 12,
-            name: "Portfólio - Professor de Inglês",
-            description: "Site portfólio para professor de inglês, destacando serviços e depoimentos.",
-            githubLink: "https://github.com/Artur-Brasileiro/Portfolio-Professor",
-            siteLink: "https://rodrigoalmeida.vercel.app/"
-          },
-          { 
-            id: 1, 
-            name: "Chatbot com React", 
-            description: "Desenvolvimento em React de um chatbot integrado com uma IA simples.",
-            githubLink: "https://github.com/Artur-Brasileiro/Chatbot-React" 
-          },
-          { 
-            id: 2, 
-            name: "Gerenciamento Familiar", 
-            description: "Criação de aplicação web feito com C# e Angular para fazer o controle financeiro de uma família.",
-            githubLink: "https://github.com/Artur-Brasileiro/Gerenciamento-Familiar" 
-          }
-        ]
-      },
-      {
-        title: "Ciência de Dados & Automação",
-        projects: [
-          { 
-            id: 6, 
-            name: "Análise de Dados PRF", 
-            description: "Ciência de Dados aplicada em uma planilha do Excel da PRF para visualizarmos quais munícipios brasileiros tem o maior índice de acidentes em rodovias.",
-            githubLink: "https://github.com/Artur-Brasileiro/Analise-PRF" 
-          },
-          { 
-            id: 7, 
-            name: "Web Scraping Simples", 
-            description: "Web Scraping no site da CEMIG utilizando Python para comparar dados anuais.",
-            githubLink: "https://github.com/Artur-Brasileiro/Web-Scraping" 
-          },
-          { 
-            id: 8, 
-            name: "Relação Idade x Pressão", 
-            description: "Plotagem de um gráfico simples para visualizar a relação de Idade x Pressão Sistólica.",
-            githubLink: "https://github.com/Artur-Brasileiro/Grafico-Dispersao" 
-          },
-        ]
-      }
-    ],
-  },
-  hardware: {
-    title: "Projetos de Hardware e Embarcados",
-    icon: Cpu,
-    projects: [
-      {
-        id: 3,
-        name: "Analisador de Espectro de Áudio", 
-        description: "Visualização de espectro em tempo real.",
-        image: "projeto_espectro.webp",
-        youtubeId: "9tUq1hGooeE", 
-        longDescription: "Um analisador de áudio compacto que usa um ESP32-S3 para capturar sons, processar as frequências e exibir o espectro em uma pequena tela OLED. Mostra a forma “visual” do som em tempo real.",
-        technicalLink: "https://github.com/Artur-Brasileiro/Analisador-Espectro",
-        tags: ["ESP32-S3", "OLED", "C++", "Processamento de Áudio"]
-      },
-      { 
-        id: 4, 
-        name: "Deauther Didático (2.4 e 5GHz)", 
-        description: "Desautenticação de redes em ambiente controlado.",
-        image: "projeto_deauther.webp",
-        youtubeId: "kmqZ7n9kF94",
-        longDescription: "Dispositivo didático baseado no BW-16 com tela OLED de 0,96\", usado para estudar o funcionamento de redes Wi-Fi e entender, em ambiente controlado, como pacotes de desautenticação afetam a conexão. O projeto inclui case em impressão 3D e uma placa de circuito impresso feita manualmente, tornando o dispositivo compacto e ideal para aprendizado prático.",
-        technicalLink: "https://github.com/Artur-Brasileiro/Deauther-5GHz",
-        tags: ["BW-16", "Redes Wi-Fi", "PCB Customizada", "Impressão 3D"]
-      },
-      { 
-        id: 13,
-        name: "Monitor de Luminosidade com Feedback Visual", 
-        description: "Sistema de leitura analógica com acionamento inteligente de atuadores.",
-        image: "projeto_sensorluz.webp",
-        youtubeId: "rBSG0NzcMFI",
-        longDescription: "Um projeto prático de sistemas embarcados focado em eletrônica analógica e conversão ADC. Utiliza um sensor LDR em configuração de divisor de tensão para monitorar a luz ambiente. O microcontrolador processa os sinais em tempo real e categoriza a luminosidade, acionando um semáforo de LEDs com base em limiares (thresholds) pré-definidos no código.",
-        technicalLink: "https://github.com/Artur-Brasileiro/Sensor-Luz",
-        tags: ["Arduino", "Eletrônica Analógica", "Sensores LDR", "C++"]
-      },
-      {
-        id: 14,
-        name: "Macropad Inteligente",
-        description: "Teclado auxiliar com display integrado e app multiplataforma que detecta programas ativos.",
-        image: "capa_macropad.jpg",
-        internalLink: "/projeto/macropad",
-        longDescription: "Um teclado auxiliar customizado do zero, unindo design de circuito impresso, eletrônica embarcada e desenvolvimento de software multiplataforma. Ele possui um aplicativo desktop em Python que detecta a janela ativa para alterar dinamicamente o contexto e as funções das teclas do hardware.",
-        technicalLink: "https://github.com/Artur-Brasileiro/Macropad-TCC",
-        tags: ["C++", "EasyEDA", "PCB", "Python"]
-      }
-    ],
-  },
-};
+import { Reveal } from "@/components/motion/Reveal";
+import { projectData, type ProjectItem } from "@/data/projects";
 
 const ProjectsPage = () => {
-  const { category } = useParams<{ category: keyof typeof projectData }>();
-  const categoryData = category && projectData[category as keyof typeof projectData];
-  
+  const { category } = useParams<{ category: string }>();
+  const categoryData =
+    category && category in projectData
+      ? projectData[category as keyof typeof projectData]
+      : undefined;
+
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -187,12 +43,20 @@ const ProjectsPage = () => {
 
   if (!categoryData) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <div className="text-center">
-          <h1 className="mb-4 text-4xl font-bold">Categoria Não Encontrada</h1>
-          <p className="mb-4 text-xl text-muted-foreground">Opa! A categoria de projetos solicitada não existe.</p>
-          <Link to="/" className="text-primary underline hover:text-primary/90">
-            <Button variant="link">Voltar para a Página Inicial</Button>
+      <div className="flex min-h-screen items-center justify-center bg-background px-6 pt-16">
+        <div className="max-w-md text-center">
+          <p className="eyebrow">Erro 404</p>
+          <h1 className="font-display mt-4 text-display-lg font-semibold">
+            Categoria não encontrada
+          </h1>
+          <p className="mt-4 text-muted-foreground">
+            A categoria de projetos solicitada não existe.
+          </p>
+          <Link
+            to="/"
+            className="mt-8 inline-flex h-11 items-center justify-center rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground shadow-soft-sm transition-colors hover:bg-primary-hover"
+          >
+            Voltar para a página inicial
           </Link>
         </div>
       </div>
@@ -200,201 +64,218 @@ const ProjectsPage = () => {
   }
 
   const Icon = categoryData.icon;
-  const isHardware = category === 'hardware';
+  const isHardware = categoryData.slug === "hardware";
 
   return (
-    <div className="min-h-screen pt-20 pb-12">
-      <div className="container mx-auto px-4">
-        
-        <Button asChild variant="ghost" className="p-0 h-auto mb-12 hover:bg-transparent">
-          <Link to="/" state={{ targetId: "projetos" }} className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 w-max">
-            <ArrowLeft className="w-4 h-4" />
-            Voltar para Projetos
-          </Link>
-        </Button>
-        
-        <div className="flex items-center gap-4 mb-10">
-            <Icon className="w-10 h-10 text-primary" />
-            <h2 className="text-4xl font-bold text-foreground">{categoryData.title}</h2>
+    <div className="min-h-screen bg-background pt-16">
+      {/* Cabeçalho da página */}
+      <div className="border-b border-border bg-surface">
+        <div className="rail py-12 md:py-16">
+          <nav aria-label="Trilha de navegação" className="flex items-center gap-2 text-sm">
+            <Link to="/" className="text-muted-foreground transition-colors hover:text-primary">
+              Início
+            </Link>
+            <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />
+            <Link
+              to="/"
+              state={{ targetId: "projetos" }}
+              className="text-muted-foreground transition-colors hover:text-primary"
+            >
+              Projetos
+            </Link>
+            <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" aria-hidden />
+            <span className="font-medium text-foreground">
+              {isHardware ? "Hardware" : "Programação"}
+            </span>
+          </nav>
+
+          <div className="mt-8 flex items-start gap-4">
+            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md border border-border bg-background text-primary">
+              <Icon className="h-5 w-5" />
+            </span>
+            <div>
+              <h1 className="font-display text-display-lg font-semibold">{categoryData.title}</h1>
+              <p className="mt-3 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+                {categoryData.lead}
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <div className="rail py-16 md:py-20">
+        <Link
+          to="/"
+          state={{ targetId: "projetos" }}
+          className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Voltar para projetos
+        </Link>
 
         {isHardware ? (
-          // ================= SEÇÃO DE HARDWARE =================
-          <div className="space-y-12">
-            {(categoryData as typeof projectData['hardware']).projects.map((project) => (
-              <Card 
-                key={project.id} 
-                className="group relative p-6 md:p-8 bg-card/80 backdrop-blur-sm border-border/50 shadow-sm transition-all duration-500 hover:shadow-md hover:border-primary/50 overflow-hidden"
-              >
-                {/* Fundo sutil ao passar o mouse usando primary e accent */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-
-                <div className="relative z-10 grid md:grid-cols-3 gap-8 md:gap-10">
-                  
-                  {/* Coluna da Imagem / Vídeo */}
-                  <div className="md:col-span-1 flex flex-col gap-4">
-                    <div className="relative rounded-xl overflow-hidden border border-white/10 group-hover:border-primary/40 transition-colors duration-500">
-                      <AspectRatio ratio={16 / 9} className="bg-secondary">
-                          <img 
-                              src={`${import.meta.env.BASE_URL}${project.image}`} 
-                              alt={`Imagem do Projeto: ${project.name}`} 
-                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                          />
-                      </AspectRatio>
-                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    </div>
-                    
-                    {/* Renderização condicional do Botão */}
-                    {(project as ProjectItem).internalLink ? (
-                      <Button 
-                        asChild
-                        className="w-full hover:opacity-90 transition-all" 
-                      >
-                        <Link to={(project as ProjectItem).internalLink}>
-                          Ver Página do Projeto
-                          <ArrowRight className="w-5 h-5 ml-2" />
-                        </Link>
-                      </Button>
-                    ) : (
-                      <Button 
-                        className="w-full transition-all" 
-                        onClick={() => handleOpenVideo((project as ProjectItem).youtubeId || "")} 
-                      >
-                          <PlayCircle className="w-5 h-5 mr-2" /> 
-                          Ver Demonstração
-                      </Button>
-                    )}
-                  </div>
-
-                  {/* Coluna das Informações */}
-                  <div className="md:col-span-2 flex flex-col h-full justify-between">
-                    <div className="space-y-4">
-                      <div>
-                        <h3 className="text-3xl font-bold text-foreground group-hover:text-primary transition-all duration-300">
-                          {project.name}
-                        </h3>
-                        <p className="text-lg font-medium text-muted-foreground mt-1">
-                          {project.description}
-                        </p>
+          /* ================= HARDWARE ================= */
+          <div className="mt-10 space-y-6">
+            {projectData.hardware.projects.map((project, index) => (
+              <Reveal key={project.id} delay={0.06 * index}>
+                <article className="group overflow-hidden rounded-lg border border-border bg-background shadow-soft-sm transition-[border-color,box-shadow] duration-300 hover:border-primary/40 hover:shadow-soft-md">
+                  <div className="grid md:grid-cols-[minmax(0,22rem)_1fr]">
+                    {/* Mídia */}
+                    <div className="flex flex-col gap-4 border-b border-border p-5 md:border-b-0 md:border-r">
+                      <div className="overflow-hidden rounded-md border border-border bg-surface">
+                        <img
+                          src={`${import.meta.env.BASE_URL}${project.image}`}
+                          alt={`Projeto ${project.name}`}
+                          loading="lazy"
+                          className="aspect-video w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                        />
                       </div>
 
+                      {project.internalLink ? (
+                        <Link
+                          to={project.internalLink}
+                          className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-soft-sm transition-colors hover:bg-primary-hover"
+                        >
+                          Ver página do projeto
+                          <ArrowRight className="h-4 w-4" />
+                        </Link>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => handleOpenVideo(project.youtubeId || "")}
+                          className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-soft-sm transition-colors hover:bg-primary-hover"
+                        >
+                          <PlayCircle className="h-4 w-4" />
+                          Ver demonstração
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Conteúdo */}
+                    <div className="flex flex-col p-6 md:p-8">
+                      <h2 className="text-xl font-semibold text-foreground md:text-2xl">
+                        {project.name}
+                      </h2>
+                      <p className="mt-1.5 text-sm font-medium text-muted-foreground">
+                        {project.description}
+                      </p>
+
                       {project.tags && (
-                        <div className="flex flex-wrap gap-2 pt-2">
-                          {project.tags.map((tag, idx) => (
-                            <Badge key={idx} variant="secondary" className="bg-secondary/50 hover:bg-secondary border-white/5">
+                        <ul className="mt-5 flex flex-wrap gap-2">
+                          {project.tags.map((tag) => (
+                            <li
+                              key={tag}
+                              className="rounded-md border border-border bg-surface px-2.5 py-1 text-xs font-medium text-muted-foreground"
+                            >
                               {tag}
-                            </Badge>
+                            </li>
                           ))}
+                        </ul>
+                      )}
+
+                      <p className="mt-6 border-t border-border pt-6 leading-relaxed text-muted-foreground">
+                        {project.longDescription}
+                      </p>
+
+                      {project.technicalLink && (
+                        <div className="mt-6">
+                          <a
+                            href={project.technicalLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex h-10 items-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-medium text-foreground shadow-soft-sm transition-colors hover:bg-surface hover:text-primary"
+                          >
+                            <Github className="h-4 w-4" />
+                            Detalhes técnicos no GitHub
+                            <ExternalLink className="h-3.5 w-3.5" />
+                          </a>
                         </div>
                       )}
-                      
-                      <div className="h-[1px] w-full bg-border/40 my-4" />
-
-                      <p className="text-foreground/80 leading-relaxed whitespace-pre-wrap">
-                          {project.longDescription}
-                      </p>
-                    </div>
-                    
-                    <div className="pt-6 mt-auto">
-                        {(project as ProjectItem).technicalLink && (
-                            <Button asChild variant="outline" className="group/btn border-white/10 hover:border-primary/50 hover:bg-primary/10 hover:text-primary">
-                                <a 
-                                    href={(project as ProjectItem).technicalLink} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="flex items-center gap-2"
-                                >
-                                    Detalhes Técnicos no GitHub
-                                    <ExternalLink className="w-4 h-4 transition-transform group-hover/btn:-translate-y-0.5 group-hover/btn:translate-x-0.5" />
-                                </a>
-                            </Button>
-                        )}
                     </div>
                   </div>
-                </div>
-              </Card>
+                </article>
+              </Reveal>
             ))}
           </div>
         ) : (
-          // ================= SEÇÃO DE SOFTWARE (COM SUBSEÇÕES) =================
-          <div className="space-y-16">
-            {(categoryData as typeof projectData['programacao']).subsections.map((subsection, index) => (
-              <div key={index} className="space-y-6">
-                
+          /* ================= SOFTWARE ================= */
+          <div className="mt-10 space-y-16">
+            {projectData.programacao.subsections.map((subsection) => (
+              <section key={subsection.title}>
                 <div className="flex items-center gap-4">
-                   <h3 className="text-2xl font-bold text-foreground">{subsection.title}</h3>
-                   <div className="h-[1px] flex-1 bg-border/60"></div>
+                  <h2 className="shrink-0 text-lg font-semibold text-foreground">
+                    {subsection.title}
+                  </h2>
+                  <span aria-hidden className="h-px flex-1 bg-border" />
+                  <span className="tabular shrink-0 font-mono text-xs text-muted-foreground">
+                    {String(subsection.projects.length).padStart(2, "0")}
+                  </span>
                 </div>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {subsection.projects.map((project) => (
-                    <Card key={project.id} className="p-4 hover:shadow-glow transition-all duration-300 flex flex-col justify-between">
-                      <CardHeader>
-                        <CardTitle>{project.name}</CardTitle>
-                        <CardDescription className="mt-2">{project.description}</CardDescription>
-                      </CardHeader>
-                        <CardContent>
-                          <div className="flex flex-col gap-3">
-                            {(project as ProjectItem).siteLink && (
-                              <Button asChild variant="default" className="w-full group shadow-sm">
-                                <a 
-                                  href={(project as ProjectItem).siteLink} 
-                                  target="_blank" 
-                                  rel="noopener noreferrer"
-                                  className="flex items-center justify-center"
-                                >
-                                  <Globe className="w-4 h-4 mr-2" />
-                                  Acessar Site
-                                </a>
-                              </Button>
-                            )}
+                <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+                  {subsection.projects.map((project: ProjectItem, index) => (
+                    <Reveal key={project.id} delay={0.05 * index} className="h-full">
+                      <article className="flex h-full flex-col rounded-lg border border-border bg-background p-5 shadow-soft-sm transition-[border-color,box-shadow] duration-300 hover:border-primary/40 hover:shadow-soft-md">
+                        <h3 className="text-base font-semibold text-foreground">{project.name}</h3>
+                        <p className="mt-2.5 flex-1 text-sm leading-relaxed text-muted-foreground">
+                          {project.description}
+                        </p>
 
-                            {(project as ProjectItem).githubLink && (
-                              <Button asChild variant="outline" className="w-full group">
-                                <a
-                                  href={(project as ProjectItem).githubLink}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="flex items-center justify-center"
-                                >
-                                  Detalhes no GitHub
-                                  <ExternalLink className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
-                                </a>
-                              </Button>
-                            )}
-                          </div>
-                        </CardContent>
-                    </Card>
+                        <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-border pt-4">
+                          {project.siteLink && (
+                            <a
+                              href={project.siteLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 text-sm font-medium text-primary transition-colors hover:text-primary-hover"
+                            >
+                              Acessar site
+                              <ExternalLink className="h-3.5 w-3.5" />
+                            </a>
+                          )}
+
+                          {project.githubLink && (
+                            <a
+                              href={project.githubLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+                            >
+                              GitHub
+                              <Github className="h-3.5 w-3.5" />
+                            </a>
+                          )}
+                        </div>
+                      </article>
+                    </Reveal>
                   ))}
                 </div>
-              </div>
+              </section>
             ))}
           </div>
         )}
-
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="sm:max-w-4xl p-0 bg-black border-border overflow-hidden">
-             <DialogHeader className="sr-only"> 
-                <DialogTitle>Demonstração do Projeto</DialogTitle>
-                <DialogDescription>Vídeo demonstrativo do hardware funcionando.</DialogDescription>
-             </DialogHeader>
-             
-             {selectedVideo && (
-               <div className="relative w-full aspect-video bg-black">
-                 <iframe 
-                   className="w-full h-full"
-                   src={`https://www.youtube.com/embed/${selectedVideo}?autoplay=1&rel=0`} 
-                   title="Demonstração do Projeto" 
-                   frameBorder="0" 
-                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                   allowFullScreen
-                 ></iframe>
-               </div>
-             )}
-          </DialogContent>
-        </Dialog>
-        
       </div>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="overflow-hidden border-border bg-background p-0 sm:max-w-4xl">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Demonstração do projeto</DialogTitle>
+            <DialogDescription>Vídeo demonstrativo do hardware funcionando.</DialogDescription>
+          </DialogHeader>
+
+          {selectedVideo && (
+            <div className="relative aspect-video w-full bg-black">
+              <iframe
+                className="h-full w-full"
+                src={`https://www.youtube.com/embed/${selectedVideo}?autoplay=1&rel=0`}
+                title="Demonstração do projeto"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

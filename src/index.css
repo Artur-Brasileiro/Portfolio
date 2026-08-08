@@ -2,62 +2,66 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =====================================================================
+   Sistema de design — corporativo, tema claro único.
+   Neutros em slate (cinza frio): cinza puro lê como wireframe, slate lê
+   como software corporativo. Azul #1D4ED8 como única cor de marca.
+   ===================================================================== */
+
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 0 0% 9%;
+    --foreground: 222 47% 11%;
+
+    /* Faixa alternada entre seções — o "papel" do documento. */
+    --surface: 210 40% 98%;
 
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 9%;
+    --card-foreground: 222 47% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 9%;
+    --popover-foreground: 222 47% 11%;
 
-    /* Primary is almost black for a premium look */
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
+    /* #1D4ED8 — 6.7:1 sobre branco (AA em qualquer tamanho). */
+    --primary: 224 76% 48%;
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 226 71% 40%;
 
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
+    --secondary: 210 40% 98%;
+    --secondary-foreground: 222 47% 11%;
 
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%; /* 6.3:1 sobre branco */
 
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 74% 42%; /* 6.4:1 — legível como texto, não só como fundo */
+    --destructive-foreground: 0 0% 100%;
 
-    /* Very light borders for a clean look */
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 9%;
+    --success: 142 72% 26%;
+    --success-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 224 76% 48%;
 
     --radius: 0.5rem;
-  }
 
-  .dark {
-    /* Keep dark mode variables valid but we enforce light mode in App.tsx */
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
+    /* Sombras tingidas de slate. Sombra preta pura suja tema claro. */
+    --shadow-sm: 0 1px 2px hsl(215 25% 27% / 0.06);
+    --shadow-md: 0 4px 12px -2px hsl(215 25% 27% / 0.08), 0 2px 4px -2px hsl(215 25% 27% / 0.04);
+    --shadow-lg: 0 12px 32px -8px hsl(215 25% 27% / 0.12), 0 4px 8px -4px hsl(215 25% 27% / 0.06);
+
+    /* Consumidas por components/ui/sidebar.tsx. */
+    --sidebar-background: 210 40% 98%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 224 76% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 40% 96%;
+    --sidebar-accent-foreground: 222 47% 11%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-ring: 224 76% 48%;
   }
 }
 
@@ -65,47 +69,86 @@
   * {
     @apply border-border;
   }
-  body {
-    @apply bg-background text-foreground font-sans;
-    font-feature-settings: "liga" 1, "calt" 1;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+
   html {
-    scroll-padding-top: 100px;
+    scroll-padding-top: 96px;
     overflow-x: clip;
+    -webkit-text-size-adjust: 100%;
   }
+
   body {
+    @apply bg-background text-foreground font-sans antialiased;
     overflow-x: clip;
+    font-feature-settings: "liga" 1, "calt" 1, "cv11" 1;
   }
-  
-  /* Selection */
+
+  /* Números tabulares onde alinhamento vertical importa (métricas, períodos). */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply text-foreground;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Um único anel de foco em toda a interface. */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
   ::selection {
-    background-color: hsl(var(--primary));
-    color: hsl(var(--primary-foreground));
+    background-color: hsl(var(--primary) / 0.15);
+    color: hsl(var(--foreground));
+  }
+}
+
+@layer components {
+  /*
+   * Rails: o container padrão de todas as seções. As bordas laterais de 1px
+   * correm continuamente de uma seção à outra porque as seções são adjacentes,
+   * emoldurando a página como um documento técnico.
+   */
+  .rail {
+    @apply mx-auto w-full max-w-6xl px-6 sm:px-8 lg:border-x lg:border-border lg:px-12;
+  }
+
+  /* Rótulo numerado que abre cada seção. */
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.14em] text-primary;
   }
 }
 
 @layer utilities {
   .font-display {
-    font-family: Inter, system-ui, sans-serif;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
   }
 }
 
-/* Scrollbar Clean */
+/* Scrollbar discreta */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 10px;
+  height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: hsl(var(--surface));
 }
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.3);
+  background: hsl(var(--border));
+  border: 2px solid hsl(var(--surface));
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.5);
+  background: hsl(215 20% 78%);
 }
 
 /* Lenis smooth scroll */

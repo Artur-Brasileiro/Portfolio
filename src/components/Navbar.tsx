@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
-import { Code2, Menu, X } from "lucide-react";
-import { Button } from "./ui/button";
+import { Menu, X } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
 import { getLenis } from "./motion/SmoothScroll";
-import ThemeToggle from "./ThemeToggle";
+import { profile } from "@/data/profile";
+import { cn } from "@/lib/utils";
 
 const navItems = [
   { name: "Sobre", href: "#sobre", id: "sobre" },
   { name: "Projetos", href: "#projetos", id: "projetos" },
-  { name: "Educação", href: "#educacao", id: "educacao" },
+  { name: "Formação", href: "#educacao", id: "educacao" },
   { name: "Contato", href: "#contato", id: "contato" },
 ];
 
@@ -23,56 +23,22 @@ const scrollWithOffset = (el: HTMLElement) => {
   }
 };
 
-type NavLinksProps = {
-  variant: "desktop" | "mobile";
-  activeSection: string;
-  onNavigate?: () => void;
-};
-
-/** Fonte única dos links — reusada por desktop e mobile (sem duplicação). */
-const NavLinks = ({ variant, activeSection, onNavigate }: NavLinksProps) => (
-  <>
-    {navItems.map((item) => {
-      const active = activeSection === item.id;
-      if (variant === "mobile") {
-        return (
-          <HashLink
-            key={item.name}
-            smooth
-            to={`/${item.href}`}
-            scroll={scrollWithOffset}
-            onClick={onNavigate}
-            className={`block py-3 px-4 text-center font-medium rounded-xl transition-colors ${
-              active
-                ? "text-primary bg-primary/10"
-                : "text-muted-foreground hover:text-primary hover:bg-secondary/50"
-            }`}
-          >
-            {item.name}
-          </HashLink>
-        );
-      }
-      return (
-        <HashLink
-          key={item.name}
-          smooth
-          to={`/${item.href}`}
-          scroll={scrollWithOffset}
-          onClick={onNavigate}
-          className={`relative text-[15px] font-medium transition-colors py-1 ${
-            active ? "text-primary" : "text-muted-foreground hover:text-primary"
-          }`}
-        >
-          {item.name}
-          <span
-            className={`absolute left-0 bottom-0 w-full h-[2px] bg-primary transition-transform duration-300 origin-left ${
-              active ? "scale-x-100" : "scale-x-0"
-            }`}
-          />
-        </HashLink>
-      );
-    })}
-  </>
+/** Monograma da marca — quadrado azul, o único bloco sólido de cor da barra. */
+const Brand = ({ onClick }: { onClick?: () => void }) => (
+  <HashLink
+    smooth
+    to="/#"
+    scroll={scrollWithOffset}
+    onClick={onClick}
+    className="flex shrink-0 items-center gap-3"
+  >
+    <span className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-sm font-semibold tracking-tight text-primary-foreground">
+      {profile.initials}
+    </span>
+    <span className="text-[15px] font-semibold tracking-tight text-foreground">
+      {profile.name}
+    </span>
+  </HashLink>
 );
 
 const Navbar = () => {
@@ -81,14 +47,14 @@ const Navbar = () => {
   const [activeSection, setActiveSection] = useState("");
   const location = useLocation();
 
-  // isScrolled (morph da pílula) — listener leve com guard de rAF.
+  // Sombra da barra ao sair do topo — listener leve com guard de rAF.
   useEffect(() => {
     let ticking = false;
     const onScroll = () => {
       if (ticking) return;
       ticking = true;
       requestAnimationFrame(() => {
-        setIsScrolled(window.scrollY > 20);
+        setIsScrolled(window.scrollY > 8);
         if (window.scrollY < 100) setActiveSection("");
         ticking = false;
       });
@@ -98,8 +64,13 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Scroll-spy via IntersectionObserver (sem getBoundingClientRect por evento).
-  // Re-tenta até as seções existirem no DOM (Index é lazy/Suspense).
+  // Fecha o menu mobile ao trocar de rota.
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  // Scroll-spy via IntersectionObserver, só na home (as seções só existem lá).
+  // Re-tenta até as seções aparecerem no DOM (Index é lazy/Suspense).
   useEffect(() => {
     if (location.pathname !== "/") {
       setActiveSection("");
@@ -121,7 +92,7 @@ const Navbar = () => {
             if (e.isIntersecting) setActiveSection((e.target as HTMLElement).id);
           });
         },
-        { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
+        { rootMargin: "-45% 0px -50% 0px", threshold: 0 },
       );
       els.forEach((el) => obs!.observe(el));
     };
@@ -132,89 +103,105 @@ const Navbar = () => {
     };
   }, [location.pathname]);
 
-  if (
-    location.pathname === "/programacao" ||
-    location.pathname === "/hardware" ||
-    location.pathname.startsWith("/projeto/")
-  ) {
-    return null;
-  }
-
   return (
-    <>
-      {/* --- NAVBAR MOBILE / TABLET --- */}
-      <nav
-        className={`md:hidden fixed top-0 w-full z-50 transition-all duration-300 border-b ${
-          isScrolled
-            ? "bg-background/90 backdrop-blur-lg border-border"
-            : "bg-transparent border-transparent"
-        }`}
-      >
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <HashLink
-            smooth
-            to="/#"
-            scroll={scrollWithOffset}
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="flex items-center gap-2"
-          >
-            <Code2 className="w-8 h-8 text-primary" />
-            <span className="font-bold text-xl text-foreground">Artur</span>
-          </HashLink>
-          <div className="flex items-center gap-1">
-            <Button
-              variant="ghost"
-              size="icon"
-              aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-foreground"
-            >
-              {isMobileMenuOpen ? <X /> : <Menu />}
-            </Button>
-          </div>
-        </div>
-      </nav>
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 border-b border-border bg-background/85 backdrop-blur-md transition-shadow duration-300",
+        isScrolled && "shadow-soft-sm",
+      )}
+    >
+      <div className="rail flex h-16 items-center justify-between">
+        <Brand onClick={() => setIsMobileMenuOpen(false)} />
 
-      {/* --- NAVBAR DESKTOP --- */}
-      <div className="hidden md:flex fixed w-full z-50 justify-center transition-all duration-300 ease-in-out top-0 pt-4">
-        <nav
-          className={`flex items-center justify-between pointer-events-auto transition-all duration-300 ease-in-out ${
-            !isScrolled
-              ? "w-full max-w-6xl px-8 py-4 bg-transparent border-transparent"
-              : "w-full max-w-6xl px-8 py-3 bg-background/90 backdrop-blur-lg border-b border-border/40"
-          }`}
-        >
-          {/* Logo */}
-          <HashLink
-            smooth
-            to="/#"
-            scroll={scrollWithOffset}
-            className="flex items-center gap-2 shrink-0 group"
-          >
-            <Code2 className="w-7 h-7 text-primary transition-transform group-hover:scale-110" />
-            <span className="font-bold text-xl text-foreground block">Artur</span>
-          </HashLink>
-
-          {/* Links */}
-          <div className="flex items-center gap-8 shrink-0">
-            <NavLinks variant="desktop" activeSection={activeSection} />
-          </div>
+        {/* Navegação desktop — indicador ancorado na borda inferior da barra. */}
+        <nav className="hidden items-center gap-8 md:flex">
+          {navItems.map((item) => {
+            const active = activeSection === item.id;
+            return (
+              <HashLink
+                key={item.name}
+                smooth
+                to={`/${item.href}`}
+                scroll={scrollWithOffset}
+                aria-current={active ? "true" : undefined}
+                className={cn(
+                  "relative flex h-16 items-center text-sm font-medium transition-colors",
+                  active ? "text-primary" : "text-muted-foreground hover:text-foreground",
+                )}
+              >
+                {item.name}
+                <span
+                  aria-hidden
+                  className={cn(
+                    "absolute inset-x-0 bottom-0 h-0.5 origin-left bg-primary transition-transform duration-300",
+                    active ? "scale-x-100" : "scale-x-0",
+                  )}
+                />
+              </HashLink>
+            );
+          })}
         </nav>
+
+        <div className="flex items-center gap-2">
+          <HashLink
+            smooth
+            to="/#contato"
+            scroll={scrollWithOffset}
+            className="hidden h-9 items-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground shadow-soft-sm transition-colors hover:bg-primary-hover md:inline-flex"
+          >
+            Fale comigo
+          </HashLink>
+
+          <button
+            type="button"
+            aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
+            aria-expanded={isMobileMenuOpen}
+            onClick={() => setIsMobileMenuOpen((open) => !open)}
+            className="-mr-2 inline-flex h-10 w-10 items-center justify-center rounded-md text-foreground transition-colors hover:bg-surface md:hidden"
+          >
+            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
 
-      {/* MENU MOBILE DROPDOWN */}
+      {/* Painel mobile — ancorado na barra, largura total, sem flutuar. */}
       {isMobileMenuOpen && (
-        <div className="md:hidden fixed top-20 left-4 right-4 z-50 bg-background/95 backdrop-blur-xl border border-border/40 p-4">
-          <div className="flex flex-col gap-2">
-            <NavLinks
-              variant="mobile"
-              activeSection={activeSection}
-              onNavigate={() => setIsMobileMenuOpen(false)}
-            />
-          </div>
+        <div className="border-t border-border bg-background md:hidden">
+          <nav className="rail flex flex-col py-2">
+            {navItems.map((item) => {
+              const active = activeSection === item.id;
+              return (
+                <HashLink
+                  key={item.name}
+                  smooth
+                  to={`/${item.href}`}
+                  scroll={scrollWithOffset}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={cn(
+                    "border-l-2 py-3 pl-4 text-sm font-medium transition-colors",
+                    active
+                      ? "border-primary bg-primary/5 text-primary"
+                      : "border-transparent text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {item.name}
+                </HashLink>
+              );
+            })}
+
+            <HashLink
+              smooth
+              to="/#contato"
+              scroll={scrollWithOffset}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="my-3 inline-flex h-10 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground"
+            >
+              Fale comigo
+            </HashLink>
+          </nav>
         </div>
       )}
-    </>
+    </header>
   );
 };
 

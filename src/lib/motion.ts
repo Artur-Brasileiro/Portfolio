@@ -19,11 +19,11 @@ export const containerVariants: Variants = {
 
 /** Item individual de um StaggerContainer. */
 export const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 24 },
+  hidden: { opacity: 0, y: 12 },
   show: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.6, ease: EASE_OUT_EXPO },
+    transition: { duration: 0.5, ease: EASE_OUT_EXPO },
   },
 };
 
