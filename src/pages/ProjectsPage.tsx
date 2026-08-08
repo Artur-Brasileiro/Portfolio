@@ -5,6 +5,7 @@ import {
   ChevronRight,
   ExternalLink,
   Github,
+  Lock,
   PlayCircle,
 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
@@ -17,7 +18,7 @@ import {
 } from "@/components/ui/dialog";
 import { useLenisLock } from "@/components/motion/useLenisLock";
 import { Reveal } from "@/components/motion/Reveal";
-import { projectData, type ProjectItem } from "@/data/projects";
+import { projectData, projectCategories, type ProjectItem } from "@/data/projects";
 
 const ProjectsPage = () => {
   const { category } = useParams<{ category: string }>();
@@ -65,6 +66,7 @@ const ProjectsPage = () => {
 
   const Icon = categoryData.icon;
   const isHardware = categoryData.slug === "hardware";
+  const otherCategory = projectCategories.find((c) => c.to !== `/${categoryData.slug}`)!;
 
   return (
     <div className="min-h-screen bg-background pt-16">
@@ -245,6 +247,13 @@ const ProjectsPage = () => {
                               <Github className="h-3.5 w-3.5" />
                             </a>
                           )}
+
+                          {project.privateCode && (
+                            <span className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
+                              <Lock className="h-3.5 w-3.5" />
+                              Código proprietário
+                            </span>
+                          )}
                         </div>
                       </article>
                     </Reveal>
@@ -254,6 +263,33 @@ const ProjectsPage = () => {
             ))}
           </div>
         )}
+
+        {/* Ponte para a outra categoria — sem isto, cada página era um beco sem saída. */}
+        <div className="mt-16 border-t border-border pt-8">
+          <Link
+            to={otherCategory.to}
+            className="group flex items-center gap-4 rounded-lg border border-border bg-background p-5 shadow-soft-sm transition-[border-color,box-shadow] duration-300 hover:border-primary/40 hover:shadow-soft-md"
+          >
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border bg-surface text-primary">
+              <otherCategory.icon className="h-4 w-4" />
+            </span>
+
+            <span className="min-w-0 flex-1">
+              <span className="block text-xs uppercase tracking-wider text-muted-foreground">
+                Ver também
+              </span>
+              <span className="mt-0.5 block text-sm font-semibold text-foreground">
+                {otherCategory.title}
+              </span>
+              <span className="mt-0.5 block text-xs text-muted-foreground">
+                <span className="tabular">{otherCategory.count}</span> projetos ·{" "}
+                {otherCategory.summary}
+              </span>
+            </span>
+
+            <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary" />
+          </Link>
+        </div>
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

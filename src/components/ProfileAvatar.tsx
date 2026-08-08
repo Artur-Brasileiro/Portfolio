@@ -1,44 +1,45 @@
 import { useState } from "react";
 import { profile } from "@/data/profile";
+import { cn } from "@/lib/utils";
 
 /**
- * Retrato emoldurado. Um retângulo 4/5 com borda e sombra lê como foto
- * institucional; um círculo lê como avatar de rede social. A moldura deslocada
- * atrás é um recurso editorial clássico — dá profundidade sem sombra pesada.
+ * Avatar mínimo: um círculo pequeno com anel de 1px, do tamanho de um elemento
+ * de interface e não de uma foto de capa. A identidade fica no nome e no
+ * trabalho, não no rosto.
  */
 const ProfileAvatar = ({
   src,
   alt = profile.name,
+  className,
 }: {
   src?: string;
   alt?: string;
+  className?: string;
 }) => {
   const [errored, setErrored] = useState(false);
   const showImg = Boolean(src) && !errored;
 
-  return (
-    <div className="relative w-full max-w-[19rem] sm:max-w-sm">
-      {/* Moldura deslocada — puramente decorativa. */}
-      <div
-        aria-hidden
-        className="absolute -bottom-4 -right-4 hidden h-full w-full rounded-lg border border-primary/25 sm:block"
-      />
+  const base = cn("h-12 w-12 shrink-0 rounded-full sm:h-14 sm:w-14", className);
 
-      <div className="relative overflow-hidden rounded-lg border border-border bg-surface shadow-soft-lg">
-        {showImg ? (
-          <img
-            src={src}
-            alt={alt}
-            onError={() => setErrored(true)}
-            className="aspect-[4/5] w-full object-cover"
-          />
-        ) : (
-          <div className="flex aspect-[4/5] w-full items-center justify-center bg-muted text-5xl font-semibold tracking-tight text-muted-foreground select-none">
-            {profile.initials}
-          </div>
-        )}
-      </div>
-    </div>
+  return showImg ? (
+    <img
+      src={src}
+      alt={alt}
+      width={56}
+      height={56}
+      onError={() => setErrored(true)}
+      className={cn(base, "object-cover ring-1 ring-border")}
+    />
+  ) : (
+    <span
+      aria-label={alt}
+      className={cn(
+        base,
+        "flex select-none items-center justify-center bg-muted text-sm font-semibold text-muted-foreground ring-1 ring-border",
+      )}
+    >
+      {profile.initials}
+    </span>
   );
 };
 

@@ -1,9 +1,9 @@
-import { ArrowRight, Github, ExternalLink } from "lucide-react";
+import { ArrowRight, Github, ExternalLink, Lock } from "lucide-react";
 import { Link } from "react-router-dom";
 import Section from "./layout/Section";
 import SectionHeader from "./layout/SectionHeader";
 import { Reveal } from "./motion/Reveal";
-import { featuredProjects } from "@/data/projects";
+import { featuredProjects, projectCategories } from "@/data/projects";
 
 const Projects = () => (
   <Section id="projetos" tone="surface">
@@ -12,15 +12,6 @@ const Projects = () => (
       label="Projetos"
       title="Cases em Destaque"
       lead="Projetos selecionados que demonstram a intersecção entre design limpo, arquitetura de software robusta e inovação em engenharia."
-      action={
-        <Link
-          to="/programacao"
-          className="group inline-flex items-center gap-2 text-sm font-medium text-primary transition-colors hover:text-primary-hover"
-        >
-          Ver todos os projetos
-          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-        </Link>
-      }
     />
 
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -97,12 +88,51 @@ const Projects = () => (
                     <Github className="h-3.5 w-3.5" />
                   </a>
                 )}
+
+                {project.privateCode && (
+                  <span className="ml-auto inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
+                    <Lock className="h-3.5 w-3.5" />
+                    Código proprietário
+                  </span>
+                )}
               </div>
             </div>
           </article>
         </Reveal>
       ))}
     </div>
+
+    {/* Acesso às duas categorias completas — antes só existia caminho para software. */}
+    <Reveal delay={0.1} className="mt-6">
+      <div className="grid gap-5 sm:grid-cols-2">
+        {projectCategories.map((category) => {
+          const Icon = category.icon;
+          return (
+            <Link
+              key={category.to}
+              to={category.to}
+              className="group flex items-center gap-4 rounded-lg border border-border bg-background p-5 shadow-soft-sm transition-[border-color,box-shadow] duration-300 hover:border-primary/40 hover:shadow-soft-md"
+            >
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border bg-surface text-primary">
+                <Icon className="h-4 w-4" />
+              </span>
+
+              <span className="min-w-0 flex-1">
+                <span className="block text-sm font-semibold text-foreground">
+                  {category.title}
+                </span>
+                <span className="mt-0.5 block text-xs text-muted-foreground">
+                  <span className="tabular">{category.count}</span> projetos ·{" "}
+                  {category.summary}
+                </span>
+              </span>
+
+              <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary" />
+            </Link>
+          );
+        })}
+      </div>
+    </Reveal>
   </Section>
 );
 

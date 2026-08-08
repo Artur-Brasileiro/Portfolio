@@ -23,8 +23,13 @@ export const profile = {
     "Especialista em software web moderno e sistemas embarcados. Transformo " +
     "problemas complexos em produtos eficientes, escaláveis e orientados a resultados.",
 
+  /** Período atual do curso — alimenta a bio, a ficha técnica e a faixa de métricas. */
+  currentSemester: 10,
+  totalSemesters: 10,
+  graduationYear: "2026",
+
   bio: [
-    "Sou estudante do 9º período de Engenharia da Computação, movido pelo desafio de " +
+    "Sou estudante do 10º período de Engenharia da Computação, movido pelo desafio de " +
       "transformar problemas complexos em soluções elegantes. Minha trajetória é marcada " +
       "pela intersecção entre o software de alto nível e as raízes da computação no hardware.",
     "Tenho sólida experiência prática na concepção de sistemas embarcados e no desenvolvimento " +
@@ -39,7 +44,7 @@ export const profile = {
   facts: [
     { label: "Formação", value: "Engenharia da Computação" },
     { label: "Instituição", value: "UEMG — Universidade do Estado de Minas Gerais" },
-    { label: "Período", value: "9º de 10 · conclusão em 2026" },
+    { label: "Período", value: "10º de 10 · conclusão em 2026" },
     { label: "Localização", value: "Ituiutaba, MG — Brasil" },
   ],
 

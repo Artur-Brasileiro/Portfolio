@@ -13,6 +13,8 @@ export type FeaturedProject = {
   tags: string[];
   demoLink: string;
   githubLink: string;
+  /** Código fechado: exibe o aviso no lugar do link de repositório. */
+  privateCode?: boolean;
   /** `true` quando demoLink é uma rota interna do próprio site. */
   isInternal: boolean;
 };
@@ -32,16 +34,17 @@ export const featuredProjects: FeaturedProject[] = [
     isInternal: false,
   },
   {
-    id: "englishup",
-    title: "EnglishUp",
+    id: "atlas-fluency",
+    title: "Atlas Fluency",
     category: "Software",
     description:
-      "Sistema de e-learning interativo para aprendizado de inglês, projetado com uma interface moderna e foco em retenção de alunos.",
-    image: "englishup.webp",
+      "Plataforma de aprendizado de idiomas e SaaS de gestão para professores: registro de aulas, controle de pagamentos e atribuição de atividades criadas dentro da própria plataforma.",
+    image: "atlasfluency.png",
     logoCover: false,
     tags: ["React", "TypeScript", "Tailwind CSS"],
-    demoLink: "https://playenglishup.com.br/",
-    githubLink: "https://github.com/Artur-Brasileiro/English-Hub",
+    demoLink: "https://atlasfluency.com.br",
+    githubLink: "",
+    privateCode: true,
     isInternal: false,
   },
   {
@@ -71,6 +74,8 @@ export type ProjectItem = {
   technicalLink?: string;
   tags?: string[];
   internalLink?: string;
+  /** Código fechado: exibe o aviso no lugar do link de repositório. */
+  privateCode?: boolean;
 };
 
 export type SoftwareCategory = {
@@ -137,10 +142,11 @@ export const projectData: {
           },
           {
             id: 11,
-            name: "EnglishUp",
-            description: "Plataforma web para aprendizado de inglês com recursos interativos.",
-            githubLink: "https://github.com/Artur-Brasileiro/English-Hub",
-            siteLink: "https://playenglishup.com.br/",
+            name: "Atlas Fluency",
+            description:
+              "Plataforma de aprendizado de idiomas e SaaS de gestão para professores: registro de aulas, controle de pagamentos e atribuição de atividades criadas na própria plataforma.",
+            siteLink: "https://atlasfluency.com.br",
+            privateCode: true,
           },
           {
             id: 12,
@@ -248,10 +254,32 @@ export const projectData: {
   },
 };
 
+export const softwareCount = projectData.programacao.subsections.reduce(
+  (sum, s) => sum + s.projects.length,
+  0,
+);
+export const hardwareCount = projectData.hardware.projects.length;
+
 /** Total de projetos catalogados — alimenta a faixa de métricas do hero. */
-export const projectCount =
-  projectData.programacao.subsections.reduce((sum, s) => sum + s.projects.length, 0) +
-  projectData.hardware.projects.length;
+export const projectCount = softwareCount + hardwareCount;
+
+/** Atalhos de categoria exibidos abaixo dos destaques na home. */
+export const projectCategories = [
+  {
+    to: "/programacao",
+    icon: Code2,
+    title: "Programação",
+    summary: "Web, inteligência artificial e ciência de dados",
+    count: softwareCount,
+  },
+  {
+    to: "/hardware",
+    icon: Cpu,
+    title: "Hardware e embarcados",
+    summary: "Eletrônica, firmware e prototipagem em PCB",
+    count: hardwareCount,
+  },
+];
 
 /* ------------------------------------------------------------------ */
 /* Case: Macropad Inteligente                                          */

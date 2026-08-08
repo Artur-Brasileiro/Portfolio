@@ -21,100 +21,95 @@ const scrollWithOffset = (el: HTMLElement) => {
 
 /** Números derivados dos dados — nada digitado à mão que possa ficar defasado. */
 const metrics: { value?: number; suffix?: string; text?: string; label: string }[] = [
-  { value: 9, suffix: "º", label: "Período do curso" },
+  { value: profile.currentSemester, suffix: "º", label: "Período do curso" },
   { value: projectCount, label: "Projetos catalogados" },
   { value: certificationCount, label: "Certificações" },
-  { text: "2026", label: "Conclusão prevista" },
+  { text: profile.graduationYear, label: "Conclusão prevista" },
 ];
 
 const Hero = () => (
   <>
     <section className="border-b border-border bg-background pt-16">
-      <div className="rail py-16 md:py-24">
-        <div className="grid items-center gap-14 lg:grid-cols-[1.15fr_1fr] lg:gap-20">
-          {/* Coluna de texto */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: EASE_OUT_EXPO }}
-            className="order-2 lg:order-1"
-          >
-            <span className="inline-flex items-center gap-2.5 rounded-full border border-border bg-surface py-1 pl-2.5 pr-3.5 text-xs font-medium text-muted-foreground">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-60" />
-                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-success" />
-              </span>
-              {profile.availability}
+      <div className="rail py-20 md:py-28">
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: EASE_OUT_EXPO }}
+          className="max-w-3xl"
+        >
+          {/* Identidade compacta — o retrato é um elemento de interface, não o assunto. */}
+          <div className="flex items-center gap-4">
+            <ProfileAvatar src={`${import.meta.env.BASE_URL}avatar1.jpg`} />
+            <div className="min-w-0">
+              <p className="text-sm font-semibold tracking-tight text-foreground">
+                {profile.name}
+              </p>
+              <p className="mt-0.5 text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                {profile.role}
+              </p>
+            </div>
+          </div>
+
+          <span className="mt-10 inline-flex items-center gap-2.5 rounded-full border border-border bg-surface py-1 pl-2.5 pr-3.5 text-xs font-medium text-muted-foreground">
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-60" />
+              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-success" />
             </span>
+            {profile.availability}
+          </span>
 
-            <h1 className="font-display mt-7 text-display-xl font-bold">
-              {profile.headline.lead}
-              <br />
-              <span className="text-muted-foreground">{profile.headline.accent}</span>
-            </h1>
+          <h1 className="font-display mt-6 text-display-xl font-bold">
+            {profile.headline.lead}
+            <br />
+            <span className="text-muted-foreground">{profile.headline.accent}</span>
+          </h1>
 
-            <p className="mt-6 flex items-center gap-3 text-sm font-medium uppercase tracking-[0.12em] text-foreground">
-              {profile.role}
-              <span aria-hidden className="h-px w-10 bg-border" />
-            </p>
+          <p className="mt-7 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+            {profile.summary}
+          </p>
 
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground">
-              {profile.summary}
-            </p>
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <HashLink
+              smooth
+              to="/#projetos"
+              scroll={scrollWithOffset}
+              className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground shadow-soft-sm transition-colors hover:bg-primary-hover"
+            >
+              Ver projetos
+              <ArrowRight className="h-4 w-4" />
+            </HashLink>
 
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <HashLink
-                smooth
-                to="/#projetos"
-                scroll={scrollWithOffset}
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground shadow-soft-sm transition-colors hover:bg-primary-hover"
-              >
-                Ver projetos
-                <ArrowRight className="h-4 w-4" />
-              </HashLink>
+            <HashLink
+              smooth
+              to="/#contato"
+              scroll={scrollWithOffset}
+              className="inline-flex h-11 items-center justify-center rounded-md border border-border bg-background px-6 text-sm font-medium text-foreground shadow-soft-sm transition-colors hover:bg-surface"
+            >
+              Entrar em contato
+            </HashLink>
+          </div>
 
-              <HashLink
-                smooth
-                to="/#contato"
-                scroll={scrollWithOffset}
-                className="inline-flex h-11 items-center justify-center rounded-md border border-border bg-background px-6 text-sm font-medium text-foreground shadow-soft-sm transition-colors hover:bg-surface"
-              >
-                Entrar em contato
-              </HashLink>
-            </div>
-
-            <div className="mt-10 flex items-center gap-6 border-t border-border pt-6">
-              <a
-                href={GITHUB_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-              >
-                <Github className="h-4 w-4" />
-                GitHub
-              </a>
-              <a
-                href={LINKEDIN_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-              >
-                <Linkedin className="h-4 w-4" />
-                LinkedIn
-              </a>
-            </div>
-          </motion.div>
-
-          {/* Retrato */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: EASE_OUT_EXPO, delay: 0.1 }}
-            className="order-1 flex justify-center lg:order-2 lg:justify-end"
-          >
-            <ProfileAvatar src={`${import.meta.env.BASE_URL}avatar.jpg`} />
-          </motion.div>
-        </div>
+          <div className="mt-10 flex items-center gap-6 border-t border-border pt-6">
+            <a
+              href={GITHUB_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+            >
+              <Github className="h-4 w-4" />
+              GitHub
+            </a>
+            <a
+              href={LINKEDIN_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+            >
+              <Linkedin className="h-4 w-4" />
+              LinkedIn
+            </a>
+          </div>
+        </motion.div>
       </div>
     </section>
 
