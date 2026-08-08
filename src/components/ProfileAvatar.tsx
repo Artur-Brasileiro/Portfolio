@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 /**
- * Avatar do hero: imagem circular com anel gradiente + status dot.
- * Se `src` faltar ou falhar ao carregar, exibe um monograma como fallback.
+ * Avatar do hero: Imagem circular limpa, sem bordas pesadas ou sombras exageradas.
+ * Design premium e minimalista.
  */
 const ProfileAvatar = ({
   src,
@@ -15,27 +15,19 @@ const ProfileAvatar = ({
   const showImg = Boolean(src) && !errored;
 
   return (
-    <div className="relative inline-block">
-      <div className="rounded-full p-[3px] bg-gradient-primary shadow-glow">
-        <div className="rounded-full bg-background p-1">
-          {showImg ? (
-            <img
-              src={src}
-              alt={alt}
-              onError={() => setErrored(true)}
-              className="h-28 w-28 md:h-32 md:w-32 rounded-full object-cover"
-            />
-          ) : (
-            <div className="h-28 w-28 md:h-32 md:w-32 rounded-full grid place-items-center bg-secondary font-display text-4xl font-bold gradient-text select-none">
-              AB
-            </div>
-          )}
+    <div className="relative inline-flex items-center justify-center">
+      {showImg ? (
+        <img
+          src={src}
+          alt={alt}
+          onError={() => setErrored(true)}
+          className="h-48 w-48 md:h-64 md:w-64 lg:h-80 lg:w-80 rounded-full object-cover grayscale-[20%] hover:grayscale-0 transition-all duration-700"
+        />
+      ) : (
+        <div className="h-48 w-48 md:h-64 md:w-64 lg:h-80 lg:w-80 rounded-full flex items-center justify-center bg-secondary font-display text-4xl md:text-5xl font-medium text-muted-foreground select-none">
+          AB
         </div>
-      </div>
-      <span
-        className="absolute bottom-2 right-2 h-4 w-4 rounded-full bg-primary ring-4 ring-background"
-        aria-hidden="true"
-      />
+      )}
     </div>
   );
 };

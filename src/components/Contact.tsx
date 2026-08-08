@@ -1,68 +1,22 @@
-import { useEffect, useRef, useState } from "react";
-import { Mail, Github, Linkedin, MapPin, Copy, Check } from "lucide-react";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
-import { Card } from "./ui/card";
-import { Reveal, StaggerContainer, StaggerItem } from "./motion/Reveal";
-import TiltCard from "./motion/TiltCard";
-import MagneticButton from "./motion/MagneticButton";
-
-const contactInfo = [
-  {
-    icon: Mail,
-    label: "Email",
-    value: "arturbrasileiro00@gmail.com",
-    link: "https://mail.google.com/mail/?view=cm&fs=1&to=arturbrasileiro00@gmail.com",
-  },
-  {
-    icon: Github,
-    label: "GitHub",
-    value: "github.com/Artur-Brasileiro",
-    link: "https://github.com/Artur-Brasileiro",
-  },
-  {
-    icon: Linkedin,
-    label: "LinkedIn",
-    value: "linkedin.com/in/artur-brasileiro",
-    link: "https://www.linkedin.com/in/artur-brasileiro/",
-  },
-  {
-    icon: MapPin,
-    label: "Localização",
-    value: "Ituiutaba (MG), Brasil",
-    link: undefined as string | undefined,
-  },
-];
+import { useState } from "react";
+import { Mail, Github, Linkedin, Check, ArrowRight } from "lucide-react";
+import { Reveal } from "./motion/Reveal";
 
 const EMAIL = "arturbrasileiro00@gmail.com";
+const GITHUB_URL = "https://github.com/Artur-Brasileiro";
+const LINKEDIN_URL = "https://www.linkedin.com/in/artur-brasileiro/";
 
 const Contact = () => {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [showModal, setShowModal] = useState(false);
   const [copied, setCopied] = useState(false);
-  const borderRef = useRef<HTMLDivElement>(null);
-
-  // Pausa a borda giratória (conic-gradient + blur) quando o formulário está fora da
-  // viewport — evita repaints contínuos caros enquanto o card não está sendo visto.
-  useEffect(() => {
-    const el = borderRef.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => el.classList.toggle("is-paused", !entry.isIntersecting),
-      { threshold: 0 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
 
   const copyEmail = async () => {
     try {
       await navigator.clipboard.writeText(EMAIL);
       setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
+      setTimeout(() => setCopied(false), 2000);
     } catch {
-      /* clipboard indisponível — ignora silenciosamente */
+      // Ignore
     }
   };
 
@@ -83,7 +37,7 @@ const Contact = () => {
       if (response.ok) {
         setStatus("success");
         form.reset();
-        setShowModal(true);
+        setTimeout(() => setStatus("idle"), 5000);
       } else {
         setStatus("error");
       }
@@ -93,169 +47,135 @@ const Contact = () => {
   };
 
   return (
-    <section id="contato" className="py-20">
-      <div className="container mx-auto px-4 relative z-30">
-        <Reveal>
-          <div className="text-center mb-12">
-            <h2 className="font-display text-4xl font-bold mb-4">
-              Entre em <span className="gradient-text">Contato</span>
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Tem algum projeto em mente? Vamos conversar!
-            </p>
-          </div>
-        </Reveal>
-
-        <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-          {/* Coluna de informações */}
-          <div className="space-y-6">
+    <section id="contato" className="py-32 bg-secondary/30 relative">
+      <div className="container mx-auto px-4 max-w-5xl">
+        <div className="grid md:grid-cols-2 gap-20">
+          
+          {/* Informações (Esquerda) */}
+          <div>
             <Reveal>
-              <h3 className="font-display text-2xl font-bold mb-6">Informações de Contato</h3>
+              <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-6">
+                Vamos conversar.
+              </h2>
+              <p className="text-muted-foreground text-lg leading-relaxed mb-12 max-w-md">
+                Estou sempre aberto a discutir novos projetos, ideias criativas ou 
+                oportunidades de fazer parte de suas visões.
+              </p>
             </Reveal>
 
-            <StaggerContainer className="space-y-6">
-              {contactInfo.map((info) => (
-                <StaggerItem key={info.label}>
-                  <TiltCard className="rounded-lg">
-                    <Card className="p-4 transition-all duration-300 bg-card border-border hover:border-primary/40 hover:shadow-glow">
-                      <div className="flex items-center gap-4">
-                        <div className="p-3 bg-primary/10 rounded-lg">
-                          <info.icon className="w-6 h-6 text-primary" />
-                        </div>
-                        <div className="min-w-0">
-                          <p className="text-sm text-muted-foreground">{info.label}</p>
-                          {info.link ? (
-                            <a
-                              href={info.link}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-foreground hover:text-primary transition-colors break-all"
-                            >
-                              {info.value}
-                            </a>
-                          ) : (
-                            <p className="text-foreground">{info.value}</p>
-                          )}
-                        </div>
-                        {info.label === "Email" && (
-                          <button
-                            type="button"
-                            onClick={copyEmail}
-                            aria-label={copied ? "E-mail copiado" : "Copiar e-mail"}
-                            title={copied ? "Copiado!" : "Copiar e-mail"}
-                            className="ml-auto shrink-0 inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary"
-                          >
-                            {copied ? (
-                              <Check className="h-4 w-4 text-primary" />
-                            ) : (
-                              <Copy className="h-4 w-4" />
-                            )}
-                          </button>
-                        )}
-                      </div>
-                    </Card>
-                  </TiltCard>
-                </StaggerItem>
-              ))}
-            </StaggerContainer>
+            <Reveal delay={0.1}>
+              <div className="space-y-8">
+                <div>
+                  <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-widest mb-2">Email</h3>
+                  <button 
+                    onClick={copyEmail}
+                    className="group flex items-center gap-3 text-xl font-medium text-foreground hover:text-muted-foreground transition-colors"
+                  >
+                    {EMAIL}
+                    {copied ? <Check className="w-5 h-5 text-green-600" /> : <Mail className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-opacity" />}
+                  </button>
+                </div>
+                
+                <div>
+                  <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-widest mb-4">Redes</h3>
+                  <div className="flex items-center gap-6">
+                    <a 
+                      href={LINKEDIN_URL} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-foreground font-medium hover:text-muted-foreground transition-colors"
+                    >
+                      <Linkedin className="w-5 h-5" />
+                      LinkedIn
+                    </a>
+                    <a 
+                      href={GITHUB_URL} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-foreground font-medium hover:text-muted-foreground transition-colors"
+                    >
+                      <Github className="w-5 h-5" />
+                      GitHub
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </Reveal>
           </div>
 
-          {/* Coluna do formulário */}
-          <Reveal delay={0.15}>
-            <div ref={borderRef} className="animated-border-card is-paused p-[2px] h-full">
-              <Card className="p-8 bg-card border-border relative z-10 w-full h-full">
-                <h3 className="font-display text-2xl font-bold mb-6">Envie uma Mensagem</h3>
+          {/* Formulário (Direita) */}
+          <div>
+            <Reveal delay={0.2}>
+              <form onSubmit={handleSubmit} className="flex flex-col gap-8" noValidate>
+                <div className="space-y-2">
+                  <label htmlFor="name" className="text-sm font-medium text-foreground ml-1">
+                    Nome Completo
+                  </label>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    required
+                    placeholder="João da Silva"
+                    className="w-full bg-transparent border-b border-border/60 py-3 px-1 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors"
+                  />
+                </div>
+                
+                <div className="space-y-2">
+                  <label htmlFor="email" className="text-sm font-medium text-foreground ml-1">
+                    Endereço de Email
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    placeholder="joao@empresa.com"
+                    className="w-full bg-transparent border-b border-border/60 py-3 px-1 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors"
+                  />
+                </div>
 
-                <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium mb-2">
-                      Nome
-                    </label>
-                    <Input
-                      id="name"
-                      name="name"
-                      placeholder="Seu nome"
-                      className="bg-secondary border-border focus-visible:ring-primary"
-                      required
-                    />
-                  </div>
+                <div className="space-y-2">
+                  <label htmlFor="message" className="text-sm font-medium text-foreground ml-1">
+                    Mensagem
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    required
+                    rows={4}
+                    placeholder="Conte-me sobre o seu projeto..."
+                    className="w-full bg-transparent border-b border-border/60 py-3 px-1 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors resize-none"
+                  />
+                </div>
 
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium mb-2">
-                      Email
-                    </label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      placeholder="seu.email@exemplo.com"
-                      className="bg-secondary border-border focus-visible:ring-primary"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium mb-2">
-                      Mensagem
-                    </label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      placeholder="Sua mensagem..."
-                      rows={5}
-                      className="bg-secondary border-border resize-none overflow-hidden focus-visible:ring-primary"
-                      required
-                      onInput={(e) => {
-                        const target = e.target as HTMLTextAreaElement;
-                        target.style.height = "auto";
-                        target.style.height = `${target.scrollHeight}px`;
-                      }}
-                    />
-                  </div>
-
-                  <MagneticButton className="block w-full" strength={0.15}>
-                    <Button
-                      type="submit"
-                      className="w-full shadow-glow"
-                      disabled={status === "loading"}
-                    >
-                      {status === "loading" ? "Enviando..." : "Enviar Mensagem"}
-                    </Button>
-                  </MagneticButton>
-
-                  {status === "error" && (
-                    <p className="text-red-500 text-center mt-2">
-                      Ocorreu um erro. Tente novamente mais tarde.
+                <div className="pt-4">
+                  <button
+                    type="submit"
+                    disabled={status === "loading"}
+                    className="inline-flex items-center justify-center gap-2 bg-foreground text-background px-8 py-4 rounded-full font-medium hover:bg-muted-foreground transition-colors w-full sm:w-auto"
+                  >
+                    {status === "loading" ? "Enviando..." : "Enviar Mensagem"}
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                  
+                  {status === "success" && (
+                    <p className="text-sm font-medium text-green-600 mt-4 text-center sm:text-left">
+                      Mensagem enviada com sucesso. Retornarei em breve!
                     </p>
                   )}
-                </form>
-              </Card>
-            </div>
-          </Reveal>
+                  {status === "error" && (
+                    <p className="text-sm font-medium text-red-600 mt-4 text-center sm:text-left">
+                      Houve um erro. Tente enviar diretamente para o email.
+                    </p>
+                  )}
+                </div>
+              </form>
+            </Reveal>
+          </div>
+
         </div>
       </div>
-
-      {/* Modal de sucesso */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div
-            className="absolute inset-0 bg-black/50"
-            onClick={() => setShowModal(false)}
-            aria-hidden="true"
-          />
-          <div
-            role="dialog"
-            aria-modal="true"
-            className="relative z-10 bg-card p-6 rounded-lg shadow-lg max-w-sm w-full mx-4 border border-border"
-          >
-            <h4 className="font-display text-lg font-semibold mb-2">Mensagem enviada</h4>
-            <p className="text-muted-foreground mb-4">Obrigado! Vou responder em breve.</p>
-            <div className="flex justify-end">
-              <Button onClick={() => setShowModal(false)}>OK</Button>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 };

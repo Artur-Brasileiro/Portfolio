@@ -159,10 +159,9 @@ const Navbar = () => {
             className="flex items-center gap-2"
           >
             <Code2 className="w-8 h-8 text-primary" />
-            <span className="font-bold text-xl gradient-text">Artur</span>
+            <span className="font-bold text-xl text-foreground">Artur</span>
           </HashLink>
           <div className="flex items-center gap-1">
-            <ThemeToggle />
             <Button
               variant="ghost"
               size="icon"
@@ -176,13 +175,13 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* --- NAVBAR DESKTOP (pílula + scroll spy) --- */}
-      <div className="hidden md:flex fixed w-full z-50 justify-center transition-all duration-700 ease-in-out pointer-events-none top-0 pt-4">
+      {/* --- NAVBAR DESKTOP --- */}
+      <div className="hidden md:flex fixed w-full z-50 justify-center transition-all duration-300 ease-in-out top-0 pt-4">
         <nav
-          className={`flex items-center justify-between pointer-events-auto transition-all duration-700 ease-in-out overflow-hidden ${
+          className={`flex items-center justify-between pointer-events-auto transition-all duration-300 ease-in-out ${
             !isScrolled
-              ? "w-full max-w-full px-12 py-4 bg-transparent border-transparent rounded-none"
-              : "w-[90%] max-w-3xl px-8 py-3 bg-background/80 backdrop-blur-lg border border-border shadow-soft-lg rounded-full"
+              ? "w-full max-w-6xl px-8 py-4 bg-transparent border-transparent"
+              : "w-full max-w-6xl px-8 py-3 bg-background/90 backdrop-blur-lg border-b border-border/40"
           }`}
         >
           {/* Logo */}
@@ -193,20 +192,19 @@ const Navbar = () => {
             className="flex items-center gap-2 shrink-0 group"
           >
             <Code2 className="w-7 h-7 text-primary transition-transform group-hover:scale-110" />
-            <span className="font-bold text-xl gradient-text block">Artur</span>
+            <span className="font-bold text-xl text-foreground block">Artur</span>
           </HashLink>
 
-          {/* Links + toggle */}
-          <div className="flex items-center gap-6 shrink-0">
+          {/* Links */}
+          <div className="flex items-center gap-8 shrink-0">
             <NavLinks variant="desktop" activeSection={activeSection} />
-            <ThemeToggle />
           </div>
         </nav>
       </div>
 
       {/* MENU MOBILE DROPDOWN */}
       {isMobileMenuOpen && (
-        <div className="md:hidden fixed top-20 left-4 right-4 z-50 bg-background/95 backdrop-blur-xl border border-border rounded-2xl p-4 shadow-soft-lg">
+        <div className="md:hidden fixed top-20 left-4 right-4 z-50 bg-background/95 backdrop-blur-xl border border-border/40 p-4">
           <div className="flex flex-col gap-2">
             <NavLinks
               variant="mobile"

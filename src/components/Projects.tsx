@@ -1,36 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import { Code2, ArrowRight, Microchip, Star, Github, Globe } from "lucide-react";
-import { Button } from "./ui/button";
-import { Card } from "./ui/card";
-import { Badge } from "./ui/badge";
+import { ArrowRight, Github, Globe } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Reveal, StaggerContainer, StaggerItem } from "./motion/Reveal";
-import TiltCard from "./motion/TiltCard";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-  type CarouselApi,
-} from "./ui/carousel";
-
-const projectCategories = [
-  {
-    icon: Code2,
-    title: "Programação",
-    description: "Aplicações web, APIs e softwares.",
-    link: "/programacao",
-    gradient: "from-primary/20 to-accent/20",
-  },
-  {
-    icon: Microchip,
-    title: "Hardware",
-    description: "Sistemas embarcados, IoT e eletrônica.",
-    link: "/hardware",
-    gradient: "from-amber-500/20 to-orange-600/20",
-  },
-];
+import { Reveal } from "./motion/Reveal";
 
 const featuredProjects = [
   {
@@ -38,10 +8,10 @@ const featuredProjects = [
     title: "ViewCongresso",
     category: "Software",
     description:
-      "Plataforma para organização e participação em congressos, simpósios e eventos acadêmicos — com submissão de trabalhos, inscrições e avaliação por pares.",
+      "Plataforma corporativa para organização e participação em congressos e simpósios, oferecendo gestão de submissão de trabalhos, inscrições e avaliação por pares.",
     image: "viewcongresso.svg",
     logoCover: true,
-    tags: ["Next.js", "React", "Web"],
+    tags: ["Next.js", "React", "TypeScript"],
     demoLink: "https://viewcongresso.com.br",
     githubLink: "",
     isInternal: false,
@@ -51,10 +21,10 @@ const featuredProjects = [
     title: "EnglishUp",
     category: "Software",
     description:
-      "Plataforma web para aprendizado de inglês com recursos interativos e design moderno.",
+      "Sistema de e-learning interativo para aprendizado de inglês, projetado com uma interface moderna e foco em retenção de alunos.",
     image: "englishup.webp",
     logoCover: false,
-    tags: ["React", "TypeScript", "Web"],
+    tags: ["React", "TypeScript", "Tailwind CSS"],
     demoLink: "https://playenglishup.com.br/",
     githubLink: "https://github.com/Artur-Brasileiro/English-Hub",
     isInternal: false,
@@ -62,12 +32,12 @@ const featuredProjects = [
   {
     id: "macropad-oled",
     title: "Macropad Inteligente",
-    category: "Hardware & PCB",
+    category: "Hardware",
     description:
-      "Teclado auxiliar com display integrado e app multiplataforma que detecta programas ativos para mudar o contexto.",
+      "Dispositivo IoT auxiliar com display OLED. Possui software desktop que se adapta dinamicamente ao contexto dos aplicativos em uso.",
     image: "capa_macropad.jpg",
     logoCover: false,
-    tags: ["C++", "EasyEDA", "PCB", "Python"],
+    tags: ["C++", "Python", "Integração de Hardware"],
     demoLink: "/projeto/macropad",
     githubLink: "https://github.com/Artur-Brasileiro/Macropad-TCC",
     isInternal: true,
@@ -75,207 +45,98 @@ const featuredProjects = [
 ];
 
 const Projects = () => {
-  const [api, setApi] = useState<CarouselApi>();
-  const pausedRef = useRef(false);
-
-  // Autoplay: avança um card a cada 4s. Pausa enquanto o mouse está sobre o
-  // carrossel (pra dar tempo de ler/clicar) e quando a aba está em segundo plano.
-  // Com loop, percorre os projetos continuamente (ativa quando há mais de 2).
-  useEffect(() => {
-    if (!api) return;
-    const id = setInterval(() => {
-      if (pausedRef.current || document.hidden) return;
-      api.scrollNext();
-    }, 4000);
-    return () => clearInterval(id);
-  }, [api]);
-
   return (
-    <section id="projetos" className="py-20 relative">
-      {/* Luzes de fundo */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/2 left-0 w-72 h-72 bg-primary/5 rounded-full blur-[100px] -translate-y-1/2" />
-        <div className="absolute top-1/2 right-0 w-72 h-72 bg-accent/5 rounded-full blur-[100px] -translate-y-1/2" />
-      </div>
-
-      <div className="container mx-auto px-4 relative z-30">
+    <section id="projetos" className="py-32 bg-background border-b border-border/40">
+      <div className="container mx-auto px-4 max-w-6xl">
         <Reveal>
-          <div className="text-center mb-16">
-            <h2 className="font-display text-4xl md:text-5xl font-bold mb-4 tracking-tight">
-              Meus <span className="gradient-text drop-shadow-sm">Projetos</span>
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-              Da lógica do software à precisão do hardware.
-            </p>
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
+            <div className="max-w-2xl">
+              <h2 className="font-display text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-4">
+                Cases em Destaque
+              </h2>
+              <p className="text-muted-foreground text-lg">
+                Projetos selecionados que demonstram a intersecção entre design limpo, 
+                arquitetura de software robusta e inovação em engenharia.
+              </p>
+            </div>
+            <Link 
+              to="/programacao" 
+              className="inline-flex items-center gap-2 font-medium text-foreground hover:text-muted-foreground transition-colors group"
+            >
+              Ver todos os projetos
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
           </div>
         </Reveal>
 
-        {/* Navegação por Categorias */}
-        <StaggerContainer className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-24">
-          {projectCategories.map((category) => (
-            <StaggerItem key={category.title} className="h-full">
-              <TiltCard className="rounded-2xl h-full">
-                <Card
-                  className={`p-1 relative h-full overflow-hidden group rounded-2xl bg-gradient-to-br ${category.gradient} border border-white/5 transition-all duration-300 hover:shadow-2xl`}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
+          {featuredProjects.map((project, index) => (
+            <Reveal key={project.id} delay={0.1 * (index + 1)}>
+              <div className="flex flex-col h-full group">
+                <div
+                  className={`relative aspect-[4/3] overflow-hidden mb-6 bg-secondary/50 rounded-lg ${
+                    project.logoCover ? "border border-border/50" : ""
+                  }`}
                 >
-                  <div className="bg-card/90 backdrop-blur-sm h-full w-full rounded-xl p-8 flex flex-col items-center justify-center text-center transition-colors group-hover:bg-card/70">
-                    <category.icon className="w-16 h-16 text-foreground/80 mb-6 group-hover:scale-110 group-hover:text-primary transition-all duration-500" />
-                    <h3 className="font-display text-2xl font-bold mb-2">{category.title}</h3>
-                    <p className="text-muted-foreground mb-8">{category.description}</p>
-
-                    <Button
-                      asChild
-                      variant="outline"
-                      className="group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300 w-full sm:w-auto border-white/10"
-                    >
-                      <Link to={category.link} className="flex items-center gap-2">
-                        Ver Projetos
-                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      </Link>
-                    </Button>
+                  <img
+                    src={
+                      project.image.startsWith("http")
+                        ? project.image
+                        : `${import.meta.env.BASE_URL}${project.image}`
+                    }
+                    alt={project.title}
+                    loading="lazy"
+                    className={`w-full h-full transition-transform duration-700 group-hover:scale-105 ${
+                      project.logoCover ? "object-contain p-12" : "object-cover"
+                    }`}
+                  />
+                  <div className="absolute top-4 left-4">
+                    <span className="px-3 py-1 bg-background/90 backdrop-blur-sm text-xs font-medium text-foreground rounded-full shadow-sm">
+                      {project.category}
+                    </span>
                   </div>
-                </Card>
-              </TiltCard>
-            </StaggerItem>
+                </div>
+
+                <div className="flex flex-col flex-1">
+                  <h3 className="font-display text-2xl font-bold mb-3 text-foreground">
+                    {project.title}
+                  </h3>
+                  <p className="text-muted-foreground mb-6 flex-1 text-base leading-relaxed">
+                    {project.description}
+                  </p>
+
+                  <div className="flex flex-wrap gap-2 mb-8">
+                    {project.tags.map((tag) => (
+                      <span key={tag} className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                        {tag} {tag !== project.tags[project.tags.length - 1] && "•"}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="flex items-center gap-6 mt-auto border-t border-border/60 pt-4">
+                    {project.demoLink && (
+                      project.isInternal ? (
+                        <Link to={project.demoLink} className="text-sm font-medium flex items-center gap-2 hover:text-muted-foreground transition-colors">
+                          Ler Estudo de Caso
+                          <ArrowRight className="w-4 h-4" />
+                        </Link>
+                      ) : (
+                        <a href={project.demoLink} target="_blank" rel="noopener noreferrer" className="text-sm font-medium flex items-center gap-2 hover:text-muted-foreground transition-colors">
+                          Acessar <Globe className="w-4 h-4" />
+                        </a>
+                      )
+                    )}
+                    {project.githubLink && (
+                      <a href={project.githubLink} target="_blank" rel="noopener noreferrer" className="text-sm font-medium flex items-center gap-2 hover:text-muted-foreground transition-colors ml-auto">
+                        Código <Github className="w-4 h-4" />
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </Reveal>
           ))}
-        </StaggerContainer>
-
-        {/* =============== PROJETOS DESTAQUE =============== */}
-        <div className="max-w-5xl mx-auto">
-          <Reveal>
-            <div className="flex items-center justify-center gap-3 mb-10">
-              <h3 className="font-display text-3xl font-bold flex items-center gap-3">
-                Projetos Destaque
-                <Star className="w-8 h-8 text-yellow-500 fill-yellow-500 drop-shadow-[0_0_10px_rgba(234,179,8,0.5)] animate-pulse" />
-              </h3>
-            </div>
-          </Reveal>
-
-          <Carousel
-            opts={{ align: "start", loop: true }}
-            setApi={setApi}
-            onMouseEnter={() => (pausedRef.current = true)}
-            onMouseLeave={() => (pausedRef.current = false)}
-            className="px-2 sm:px-0"
-          >
-            <CarouselContent className="py-4">
-              {featuredProjects.map((project) => (
-                <CarouselItem key={project.id} className="sm:basis-1/2">
-                  <TiltCard className="rounded-xl h-full">
-                  <Card className="group flex h-full flex-col overflow-hidden bg-card border-border/50 shadow-lg transition-all duration-500 hover:border-primary/40 hover:shadow-glow">
-                    {/* Imagem (logoCover: logo centralizado sobre branco; senão, foto em object-cover) */}
-                    <div
-                      className={`relative aspect-video overflow-hidden ${
-                        project.logoCover ? "bg-white" : "bg-secondary"
-                      }`}
-                    >
-                      <img
-                        src={
-                          project.image.startsWith("http")
-                            ? project.image
-                            : `${import.meta.env.BASE_URL}${project.image}`
-                        }
-                        alt={project.title}
-                        loading="lazy"
-                        className={`w-full h-full transition-transform duration-700 group-hover:scale-105 ${
-                          project.logoCover ? "object-contain p-8" : "object-cover"
-                        }`}
-                      />
-                      <div className="absolute top-4 left-4">
-                        <Badge
-                          variant="secondary"
-                          className="bg-background/80 backdrop-blur-md border-white/10 text-foreground font-semibold"
-                        >
-                          {project.category}
-                        </Badge>
-                      </div>
-                    </div>
-
-                    {/* Conteúdo */}
-                    <div className="p-6 flex flex-col flex-1">
-                      <h4 className="font-display text-2xl font-bold mb-2 text-foreground group-hover:text-primary transition-colors">
-                        {project.title}
-                      </h4>
-                      <p className="text-muted-foreground mb-6 flex-1 text-sm">
-                        {project.description}
-                      </p>
-
-                      <div className="flex flex-wrap gap-2 mb-6">
-                        {project.tags.map((tag) => (
-                          <Badge key={tag} variant="outline" className="border-border/60 text-xs">
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
-
-                      <div className="flex flex-col xl:flex-row gap-3 mt-auto">
-                        {project.demoLink && (
-                          <Button asChild variant="default" className="flex-1">
-                            {project.isInternal ? (
-                              <Link to={project.demoLink}>
-                                <ArrowRight className="w-4 h-4 mr-2" />
-                                Ver Detalhes
-                              </Link>
-                            ) : (
-                              <a href={project.demoLink} target="_blank" rel="noopener noreferrer">
-                                <Globe className="w-4 h-4 mr-2" />
-                                Ver Online
-                              </a>
-                            )}
-                          </Button>
-                        )}
-                        {project.githubLink && (
-                          <Button
-                            asChild
-                            variant="outline"
-                            className="flex-1 border-white/10 hover:bg-secondary"
-                          >
-                            <a href={project.githubLink} target="_blank" rel="noopener noreferrer">
-                              <Github className="w-4 h-4 mr-2" />
-                              Repositório
-                            </a>
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                  </Card>
-                </TiltCard>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            {/* Setas laterais: apenas em telas com espaço (sm+), fora do card */}
-            <CarouselPrevious className="hidden sm:inline-flex sm:-left-4 lg:-left-12" />
-            <CarouselNext className="hidden sm:inline-flex sm:-right-4 lg:-right-12" />
-
-            {/* Mobile: setas abaixo do carrossel para não sobrepor o card
-                (resetam o `absolute` base para ficar em fluxo normal) */}
-            <div className="mt-3 flex items-center justify-center gap-4 sm:hidden">
-              <CarouselPrevious className="static left-auto right-auto top-auto translate-y-0" />
-              <CarouselNext className="static left-auto right-auto top-auto translate-y-0" />
-            </div>
-          </Carousel>
         </div>
-      </div>
-
-      {/* Borda ondulada (Wave SVG) com Neon */}
-      <div className="absolute left-0 right-0 top-full -mt-[2px] w-full leading-none z-10 pointer-events-none">
-        <svg
-          viewBox="0 0 1440 120"
-          className="block w-full h-[70px] md:h-[90px] -scale-y-100"
-          preserveAspectRatio="none"
-        >
-          <path
-            className="fill-background"
-            d="M0,64 C30,88 60,88 90,64 C120,40 150,40 180,64 C210,88 240,88 270,64 C300,40 330,40 360,64 C390,88 420,88 450,64 C480,40 510,40 540,64 C570,88 600,88 630,64 C660,40 690,40 720,64 C750,88 780,88 810,64 C840,40 870,40 900,64 C930,88 960,88 990,64 C1020,40 1050,40 1080,64 C1110,88 1140,88 1170,64 C1200,40 1230,40 1260,64 C1290,88 1320,88 1350,64 C1380,40 1410,40 1440,64 L1440,120 L0,120 Z"
-          />
-          <path
-            className="neon-wave"
-            stroke="hsl(var(--primary))"
-            strokeWidth="3"
-            fill="none"
-            d="M0,64 C30,88 60,88 90,64 C120,40 150,40 180,64 C210,88 240,88 270,64 C300,40 330,40 360,64 C390,88 420,88 450,64 C480,40 510,40 540,64 C570,88 600,88 630,64 C660,40 690,40 720,64 C750,88 780,88 810,64 C840,40 870,40 900,64 C930,88 960,88 990,64 C1020,40 1050,40 1080,64 C1110,88 1140,88 1170,64 C1200,40 1230,40 1260,64 C1290,88 1320,88 1350,64 C1380,40 1410,40 1440,64"
-          />
-        </svg>
       </div>
     </section>
   );

@@ -215,7 +215,7 @@ const ProjectsPage = () => {
         
         <div className="flex items-center gap-4 mb-10">
             <Icon className="w-10 h-10 text-primary" />
-            <h2 className="text-4xl font-bold gradient-text">{categoryData.title}</h2>
+            <h2 className="text-4xl font-bold text-foreground">{categoryData.title}</h2>
         </div>
 
         {isHardware ? (
@@ -224,7 +224,7 @@ const ProjectsPage = () => {
             {(categoryData as typeof projectData['hardware']).projects.map((project) => (
               <Card 
                 key={project.id} 
-                className="group relative p-6 md:p-8 bg-card/80 backdrop-blur-sm border-border/50 shadow-lg transition-all duration-500 hover:shadow-glow hover:border-primary/30 overflow-hidden"
+                className="group relative p-6 md:p-8 bg-card/80 backdrop-blur-sm border-border/50 shadow-sm transition-all duration-500 hover:shadow-md hover:border-primary/50 overflow-hidden"
               >
                 {/* Fundo sutil ao passar o mouse usando primary e accent */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
@@ -248,7 +248,7 @@ const ProjectsPage = () => {
                     {(project as ProjectItem).internalLink ? (
                       <Button 
                         asChild
-                        className="w-full bg-[image:var(--gradient-primary)] hover:opacity-90 text-primary-foreground shadow-glow border-0 transition-all" 
+                        className="w-full hover:opacity-90 transition-all" 
                       >
                         <Link to={(project as ProjectItem).internalLink}>
                           Ver Página do Projeto
@@ -257,7 +257,7 @@ const ProjectsPage = () => {
                       </Button>
                     ) : (
                       <Button 
-                        className="w-full bg-primary/90 hover:bg-primary shadow-glow text-primary-foreground transition-all" 
+                        className="w-full transition-all" 
                         onClick={() => handleOpenVideo((project as ProjectItem).youtubeId || "")} 
                       >
                           <PlayCircle className="w-5 h-5 mr-2" /> 
@@ -270,8 +270,7 @@ const ProjectsPage = () => {
                   <div className="md:col-span-2 flex flex-col h-full justify-between">
                     <div className="space-y-4">
                       <div>
-                        {/* Título com o gradiente correto ao passar o mouse */}
-                        <h3 className="text-3xl font-bold text-foreground group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-primary group-hover:to-accent transition-all duration-300">
+                        <h3 className="text-3xl font-bold text-foreground group-hover:text-primary transition-all duration-300">
                           {project.name}
                         </h3>
                         <p className="text-lg font-medium text-muted-foreground mt-1">

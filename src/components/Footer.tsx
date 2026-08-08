@@ -24,14 +24,14 @@ const scrollWithOffset = (el: HTMLElement) => {
 
 const Footer = () => {
   return (
-    <footer className="border-t border-border bg-secondary/40">
+    <footer className="border-t border-border/60 bg-background pt-10">
       <div className="container mx-auto px-4 py-12">
         <div className="flex flex-col items-center gap-8 md:flex-row md:items-start md:justify-between">
           {/* Marca + tagline */}
           <div className="flex flex-col items-center gap-3 text-center md:items-start md:text-left">
             <div className="flex items-center gap-2">
               <Code2 className="w-6 h-6 text-primary" />
-              <span className="font-display text-xl font-bold gradient-text">Artur Brasileiro</span>
+              <span className="font-display text-xl font-bold text-foreground">Artur Brasileiro</span>
             </div>
             <p className="text-sm text-muted-foreground max-w-xs">
               Engenheiro da Computação · software web e sistemas embarcados.

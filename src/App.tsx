@@ -40,7 +40,7 @@ const AnimatedRoutes = () => {
 };
 
 const App = () => (
-  <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
+  <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <SmoothScroll>
